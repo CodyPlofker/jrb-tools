@@ -4,750 +4,645 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Persona Funnel Validation & Scaling</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #f5f5f5;
-            color: #111;
-            line-height: 1.5;
-            min-height: 100vh;
-            padding: 40px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f8f9fa;
+            padding: 30px;
+            color: #1a1a2e;
         }
+        .container { max-width: 1000px; margin: 0 auto; }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+        header { text-align: center; margin-bottom: 30px; }
+        header h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+        header p { color: #666; font-size: 14px; }
 
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        header h1 {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        header p {
-            color: #666;
-            font-size: 15px;
-        }
-
-        .flowchart-wrapper {
+        /* Team Bar */
+        .team-bar {
             display: flex;
-            gap: 40px;
-            align-items: flex-start;
-        }
-
-        /* Team Sidebar */
-        .team-sidebar {
-            flex-shrink: 0;
-            width: 160px;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 30px;
+            padding: 16px;
             background: #fff;
             border-radius: 12px;
-            padding: 20px;
-            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
-
-        .team-sidebar h3 {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            text-align: center;
-        }
-
         .team-role {
-            padding: 10px 14px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 500;
-            text-align: center;
-            margin-bottom: 10px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .team-role.research { background: #1a1a2e; color: #fff; }
+        .team-role.creative { background: #FFD700; color: #1a1a2e; }
+        .team-role.paid { background: #4169E1; color: #fff; }
+        .team-role.ecom { background: #9370DB; color: #fff; }
+        .team-role.lifecycle { background: #9932CC; color: #fff; }
+
+        /* Phase Accordion */
+        .phase {
+            background: #fff;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            overflow: hidden;
+            border: 1px solid #e9ecef;
         }
 
-        .team-role.research {
-            background: #1a1a2e;
-            color: #fff;
-        }
-
-        .team-role.creative {
-            background: #FFD700;
-            color: #111;
-        }
-
-        .team-role.paid {
-            background: #4169E1;
-            color: #fff;
-        }
-
-        .team-role.ecom {
-            background: #9370DB;
-            color: #fff;
-        }
-
-        .team-role.lifecycle {
-            background: #9932CC;
-            color: #fff;
-        }
-
-        /* Main Flowchart */
-        .flowchart-main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .flowchart-row {
+        .phase-header {
+            padding: 20px 24px;
+            cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 20px;
+            justify-content: space-between;
+            transition: background 0.2s;
+            user-select: none;
         }
 
-        .flow-content {
-            flex: 1;
+        .phase-header:hover {
+            background: #f8f9fa;
+        }
+
+        .phase-header-left {
             display: flex;
-            flex-direction: column;
             align-items: center;
             gap: 16px;
         }
 
-        .annotation {
-            flex-shrink: 0;
-            width: 280px;
-            font-size: 13px;
-            color: #444;
-            font-weight: 500;
-            padding-left: 20px;
-            border-left: 3px solid #e0e0e0;
-        }
-
-        /* Flow Nodes */
-        .node {
-            padding: 14px 24px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 500;
-            text-align: center;
-            min-width: 200px;
-        }
-
-        .node-primary {
+        .phase-num {
             background: #1a1a2e;
             color: #fff;
-        }
-
-        .node-phase {
-            background: #2d2d44;
-            color: #fff;
-            border-radius: 20px;
-            padding: 10px 20px;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .node-dark {
-            background: #333;
-            color: #fff;
-        }
-
-        .node-yellow {
-            background: #FFD700;
-            color: #111;
-        }
-
-        .node-blue {
-            background: #4169E1;
-            color: #fff;
-        }
-
-        .node-purple {
-            background: #9932CC;
-            color: #fff;
-        }
-
-        .node-green {
-            background: #22c55e;
-            color: #fff;
-        }
-
-        .node-amber {
-            background: #f59e0b;
-            color: #fff;
-        }
-
-        .node-red {
-            background: #ef4444;
-            color: #fff;
-        }
-
-        .node-outline {
-            background: #fff;
-            border: 2px solid #333;
-            color: #333;
-        }
-
-        .node-output {
-            background: #f0fdf4;
-            border: 2px solid #22c55e;
-            color: #166534;
-        }
-
-        /* Connector */
-        .connector {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            padding: 8px 0;
-        }
-
-        .connector-line {
-            width: 2px;
-            height: 30px;
-            background: #999;
-        }
-
-        .connector-arrow {
-            width: 0;
-            height: 0;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-top: 8px solid #999;
-        }
-
-        /* Persona Tracks */
-        .persona-tracks {
-            display: flex;
-            gap: 24px;
             justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            flex-shrink: 0;
         }
 
-        .persona-track {
+        .phase-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .phase-subtitle {
+            font-size: 13px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .phase-toggle {
+            font-size: 24px;
+            color: #999;
+            transition: transform 0.3s;
+        }
+
+        .phase.open .phase-toggle {
+            transform: rotate(180deg);
+        }
+
+        .phase-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+        }
+
+        .phase.open .phase-content {
+            max-height: 2000px;
+        }
+
+        .phase-inner {
+            padding: 0 24px 24px 24px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        /* Flow Elements */
+        .flow-center { text-align: center; margin: 20px 0; }
+
+        .node {
+            display: inline-block;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            margin: 4px;
+        }
+        .node.primary { background: #1a1a2e; color: #fff; }
+        .node.yellow { background: #FFD700; color: #1a1a2e; }
+        .node.blue { background: #4169E1; color: #fff; }
+        .node.green { background: #22c55e; color: #fff; }
+        .node.purple { background: #9932CC; color: #fff; }
+        .node.outline { background: #fff; border: 2px solid #1a1a2e; color: #1a1a2e; }
+        .node.output { background: #ecfdf5; border: 2px solid #22c55e; color: #166534; }
+
+        .arrow {
+            text-align: center;
+            color: #ccc;
+            font-size: 28px;
+            margin: 12px 0;
+            line-height: 1;
+        }
+
+        /* Cards */
+        .card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 12px 0;
+        }
+
+        .card h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            min-width: 220px;
-        }
-
-        .persona-track .node {
-            width: 100%;
-        }
-
-        /* Branch Split */
-        .branch-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-        }
-
-        .branch-line-horizontal {
-            width: 60%;
-            height: 2px;
-            background: #999;
-            position: relative;
-        }
-
-        .branch-line-horizontal::before,
-        .branch-line-horizontal::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            width: 2px;
-            height: 20px;
-            background: #999;
-        }
-
-        .branch-line-horizontal::before {
-            left: 0;
-        }
-
-        .branch-line-horizontal::after {
-            right: 0;
-        }
-
-        .branch-line-horizontal .center-line {
-            position: absolute;
-            left: 50%;
-            top: 0;
-            width: 2px;
-            height: 20px;
-            background: #999;
-            transform: translateX(-50%);
-        }
-
-        /* Decision Node */
-        .decision-container {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin: 10px 0;
-        }
-
-        .decision-path {
-            display: flex;
-            flex-direction: column;
             align-items: center;
             gap: 10px;
         }
 
-        .decision-label {
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            padding: 4px 10px;
-            border-radius: 4px;
-        }
-
-        .decision-label.green {
-            background: #dcfce7;
-            color: #166534;
-        }
-
-        .decision-label.yellow {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .decision-label.red {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        /* Sub-items list */
-        .sub-items {
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 12px 16px;
-            font-size: 12px;
-            text-align: left;
-            min-width: 200px;
-        }
-
-        .sub-items h4 {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #666;
-            margin-bottom: 8px;
-        }
-
-        .sub-items ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .sub-items li {
-            padding: 4px 0;
-            color: #444;
-            position: relative;
-            padding-left: 14px;
-        }
-
-        .sub-items li::before {
-            content: '•';
-            position: absolute;
-            left: 0;
-            color: #999;
-        }
-
-        /* Phase Divider */
-        .phase-divider {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 20px 0;
-            width: 100%;
-        }
-
-        .phase-divider-line {
-            flex: 1;
-            height: 1px;
-            background: #ddd;
-        }
-
-        .phase-number {
-            background: #111;
-            color: #fff;
-            font-size: 12px;
-            font-weight: 600;
-            padding: 8px 16px;
-            border-radius: 20px;
-        }
-
-        /* Scaling Section */
-        .scaling-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            width: 100%;
-            max-width: 800px;
-        }
-
-        .scaling-card {
-            background: #fff;
-            border-radius: 8px;
-            padding: 16px;
-            border: 1px solid #e0e0e0;
-        }
-
-        .scaling-card h4 {
+        .card ul {
             font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 10px;
+            color: #444;
+            padding-left: 20px;
+            line-height: 1.7;
+        }
+
+        /* Grid layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        /* Persona Brief Grid */
+        .brief-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+            margin: 16px 0;
+        }
+
+        .brief-item {
+            background: #fff;
+            border: 1px solid #e9ecef;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 13px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        .scaling-card h4 .dot {
-            width: 10px;
-            height: 10px;
+        .brief-item.highlight {
+            background: #fffbeb;
+            border-color: #fcd34d;
+        }
+
+        .brief-item::before {
+            content: '•';
+            color: #22c55e;
+            font-weight: bold;
+        }
+
+        /* Persona Tracks */
+        .tracks {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .track {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            min-width: 200px;
+            flex: 1;
+            max-width: 280px;
+        }
+
+        .track .node {
+            display: block;
+            margin: 8px 0;
+        }
+
+        /* Decision Cards */
+        .decision-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid #e9ecef;
+        }
+
+        .decision-card.green { border-color: #22c55e; }
+        .decision-card.yellow { border-color: #f59e0b; }
+        .decision-card.red { border-color: #ef4444; }
+
+        .decision-card h4 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .dot {
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
+            flex-shrink: 0;
         }
+        .dot.green { background: #22c55e; }
+        .dot.yellow { background: #f59e0b; }
+        .dot.red { background: #ef4444; }
 
-        .scaling-card h4 .dot.green {
-            background: #22c55e;
-        }
-
-        .scaling-card h4 .dot.yellow {
-            background: #f59e0b;
-        }
-
-        .scaling-card h4 .dot.red {
-            background: #ef4444;
-        }
-
-        .scaling-card ul {
-            list-style: none;
-            font-size: 12px;
+        .decision-card ul {
+            font-size: 13px;
             color: #555;
+            padding-left: 20px;
+            line-height: 1.8;
         }
 
-        .scaling-card li {
-            padding: 4px 0;
-            padding-left: 14px;
-            position: relative;
-        }
-
-        .scaling-card li::before {
-            content: '→';
-            position: absolute;
-            left: 0;
-            color: #999;
-        }
-
-        /* Final Section */
-        .final-section {
-            background: #9932CC;
+        /* Final Banner */
+        .final-banner {
+            background: linear-gradient(135deg, #9932CC, #7c3aed);
             color: #fff;
-            padding: 20px 40px;
-            border-radius: 8px;
+            padding: 24px;
+            border-radius: 10px;
             text-align: center;
             font-weight: 500;
+            margin-top: 20px;
         }
 
-        /* Interactive tooltips */
-        .tooltip-trigger {
-            cursor: help;
-            border-bottom: 1px dashed currentColor;
+        /* Expand All Button */
+        .controls {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 16px;
         }
 
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .flowchart-wrapper {
-                flex-direction: column;
-            }
-
-            .team-sidebar {
-                width: 100%;
-                display: flex;
-                flex-wrap: wrap;
-                gap: 10px;
-                justify-content: center;
-            }
-
-            .team-sidebar h3 {
-                width: 100%;
-            }
-
-            .team-role {
-                margin-bottom: 0;
-            }
-
-            .annotation {
-                width: 100%;
-                border-left: none;
-                border-top: 2px solid #e0e0e0;
-                padding-left: 0;
-                padding-top: 10px;
-                margin-top: 10px;
-            }
-
-            .persona-tracks {
-                flex-direction: column;
-                align-items: center;
-            }
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
         }
+
+        .btn-outline {
+            background: #fff;
+            border: 1px solid #ddd;
+            color: #333;
+        }
+
+        .btn-outline:hover {
+            border-color: #1a1a2e;
+        }
+
+        /* Status indicator */
+        .status-badge {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .status-badge.draft { background: #fef3c7; color: #92400e; }
+        .status-badge.active { background: #dcfce7; color: #166534; }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>Persona Funnel Validation & Scaling</h1>
-            <p>From Research to Scaled Production</p>
+            <p>Click each phase to expand/collapse</p>
         </header>
 
-        <div class="flowchart-wrapper">
-            <!-- Team Sidebar -->
-            <div class="team-sidebar">
-                <h3>Team</h3>
-                <div class="team-role research">Research</div>
-                <div class="team-role creative">Creative</div>
-                <div class="team-role paid">Paid Strategy</div>
-                <div class="team-role ecom">Ecom</div>
-                <div class="team-role lifecycle">Lifecycle</div>
+        <div class="team-bar">
+            <span class="team-role research">Research</span>
+            <span class="team-role creative">Creative</span>
+            <span class="team-role paid">Paid Strategy</span>
+            <span class="team-role ecom">Ecom</span>
+            <span class="team-role lifecycle">Lifecycle</span>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-outline" onclick="toggleAll()">Expand / Collapse All</button>
+        </div>
+
+        <!-- Phase 1: Research -->
+        <div class="phase open" data-phase="1">
+            <div class="phase-header" onclick="togglePhase(1)">
+                <div class="phase-header-left">
+                    <div class="phase-num">1</div>
+                    <div>
+                        <div class="phase-title">Research</div>
+                        <div class="phase-subtitle">Outersignal Personas → Persona Brief</div>
+                    </div>
+                </div>
+                <div class="phase-toggle">▼</div>
             </div>
-
-            <!-- Main Flowchart -->
-            <div class="flowchart-main">
-
-                <!-- Phase 1: Research -->
-                <div class="flowchart-row">
-                    <div class="flow-content">
-                        <div class="phase-divider">
-                            <div class="phase-divider-line"></div>
-                            <div class="phase-number">Phase 1: Research</div>
-                            <div class="phase-divider-line"></div>
-                        </div>
-
-                        <div class="node node-primary">Outersignal Personas<br><small>Begin with output of angles and insights</small></div>
-
-                        <div class="connector">
-                            <div class="connector-line"></div>
-                            <div class="connector-arrow"></div>
-                        </div>
-
-                        <div class="sub-items" style="max-width: 500px;">
-                            <h4>Research Activities</h4>
-                            <ul>
-                                <li>Push segments to Klaviyo → email persona surveys</li>
-                                <li>Analyze reviews for insider language & "golden nugget" copy</li>
-                                <li>Reddit/FB group research for psychographics</li>
-                                <li>Listenlabs survey for deeper understanding</li>
-                                <li>Create IG account & interact as the persona</li>
-                                <li>Scan FB Ads Library for non-competitive success</li>
-                                <li>TikTok trends data for key topics</li>
-                            </ul>
-                        </div>
-
-                        <div class="connector">
-                            <div class="connector-line"></div>
-                            <div class="connector-arrow"></div>
-                        </div>
-
-                        <div class="node node-output">
-                            <strong>Output: 1-Pager / Persona Brief</strong>
-                        </div>
-
-                        <div class="sub-items" style="max-width: 600px;">
-                            <h4>Persona Brief Contains</h4>
-                            <ul style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px;">
-                                <li>Who they are</li>
-                                <li>Professions</li>
-                                <li>Demographics</li>
-                                <li>Psychographics</li>
-                                <li>Key motivations & desires</li>
-                                <li>Why our brand appeals</li>
-                                <li>4-6 core value props to test</li>
-                                <li>Creator profiles they follow</li>
-                                <li>Creators that fit this persona</li>
-                                <li>Successful non-competitive ads</li>
-                                <li>Golden nugget reviews</li>
-                                <li>Sample customer profiles</li>
-                            </ul>
-                        </div>
+            <div class="phase-content">
+                <div class="phase-inner">
+                    <div class="flow-center">
+                        <div class="node primary">Outersignal Personas<br><small>Begin with output of angles and insights</small></div>
                     </div>
-                    <div class="annotation">
-                        <strong>Goal:</strong> Deep understanding of persona before any creative spend. Build the brief that guides all creative and media decisions.
+
+                    <div class="arrow">↓</div>
+
+                    <div class="card">
+                        <h4>Research Activities</h4>
+                        <ul>
+                            <li>Push segments to Klaviyo and email specific "persona" surveys to enrich insights</li>
+                            <li>Analyze reviews from this cohort to find shared insider language, desires, and "golden nugget" reviews for copy</li>
+                            <li>Perform internet/Reddit, FB group research to understand desires, motivations, psychographics</li>
+                            <li>Listenlabs survey to understand the persona more</li>
+                            <li>Create IG account and build it/interact as the persona</li>
+                            <li>Scan FB Ads Library for non-competitive brands who successfully market to this persona</li>
+                            <li>Use TikTok trends data to find top TikToks for some key topics</li>
+                        </ul>
+                    </div>
+
+                    <div class="arrow">↓</div>
+
+                    <div class="flow-center">
+                        <div class="node output"><strong>End Output: 1-Pager / Persona Brief</strong></div>
+                    </div>
+
+                    <div class="brief-grid">
+                        <div class="brief-item">Who they are</div>
+                        <div class="brief-item">Professions</div>
+                        <div class="brief-item">Demographics</div>
+                        <div class="brief-item highlight">Psychographics</div>
+                        <div class="brief-item">Key motivations and desires</div>
+                        <div class="brief-item">Why our brand appeals</div>
+                        <div class="brief-item highlight">4-6 core key value props or angles to test</div>
+                        <div class="brief-item highlight">Creator profiles that this persona follows</div>
+                        <div class="brief-item highlight">Creators that fit this persona</div>
+                        <div class="brief-item highlight">Successful non-competitive ads</div>
+                        <div class="brief-item highlight">Golden nugget reviews</div>
+                        <div class="brief-item">Sample customer profiles</div>
                     </div>
                 </div>
-
-                <!-- Phase 2: Testing -->
-                <div class="flowchart-row">
-                    <div class="flow-content">
-                        <div class="phase-divider">
-                            <div class="phase-divider-line"></div>
-                            <div class="phase-number">Phase 2: Creative Testing</div>
-                            <div class="phase-divider-line"></div>
-                        </div>
-
-                        <div class="node node-yellow">Statics for Identifying Winning<br>Angles per Persona</div>
-
-                        <div class="connector">
-                            <div class="connector-line"></div>
-                            <div class="connector-arrow"></div>
-                        </div>
-
-                        <!-- Persona Tracks -->
-                        <div class="persona-tracks">
-                            <div class="persona-track">
-                                <div class="node node-dark">Persona 1<br><small>Value Prop A</small></div>
-                                <div class="node node-outline">Test 4-6 angles</div>
-                                <div class="node node-blue">Meta + Google</div>
-                            </div>
-                            <div class="persona-track">
-                                <div class="node node-dark">Persona 2<br><small>Value Prop B</small></div>
-                                <div class="node node-outline">Test 4-6 angles</div>
-                                <div class="node node-blue">Meta + Google</div>
-                            </div>
-                            <div class="persona-track">
-                                <div class="node node-dark">Persona 3<br><small>Value Prop C</small></div>
-                                <div class="node node-outline">Test 4-6 angles</div>
-                                <div class="node node-blue">Meta + Google</div>
-                            </div>
-                        </div>
-
-                        <div class="connector">
-                            <div class="connector-line" style="height: 40px;"></div>
-                            <div class="connector-arrow"></div>
-                        </div>
-
-                        <div class="node node-primary">Analyze Results & Categorize</div>
-                    </div>
-                    <div class="annotation">
-                        <strong>Goal:</strong> Validate which personas and angles have scale potential through controlled static testing before investing in production.
-                    </div>
-                </div>
-
-                <!-- Phase 3: Scale/Iterate/Cut -->
-                <div class="flowchart-row">
-                    <div class="flow-content">
-                        <div class="phase-divider">
-                            <div class="phase-divider-line"></div>
-                            <div class="phase-number">Phase 3: Scale, Iterate, or Cut</div>
-                            <div class="phase-divider-line"></div>
-                        </div>
-
-                        <div class="scaling-grid">
-                            <div class="scaling-card">
-                                <h4><span class="dot green"></span> Green = Scale</h4>
-                                <ul>
-                                    <li>Scale winners within ad set</li>
-                                    <li>Expand to other campaigns</li>
-                                    <li>Produce 2nd batch of statics</li>
-                                    <li>Create sub-persona batches</li>
-                                    <li>Animate to GIFs/short video</li>
-                                    <li>Test awareness levels</li>
-                                    <li>Test unique mechanisms</li>
-                                    <li>Graduate to Phase 4</li>
-                                </ul>
-                            </div>
-                            <div class="scaling-card">
-                                <h4><span class="dot yellow"></span> Yellow = Iterate</h4>
-                                <ul>
-                                    <li>Refine angle/messaging</li>
-                                    <li>Test new creative formats</li>
-                                    <li>Adjust targeting</li>
-                                    <li>Re-test with variations</li>
-                                    <li>Consider sub-segments</li>
-                                </ul>
-                            </div>
-                            <div class="scaling-card">
-                                <h4><span class="dot red"></span> Red = Cut</h4>
-                                <ul>
-                                    <li>Cut losses</li>
-                                    <li>Move on from concept</li>
-                                    <li>Document learnings</li>
-                                    <li>Apply insights to other personas</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="connector">
-                            <div class="connector-line" style="height: 30px;"></div>
-                            <div class="connector-arrow"></div>
-                        </div>
-
-                        <div class="node node-green" style="font-size: 14px;">If Green → Continue to Phase 4</div>
-                    </div>
-                    <div class="annotation">
-                        <strong>Goal:</strong> Make clear go/no-go decisions. Only invest production resources in validated winners. Cut losers fast, iterate on maybes.
-                    </div>
-                </div>
-
-                <!-- Phase 4: Scaling Production -->
-                <div class="flowchart-row">
-                    <div class="flow-content">
-                        <div class="phase-divider">
-                            <div class="phase-divider-line"></div>
-                            <div class="phase-number">Phase 4: Scaling Production</div>
-                            <div class="phase-divider-line"></div>
-                        </div>
-
-                        <div class="node node-primary">Package Data & Insights<br><small>Develop hypothesis for next round</small></div>
-
-                        <div class="connector">
-                            <div class="connector-line"></div>
-                            <div class="connector-arrow"></div>
-                        </div>
-
-                        <div class="persona-tracks">
-                            <div class="persona-track">
-                                <div class="node node-yellow">Create UGC Brief(s)<br><small>With winning concepts</small></div>
-                            </div>
-                        </div>
-
-                        <div class="connector">
-                            <div class="connector-line"></div>
-                        </div>
-
-                        <div class="persona-tracks">
-                            <div class="persona-track">
-                                <div class="node node-outline">
-                                    <strong>Organic</strong><br>
-                                    <small>Find 1-3 creators in persona<br>Run organic experiments on new pages</small>
-                                </div>
-                            </div>
-                            <div class="persona-track">
-                                <div class="node node-blue">
-                                    <strong>Paid</strong><br>
-                                    <small>Brief 5-10 creators<br>Scale winning angles</small>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="connector">
-                            <div class="connector-line" style="height: 40px;"></div>
-                            <div class="connector-arrow"></div>
-                        </div>
-
-                        <div class="final-section">
-                            Lifecycle: Retarget based on persona need states expressed through engagement
-                        </div>
-                    </div>
-                    <div class="annotation">
-                        <strong>Goal:</strong> Scale validated personas through UGC production. Use organic to test, paid to scale. Feed learnings back to lifecycle for retargeting.
-                    </div>
-                </div>
-
             </div>
         </div>
+
+        <!-- Phase 2: MVP Static Production and Testing -->
+        <div class="phase" data-phase="2">
+            <div class="phase-header" onclick="togglePhase(2)">
+                <div class="phase-header-left">
+                    <div class="phase-num">2</div>
+                    <div>
+                        <div class="phase-title">MVP Static Production and Testing</div>
+                        <div class="phase-subtitle">Launch enough assets to rule out execution as barrier to success</div>
+                    </div>
+                </div>
+                <div class="phase-toggle">▼</div>
+            </div>
+            <div class="phase-content">
+                <div class="phase-inner">
+                    <div class="card" style="background: #f0f9ff; border: 1px solid #bae6fd;">
+                        <h4 style="color: #0369a1;">Goal</h4>
+                        <p style="font-size: 14px; color: #444;">Launch enough assets to rule out execution as barrier to success while keeping initial cost low enough to not create risk</p>
+                    </div>
+
+                    <div class="flow-center">
+                        <div class="node yellow">Launch Toolkit of 12-50 Diversified Statics</div>
+                    </div>
+
+                    <div class="arrow">↓</div>
+
+                    <div class="grid-2">
+                        <div class="card">
+                            <h4>Testing Parameters</h4>
+                            <ul>
+                                <li>Test minimum <strong>4-5 unique angles</strong> or value props</li>
+                                <li>Diversified yet proven formats</li>
+                                <li>Test <strong>2-4 products</strong> per initial persona batch</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h4>Traffic & Structure</h4>
+                            <ul>
+                                <li>Direct traffic to generic landing page or PDP</li>
+                                <li>Launch <strong>one ad set per persona and product</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="arrow">↓</div>
+
+                    <div class="tracks">
+                        <div class="track">
+                            <div class="node primary">Persona 1</div>
+                            <div class="node outline">4-5 angles × 2-4 products</div>
+                            <div class="node blue">Meta + Google</div>
+                        </div>
+                        <div class="track">
+                            <div class="node primary">Persona 2</div>
+                            <div class="node outline">4-5 angles × 2-4 products</div>
+                            <div class="node blue">Meta + Google</div>
+                        </div>
+                        <div class="track">
+                            <div class="node primary">Persona 3</div>
+                            <div class="node outline">4-5 angles × 2-4 products</div>
+                            <div class="node blue">Meta + Google</div>
+                        </div>
+                    </div>
+
+                    <div class="arrow">↓</div>
+
+                    <div class="flow-center">
+                        <div class="node primary">Analyze Results within 5-7 Days</div>
+                    </div>
+
+                    <div class="arrow">↓</div>
+
+                    <h4 style="text-align: center; margin: 20px 0 16px; font-size: 14px; color: #666; text-transform: uppercase; letter-spacing: 1px;">Decision Thresholds</h4>
+
+                    <div class="grid-3">
+                        <div class="decision-card green">
+                            <h4><span class="dot green"></span> Green Light</h4>
+                            <ul style="list-style: none; padding-left: 0;">
+                                <li><strong>$2k/day</strong> on a concept</li>
+                                <li><strong>≥ 0.8 ROAS</strong></li>
+                                <li><strong>≥ 60%</strong> New Visit Rate</li>
+                                <li style="margin-top: 8px; color: #166534;">→ Scale to Phase 3</li>
+                            </ul>
+                        </div>
+                        <div class="decision-card yellow">
+                            <h4><span class="dot yellow"></span> Yellow Light</h4>
+                            <ul style="list-style: none; padding-left: 0;">
+                                <li><strong>$1k/day</strong> on a concept</li>
+                                <li><strong>≥ 0.6 ROAS</strong></li>
+                                <li><strong>≥ 50%</strong> New Visit Rate</li>
+                                <li style="margin-top: 8px; color: #92400e;">→ Iterate & retest</li>
+                            </ul>
+                        </div>
+                        <div class="decision-card red">
+                            <h4><span class="dot red"></span> Red Light</h4>
+                            <ul style="list-style: none; padding-left: 0;">
+                                <li><strong>Minimal spend</strong> on concept</li>
+                                <li><strong>< 0.5 ROAS</strong></li>
+                                <li><strong>< 40%</strong> New Visit Rate</li>
+                                <li style="margin-top: 8px; color: #991b1b;">→ Cut & move on</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 3: Scale/Iterate/Cut -->
+        <div class="phase" data-phase="3">
+            <div class="phase-header" onclick="togglePhase(3)">
+                <div class="phase-header-left">
+                    <div class="phase-num">3</div>
+                    <div>
+                        <div class="phase-title">Scaling, Iterating, and Cutting</div>
+                        <div class="phase-subtitle">Green = Scale, Yellow = Iterate, Red = Cut</div>
+                    </div>
+                </div>
+                <div class="phase-toggle">▼</div>
+            </div>
+            <div class="phase-content">
+                <div class="phase-inner">
+                    <div class="grid-3">
+                        <div class="decision-card green">
+                            <h4><span class="dot green"></span> Green = Scaling</h4>
+                            <ul>
+                                <li>Scale winners within testing ad set and to other relevant campaigns</li>
+                                <li>Produce second batch of statics, doubling down on winning concepts and format</li>
+                                <li>Create batches for more specific sub-personas with exploratory formats</li>
+                                <li>Animate statics into GIFs and short videos to drive new placements</li>
+                                <li>Experiment with varying levels of awareness and sophistication</li>
+                                <li>Experiment with unique mechanisms of the problem and solutions</li>
+                                <li>Graduate to next phase of production</li>
+                            </ul>
+                        </div>
+                        <div class="decision-card yellow">
+                            <h4><span class="dot yellow"></span> Yellow = Iterating</h4>
+                            <ul>
+                                <li>Refine angle/messaging</li>
+                                <li>Test new creative formats</li>
+                                <li>Adjust targeting parameters</li>
+                                <li>Re-test with variations</li>
+                                <li>Consider sub-segments</li>
+                                <li>Review and optimize</li>
+                            </ul>
+                        </div>
+                        <div class="decision-card red">
+                            <h4><span class="dot red"></span> Red = Cutting</h4>
+                            <ul>
+                                <li>Cut losses</li>
+                                <li>Move on from that concept or format</li>
+                                <li>Document learnings</li>
+                                <li>Apply insights to other personas</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="arrow">↓</div>
+
+                    <div class="flow-center">
+                        <div class="node green">If Green → Continue to Phase 4</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 4: Scaling Production -->
+        <div class="phase" data-phase="4">
+            <div class="phase-header" onclick="togglePhase(4)">
+                <div class="phase-header-left">
+                    <div class="phase-num">4</div>
+                    <div>
+                        <div class="phase-title">Scaling Production</div>
+                        <div class="phase-subtitle">UGC briefs, organic experiments, paid scaling</div>
+                    </div>
+                </div>
+                <div class="phase-toggle">▼</div>
+            </div>
+            <div class="phase-content">
+                <div class="phase-inner">
+                    <div class="flow-center">
+                        <div class="node primary">Package data, insights, and develop hypothesis for next round of testing</div>
+                    </div>
+
+                    <div class="arrow">↓</div>
+
+                    <div class="flow-center">
+                        <div class="node yellow">Create UGC Brief(s) with concepts</div>
+                    </div>
+
+                    <div class="arrow">↓</div>
+
+                    <div class="grid-2">
+                        <div class="card">
+                            <h4>Organic</h4>
+                            <ul>
+                                <li>Find 1-3 creators in the persona</li>
+                                <li>Run organic experiments on new pages</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h4>Paid</h4>
+                            <ul>
+                                <li>Brief 5-10 creators</li>
+                                <li>Scale winning angles through paid</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="final-banner">
+                        <strong>Lifecycle:</strong> Retarget based on narrow need states expressed through popup / engagement
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
+
+    <script>
+        function togglePhase(num) {
+            const phase = document.querySelector(`.phase[data-phase="${num}"]`);
+            phase.classList.toggle('open');
+        }
+
+        function toggleAll() {
+            const phases = document.querySelectorAll('.phase');
+            const allOpen = Array.from(phases).every(p => p.classList.contains('open'));
+
+            phases.forEach(phase => {
+                if (allOpen) {
+                    phase.classList.remove('open');
+                } else {
+                    phase.classList.add('open');
+                }
+            });
+        }
+
+        // Open Phase 1 by default (already has 'open' class in HTML)
+    </script>
 </body>
 </html>
