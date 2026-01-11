@@ -23,6 +23,119 @@
             min-height: 100vh;
         }
 
+        /* Password Screen */
+        .password-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #f8f7f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .password-screen.hidden {
+            display: none;
+        }
+
+        .password-box {
+            background: #fff;
+            padding: 48px;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .password-box .logo {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .password-box .subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 32px;
+        }
+
+        .password-box label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #666;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+
+        .password-box input {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 16px;
+            font-family: 'DM Sans', sans-serif;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            transition: border-color 0.2s;
+        }
+
+        .password-box input:focus {
+            outline: none;
+            border-color: #111;
+        }
+
+        .password-box button {
+            width: 100%;
+            padding: 14px 24px;
+            font-size: 13px;
+            font-family: 'Space Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            background: #111;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .password-box button:hover {
+            background: #333;
+        }
+
+        .password-error {
+            color: #dc2626;
+            font-size: 13px;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .password-error.visible {
+            display: block;
+        }
+
+        .lock-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        /* Main Content - Hidden by default */
+        .main-content {
+            display: none;
+        }
+
+        .main-content.visible {
+            display: block;
+        }
+
         .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -265,12 +378,12 @@
         }
 
         th.sorted-asc::after {
-            content: ' ▲';
+            content: ' ^';
             font-size: 10px;
         }
 
         th.sorted-desc::after {
-            content: ' ▼';
+            content: ' v';
             font-size: 10px;
         }
 
@@ -396,8 +509,12 @@
                 background: #fff;
             }
 
-            .filters, .view-toggle, .export-section, .search-box {
-                display: none;
+            .filters, .view-toggle, .export-section, .search-box, .password-screen {
+                display: none !important;
+            }
+
+            .main-content {
+                display: block !important;
             }
 
             .table-card, .chart-card, .summary-card {
@@ -408,125 +525,185 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
+    <!-- Password Screen -->
+    <div class="password-screen" id="passwordScreen">
+        <div class="password-box">
+            <div class="lock-icon">&#128274;</div>
             <div class="logo">Jones Road</div>
-            <p>2025 Staff Merit & Bonus Dashboard</p>
-        </header>
-
-        <!-- View Toggle -->
-        <div class="view-toggle">
-            <button class="view-btn active" onclick="setView('detailed')">Detailed View</button>
-            <button class="view-btn" onclick="setView('board')">Board Presentation</button>
+            <div class="subtitle">Staff Merit & Bonus Dashboard</div>
+            <form onsubmit="checkPassword(event)">
+                <label for="password">Enter Password</label>
+                <input type="password" id="password" placeholder="Password" autofocus>
+                <button type="submit">Access Dashboard</button>
+            </form>
+            <div class="password-error" id="passwordError">Incorrect password. Please try again.</div>
         </div>
+    </div>
 
-        <!-- Summary Cards -->
-        <div class="summary-grid" id="summaryGrid">
-            <!-- Populated by JS -->
+    <!-- Main Content (hidden until password entered) -->
+    <div class="main-content" id="mainContent">
+        <div class="container">
+            <header>
+                <div class="logo">Jones Road</div>
+                <p>2025 Staff Merit & Bonus Dashboard</p>
+            </header>
+
+            <!-- View Toggle -->
+            <div class="view-toggle">
+                <button class="view-btn active" onclick="setView('detailed')">Detailed View</button>
+                <button class="view-btn" onclick="setView('board')">Board Presentation</button>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="summary-grid" id="summaryGrid">
+                <!-- Populated by JS -->
+            </div>
+
+            <!-- Filters -->
+            <div class="filters">
+                <h2>Filters</h2>
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label>Category</label>
+                        <select id="filterCategory" onchange="applyFilters()">
+                            <option value="">All Categories</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Manager</label>
+                        <select id="filterManager" onchange="applyFilters()">
+                            <option value="">All Managers</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>C-Suite Responsibility</label>
+                        <select id="filterCSuite" onchange="applyFilters()">
+                            <option value="">All</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Rating</label>
+                        <select id="filterRating" onchange="applyFilters()">
+                            <option value="">All Ratings</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-secondary" onclick="resetFilters()">Reset Filters</button>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3>Total Compensation by Category (2025)</h3>
+                    <div class="chart-container">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>Merit Increase % Distribution</h3>
+                    <div class="chart-container">
+                        <canvas id="meritChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>Headcount by Category</h3>
+                    <div class="chart-container">
+                        <canvas id="headcountChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>Bonus % by Category</h3>
+                    <div class="chart-container">
+                        <canvas id="bonusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Export Section -->
+            <div class="export-section">
+                <button class="btn btn-secondary" onclick="exportCSV()">Export CSV</button>
+                <button class="btn btn-secondary" onclick="window.print()">Print / PDF</button>
+            </div>
+
+            <!-- Data Table -->
+            <div class="table-card">
+                <div class="table-header">
+                    <h2>Staff Details (<span id="rowCount">0</span> employees)</h2>
+                    <input type="text" class="search-box" id="searchBox" placeholder="Search by name, title..." onkeyup="applyFilters()">
+                </div>
+                <div class="table-wrapper">
+                    <table id="staffTable">
+                        <thead>
+                            <tr>
+                                <th onclick="sortTable('name')">Name</th>
+                                <th onclick="sortTable('title')">Title</th>
+                                <th onclick="sortTable('manager')">Manager</th>
+                                <th onclick="sortTable('category')">Category</th>
+                                <th onclick="sortTable('currentSalary')" class="money">Current Salary</th>
+                                <th onclick="sortTable('meritPercent')" class="percent">Merit %</th>
+                                <th onclick="sortTable('salary2025')" class="money">2025 Salary</th>
+                                <th onclick="sortTable('bonus2025')" class="money">2025 Bonus</th>
+                                <th onclick="sortTable('bonusPercent')" class="percent">Bonus %</th>
+                                <th onclick="sortTable('totalComp')" class="money">Total Comp 2026</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <footer>
+                Jones Road Beauty &middot; Staff Merit Dashboard 2025
+            </footer>
         </div>
-
-        <!-- Filters -->
-        <div class="filters">
-            <h2>Filters</h2>
-            <div class="filter-row">
-                <div class="filter-group">
-                    <label>Category</label>
-                    <select id="filterCategory" onchange="applyFilters()">
-                        <option value="">All Categories</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>Manager</label>
-                    <select id="filterManager" onchange="applyFilters()">
-                        <option value="">All Managers</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>C-Suite Responsibility</label>
-                    <select id="filterCSuite" onchange="applyFilters()">
-                        <option value="">All</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>Rating</label>
-                    <select id="filterRating" onchange="applyFilters()">
-                        <option value="">All Ratings</option>
-                    </select>
-                </div>
-                <button class="btn btn-secondary" onclick="resetFilters()">Reset Filters</button>
-            </div>
-        </div>
-
-        <!-- Charts -->
-        <div class="charts-grid">
-            <div class="chart-card">
-                <h3>Total Compensation by Category (2025)</h3>
-                <div class="chart-container">
-                    <canvas id="categoryChart"></canvas>
-                </div>
-            </div>
-            <div class="chart-card">
-                <h3>Merit Increase % Distribution</h3>
-                <div class="chart-container">
-                    <canvas id="meritChart"></canvas>
-                </div>
-            </div>
-            <div class="chart-card">
-                <h3>Headcount by Category</h3>
-                <div class="chart-container">
-                    <canvas id="headcountChart"></canvas>
-                </div>
-            </div>
-            <div class="chart-card">
-                <h3>Bonus % by Category</h3>
-                <div class="chart-container">
-                    <canvas id="bonusChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!-- Export Section -->
-        <div class="export-section">
-            <button class="btn btn-secondary" onclick="exportCSV()">Export CSV</button>
-            <button class="btn btn-secondary" onclick="window.print()">Print / PDF</button>
-        </div>
-
-        <!-- Data Table -->
-        <div class="table-card">
-            <div class="table-header">
-                <h2>Staff Details (<span id="rowCount">0</span> employees)</h2>
-                <input type="text" class="search-box" id="searchBox" placeholder="Search by name, title..." onkeyup="applyFilters()">
-            </div>
-            <div class="table-wrapper">
-                <table id="staffTable">
-                    <thead>
-                        <tr>
-                            <th onclick="sortTable('name')">Name</th>
-                            <th onclick="sortTable('title')">Title</th>
-                            <th onclick="sortTable('manager')">Manager</th>
-                            <th onclick="sortTable('category')">Category</th>
-                            <th onclick="sortTable('currentSalary')" class="money">Current Salary</th>
-                            <th onclick="sortTable('meritPercent')" class="percent">Merit %</th>
-                            <th onclick="sortTable('salary2025')" class="money">2025 Salary</th>
-                            <th onclick="sortTable('bonus2025')" class="money">2025 Bonus</th>
-                            <th onclick="sortTable('bonusPercent')" class="percent">Bonus %</th>
-                            <th onclick="sortTable('totalComp')" class="money">Total Comp 2026</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                        <!-- Populated by JS -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <footer>
-            Jones Road Beauty &middot; Staff Merit Dashboard 2025
-        </footer>
     </div>
 
     <script>
-        // Staff Data from Google Sheet
+        // ========================================
+        // PASSWORD PROTECTION
+        // ========================================
+        // Password hash (SHA-256 of "JonesRoad2025")
+        // To change the password, update this hash
+        // Generate new hash at: https://emn178.github.io/online-tools/sha256.html
+        const PASSWORD_HASH = '9d27aa4a98069d39bd9aa8b051ecf6aa84c85c35ad369418f9534d23eee10449';
+
+        // Check if already authenticated this session
+        if (sessionStorage.getItem('jr_authenticated') === 'true') {
+            document.getElementById('passwordScreen').classList.add('hidden');
+            document.getElementById('mainContent').classList.add('visible');
+            initializeDashboard();
+        }
+
+        async function hashPassword(password) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(password);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        async function checkPassword(event) {
+            event.preventDefault();
+            const password = document.getElementById('password').value;
+            const hash = await hashPassword(password);
+
+            if (hash === PASSWORD_HASH) {
+                sessionStorage.setItem('jr_authenticated', 'true');
+                document.getElementById('passwordScreen').classList.add('hidden');
+                document.getElementById('mainContent').classList.add('visible');
+                initializeDashboard();
+            } else {
+                document.getElementById('passwordError').classList.add('visible');
+                document.getElementById('password').value = '';
+                document.getElementById('password').focus();
+            }
+        }
+
+        // ========================================
+        // DASHBOARD DATA & LOGIC
+        // ========================================
         const staffData = [
             { name: "Christina DeVries", title: "COO", manager: "Cody", cSuite: "Board", category: "C-Suite", currentSalary: 260000, meritPercent: 15.38, salary2025: 300000, bonus2025: 0, bonusPercent: 0, totalComp: 303000, rating: null },
             { name: "Cody Plofker", title: "CEO", manager: "Board", cSuite: "Board", category: "C-Suite", currentSalary: 260000, meritPercent: 15.38, salary2025: 300000, bonus2025: 0, bonusPercent: 0, totalComp: 303000, rating: null },
@@ -541,7 +718,7 @@
             { name: "Samantha Liegner", title: "Associate Manager Operations", manager: "Matt", cSuite: "Chrissy", category: "Below Manager", currentSalary: 70000, meritPercent: 11.43, salary2025: 78000, bonus2025: 7619, bonusPercent: 10, totalComp: 93619, rating: 3 },
             { name: "Natalie Lopez", title: "Senior Director of Demand & Supply Planning", manager: "Chrissy", cSuite: "Chrissy", category: "Senior Director", currentSalary: 175000, meritPercent: 4.00, salary2025: 182000, bonus2025: 44447, bonusPercent: 24, totalComp: 231447, rating: 3 },
             { name: "Kaitlyn Colucci", title: "Office Manager/HR Administrator", manager: "Bianca", cSuite: "Chrissy", category: "Below Manager", currentSalary: 66300, meritPercent: 5.58, salary2025: 70000, bonus2025: 8063, bonusPercent: 12, totalComp: 79063, rating: 2 },
-            { name: "Diana Horan", title: "Bianca", manager: "Erin", cSuite: "Cody", category: "Manager", currentSalary: 81600, meritPercent: 4.00, salary2025: 85000, bonus2025: 12455, bonusPercent: 15, totalComp: 100455, rating: 3 },
+            { name: "Diana Horan", title: "Senior Graphic Designer", manager: "Erin", cSuite: "Cody", category: "Manager", currentSalary: 81600, meritPercent: 4.00, salary2025: 85000, bonus2025: 12455, bonusPercent: 15, totalComp: 100455, rating: 3 },
             { name: "Alyssa Darlington", title: "Community Associate", manager: "Matt", cSuite: "Chrissy", category: "Below Manager", currentSalary: 59300, meritPercent: 3.00, salary2025: 61000, bonus2025: 5959, bonusPercent: 10, totalComp: 67959, rating: 2 },
             { name: "Genevieve Outwater", title: "Sr. Manager, Marketing Ops", manager: "Payal", cSuite: "Cody", category: "Senior Manager", currentSalary: 110000, meritPercent: 9.00, salary2025: 120000, bonus2025: 17583, bonusPercent: 15, totalComp: 147583, rating: 3 },
             { name: "Nicole Near", title: "Director of Product Development", manager: "Chrissy", cSuite: "Chrissy", category: "Director", currentSalary: 150000, meritPercent: 4.00, salary2025: 156000, bonus2025: 32662, bonusPercent: 21, totalComp: 197662, rating: 3 },
@@ -578,37 +755,32 @@
         let currentSort = { column: 'name', direction: 'asc' };
         let charts = {};
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
+        function initializeDashboard() {
             populateFilters();
             updateSummary();
             renderTable();
             initCharts();
-        });
+        }
 
         function populateFilters() {
-            // Categories
             const categories = [...new Set(staffData.map(s => s.category))].sort();
             const categorySelect = document.getElementById('filterCategory');
             categories.forEach(c => {
                 categorySelect.innerHTML += `<option value="${c}">${c}</option>`;
             });
 
-            // Managers
             const managers = [...new Set(staffData.map(s => s.manager))].sort();
             const managerSelect = document.getElementById('filterManager');
             managers.forEach(m => {
                 managerSelect.innerHTML += `<option value="${m}">${m}</option>`;
             });
 
-            // C-Suite Responsibility
             const cSuites = [...new Set(staffData.map(s => s.cSuite))].sort();
             const cSuiteSelect = document.getElementById('filterCSuite');
             cSuites.forEach(c => {
                 cSuiteSelect.innerHTML += `<option value="${c}">${c}</option>`;
             });
 
-            // Ratings
             const ratings = [...new Set(staffData.map(s => s.rating).filter(r => r !== null))].sort();
             const ratingSelect = document.getElementById('filterRating');
             ratings.forEach(r => {
@@ -742,7 +914,6 @@
             const tbody = document.getElementById('tableBody');
             document.getElementById('rowCount').textContent = filteredData.length;
 
-            // Update sort indicators
             document.querySelectorAll('th').forEach(th => {
                 th.classList.remove('sorted-asc', 'sorted-desc');
             });
@@ -774,7 +945,6 @@
                 'Below Manager': '#6b7280'
             };
 
-            // Category Compensation Chart
             const categoryData = getDataByCategory();
             charts.category = new Chart(document.getElementById('categoryChart'), {
                 type: 'bar',
@@ -789,21 +959,16 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
+                    plugins: { legend: { display: false } },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            ticks: {
-                                callback: value => '$' + (value / 1000) + 'K'
-                            }
+                            ticks: { callback: value => '$' + (value / 1000) + 'K' }
                         }
                     }
                 }
             });
 
-            // Merit Distribution Chart
             const meritRanges = getMeritDistribution();
             charts.merit = new Chart(document.getElementById('meritChart'), {
                 type: 'bar',
@@ -818,19 +983,11 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { stepSize: 1 }
-                        }
-                    }
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
                 }
             });
 
-            // Headcount by Category
             charts.headcount = new Chart(document.getElementById('headcountChart'), {
                 type: 'doughnut',
                 data: {
@@ -843,15 +1000,10 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'right'
-                        }
-                    }
+                    plugins: { legend: { position: 'right' } }
                 }
             });
 
-            // Bonus % by Category
             charts.bonus = new Chart(document.getElementById('bonusChart'), {
                 type: 'bar',
                 data: {
@@ -865,15 +1017,11 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
+                    plugins: { legend: { display: false } },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            ticks: {
-                                callback: value => value + '%'
-                            }
+                            ticks: { callback: value => value + '%' }
                         }
                     }
                 }
@@ -899,14 +1047,7 @@
         }
 
         function getMeritDistribution() {
-            const ranges = {
-                '0%': 0,
-                '1-5%': 0,
-                '5-10%': 0,
-                '10-15%': 0,
-                '15-20%': 0,
-                '20%+': 0
-            };
+            const ranges = { '0%': 0, '1-5%': 0, '5-10%': 0, '10-15%': 0, '15-20%': 0, '20%+': 0 };
 
             filteredData.forEach(s => {
                 if (s.meritPercent === 0) ranges['0%']++;
@@ -924,21 +1065,17 @@
             const categoryData = getDataByCategory();
             const meritRanges = getMeritDistribution();
 
-            // Update category chart
             charts.category.data.labels = Object.keys(categoryData);
             charts.category.data.datasets[0].data = Object.values(categoryData).map(d => d.totalComp);
             charts.category.update();
 
-            // Update merit chart
             charts.merit.data.datasets[0].data = Object.values(meritRanges);
             charts.merit.update();
 
-            // Update headcount chart
             charts.headcount.data.labels = Object.keys(categoryData);
             charts.headcount.data.datasets[0].data = Object.values(categoryData).map(d => d.count);
             charts.headcount.update();
 
-            // Update bonus chart
             charts.bonus.data.labels = Object.keys(categoryData);
             charts.bonus.data.datasets[0].data = Object.values(categoryData).map(d => d.avgBonus);
             charts.bonus.update();
@@ -954,23 +1091,14 @@
                 document.body.classList.remove('board-mode');
             }
 
-            // Trigger chart resize
             Object.values(charts).forEach(chart => chart.resize());
         }
 
         function exportCSV() {
             const headers = ['Name', 'Title', 'Manager', 'Category', 'Current Salary', 'Merit %', '2025 Salary', '2025 Bonus', 'Bonus %', 'Total Comp 2026'];
             const rows = filteredData.map(s => [
-                s.name,
-                s.title,
-                s.manager,
-                s.category,
-                s.currentSalary,
-                s.meritPercent,
-                s.salary2025,
-                s.bonus2025,
-                s.bonusPercent,
-                s.totalComp
+                s.name, s.title, s.manager, s.category, s.currentSalary,
+                s.meritPercent, s.salary2025, s.bonus2025, s.bonusPercent, s.totalComp
             ]);
 
             const csv = [headers, ...rows].map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
