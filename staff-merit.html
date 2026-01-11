@@ -639,9 +639,9 @@
                                 <th onclick="sortTable('title')">Title</th>
                                 <th onclick="sortTable('manager')">Manager</th>
                                 <th onclick="sortTable('category')">Category</th>
-                                <th onclick="sortTable('currentSalary')" class="money">Current Salary</th>
+                                <th onclick="sortTable('currentSalary')" class="money">2025 Salary</th>
                                 <th onclick="sortTable('meritPercent')" class="percent">Merit %</th>
-                                <th onclick="sortTable('salary2025')" class="money">2025 Salary</th>
+                                <th onclick="sortTable('proposedSalary')" class="money">2026 Salary</th>
                                 <th onclick="sortTable('bonus2025')" class="money">2025 Bonus</th>
                                 <th onclick="sortTable('bonusPercent')" class="percent">Bonus %</th>
                                 <th onclick="sortTable('totalComp')" class="money">Total Comp 2026</th>
@@ -704,51 +704,52 @@
         // ========================================
         // DASHBOARD DATA & LOGIC
         // ========================================
+        // Data: currentSalary = 2025 Salary, proposedSalary = 2026 Salary Rounded, meritPercent = % increase from 2025 to 2026
         const staffData = [
-            { name: "Christina DeVries", title: "COO", manager: "Cody", cSuite: "Board", category: "C-Suite", currentSalary: 260000, meritPercent: 15.38, salary2025: 300000, bonus2025: 0, bonusPercent: 0, totalComp: 303000, rating: null },
-            { name: "Cody Plofker", title: "CEO", manager: "Board", cSuite: "Board", category: "C-Suite", currentSalary: 260000, meritPercent: 15.38, salary2025: 300000, bonus2025: 0, bonusPercent: 0, totalComp: 303000, rating: null },
-            { name: "Aniseh Abukharma", title: "Director of Retail Operations", manager: "Juliet", cSuite: "Cody", category: "Director", currentSalary: 142000, meritPercent: 4.00, salary2025: 150000, bonus2025: 27206, bonusPercent: 18, totalComp: 182206, rating: 3 },
-            { name: "Erin Silverman", title: "Creative Director", manager: "Cody", cSuite: "Bobbi", category: "Director", currentSalary: 142000, meritPercent: 4.00, salary2025: 148000, bonus2025: 28915, bonusPercent: 20, totalComp: 188915, rating: 3 },
-            { name: "JT Kim", title: "Director of Logistics & Transportation", manager: "Matt", cSuite: "Chrissy", category: "Director", currentSalary: 130000, meritPercent: 7.69, salary2025: 140000, bonus2025: 27352, bonusPercent: 20, totalComp: 171352, rating: 3 },
-            { name: "Carly Steakin", title: "Marketing Operations Manager", manager: "Genevieve", cSuite: "Cody", category: "Manager", currentSalary: 73500, meritPercent: 18.37, salary2025: 87000, bonus2025: 12748, bonusPercent: 15, totalComp: 102748, rating: 3 },
-            { name: "Cheyenne Pellicoro", title: "Senior Manager Of Makeup Artistry and Education", manager: "Juliet", cSuite: "Bobbi", category: "Senior Manager", currentSalary: 102000, meritPercent: 27.00, salary2025: 125000, bonus2025: 18316, bonusPercent: 15, totalComp: 160316, rating: 3 },
-            { name: "Shane Duffy", title: "Information Systems Manager", manager: "Chrissy", cSuite: "Chrissy", category: "Manager", currentSalary: 86700, meritPercent: 6.00, salary2025: 92000, bonus2025: 12273, bonusPercent: 13, totalComp: 114273, rating: 3 },
-            { name: "Payal Patel", title: "Senior Director, Brand Marketing", manager: "Cody", cSuite: "Cody", category: "Senior Director", currentSalary: 173000, meritPercent: 6.94, salary2025: 185000, bonus2025: 45179, bonusPercent: 24, totalComp: 236179, rating: 3 },
-            { name: "Adrienne Haynes", title: "Product Development Manager", manager: "Nicole", cSuite: "Chrissy", category: "Manager", currentSalary: 80000, meritPercent: 12.50, salary2025: 90000, bonus2025: 13188, bonusPercent: 15, totalComp: 106188, rating: 3 },
-            { name: "Samantha Liegner", title: "Associate Manager Operations", manager: "Matt", cSuite: "Chrissy", category: "Below Manager", currentSalary: 70000, meritPercent: 11.43, salary2025: 78000, bonus2025: 7619, bonusPercent: 10, totalComp: 93619, rating: 3 },
-            { name: "Natalie Lopez", title: "Senior Director of Demand & Supply Planning", manager: "Chrissy", cSuite: "Chrissy", category: "Senior Director", currentSalary: 175000, meritPercent: 4.00, salary2025: 182000, bonus2025: 44447, bonusPercent: 24, totalComp: 231447, rating: 3 },
-            { name: "Kaitlyn Colucci", title: "Office Manager/HR Administrator", manager: "Bianca", cSuite: "Chrissy", category: "Below Manager", currentSalary: 66300, meritPercent: 5.58, salary2025: 70000, bonus2025: 8063, bonusPercent: 12, totalComp: 79063, rating: 2 },
-            { name: "Diana Horan", title: "Senior Graphic Designer", manager: "Erin", cSuite: "Cody", category: "Manager", currentSalary: 81600, meritPercent: 4.00, salary2025: 85000, bonus2025: 12455, bonusPercent: 15, totalComp: 100455, rating: 3 },
-            { name: "Alyssa Darlington", title: "Community Associate", manager: "Matt", cSuite: "Chrissy", category: "Below Manager", currentSalary: 59300, meritPercent: 3.00, salary2025: 61000, bonus2025: 5959, bonusPercent: 10, totalComp: 67959, rating: 2 },
-            { name: "Genevieve Outwater", title: "Sr. Manager, Marketing Ops", manager: "Payal", cSuite: "Cody", category: "Senior Manager", currentSalary: 110000, meritPercent: 9.00, salary2025: 120000, bonus2025: 17583, bonusPercent: 15, totalComp: 147583, rating: 3 },
-            { name: "Nicole Near", title: "Director of Product Development", manager: "Chrissy", cSuite: "Chrissy", category: "Director", currentSalary: 150000, meritPercent: 4.00, salary2025: 156000, bonus2025: 32662, bonusPercent: 21, totalComp: 197662, rating: 3 },
-            { name: "Emma Silverman", title: "Content Producer", manager: "Erin", cSuite: "Cody", category: "Manager", currentSalary: 75000, meritPercent: 6.50, salary2025: 80000, bonus2025: 11722, bonusPercent: 15, totalComp: 111722, rating: 3 },
-            { name: "Francesca Dygos", title: "Product Development Coordinator", manager: "Nicole", cSuite: "Chrissy", category: "Below Manager", currentSalary: 45760, meritPercent: 35.49, salary2025: 62000, bonus2025: 6056, bonusPercent: 10, totalComp: 70056, rating: 3 },
-            { name: "Dana Valencia", title: "Senior Director of QC and Regulatory Affairs", manager: "Chrissy", cSuite: "Chrissy", category: "Senior Director", currentSalary: 193800, meritPercent: 4.00, salary2025: 201500, bonus2025: 44801, bonusPercent: 22, totalComp: 252801, rating: 3 },
-            { name: "Ersa Qymyri", title: "Manager of Demand & Supply Planning", manager: "Natalie", cSuite: "Chrissy", category: "Manager", currentSalary: 86700, meritPercent: 10.50, salary2025: 96000, bonus2025: 14067, bonusPercent: 15, totalComp: 113067, rating: 3 },
-            { name: "Kaitlyn Quintavalle", title: "CX Shade Matching Associate", manager: "Matt", cSuite: "Chrissy", category: "Below Manager", currentSalary: 56160, meritPercent: 5.00, salary2025: 56160, bonus2025: 5486, bonusPercent: 10, totalComp: 64486, rating: 3 },
-            { name: "Hyun Kim", title: "Procurement Manager", manager: "Matt", cSuite: "Chrissy", category: "Manager", currentSalary: 100000, meritPercent: 10.00, salary2025: 110000, bonus2025: 18043, bonusPercent: 16, totalComp: 138043, rating: 4 },
-            { name: "Cecily Lentz", title: "Benefits & Payroll Administrator", manager: "Bianca", cSuite: "C Suite", category: "Manager", currentSalary: 72000, meritPercent: 3.00, salary2025: 74200, bonus2025: 10872, bonusPercent: 15, totalComp: 86872, rating: 3 },
-            { name: "Joanne Freeman", title: "AP Staff Accountant", manager: "Bianca", cSuite: "C Suite", category: "Below Manager", currentSalary: 67500, meritPercent: 12.50, salary2025: 76000, bonus2025: 6094, bonusPercent: 8, totalComp: 84094, rating: 2 },
-            { name: "Emily Wouters", title: "CX Makeup Artist", manager: "Matt", cSuite: "Chrissy", category: "Below Manager", currentSalary: 29120, meritPercent: 0.00, salary2025: 29120, bonus2025: 2912, bonusPercent: 10, totalComp: 31912, rating: 3 },
-            { name: "Gianna Glover", title: "Second Assistant to Founder", manager: "Bobbi", cSuite: "Bobbi", category: "Below Manager", currentSalary: 55000, meritPercent: 12.50, salary2025: 62000, bonus2025: 6200, bonusPercent: 10, totalComp: 76200, rating: 4 },
-            { name: "Courtney Edwards", title: "Executive Assistant to Founder", manager: "Bobbi", cSuite: "Bobbi", category: "Director", currentSalary: 125000, meritPercent: 4.00, salary2025: 130000, bonus2025: 26000, bonusPercent: 20, totalComp: 159000, rating: 2 },
-            { name: "Matthew Jadro", title: "Sr. Director of Supply Chain & CX", manager: "Chrissy", cSuite: "Chrissy", category: "Senior Director", currentSalary: 190000, meritPercent: 4.00, salary2025: 198000, bonus2025: 48354, bonusPercent: 24, totalComp: 252354, rating: 3 },
-            { name: "Katie Neglia", title: "Director of Packaging", manager: "Nicole", cSuite: "Chrissy", category: "Director", currentSalary: 140000, meritPercent: 7.14, salary2025: 150000, bonus2025: 31406, bonusPercent: 21, totalComp: 191406, rating: 3 },
-            { name: "Charlotte Newman", title: "Assistant to CMRO & Social Media Coordinator", manager: "Cody", cSuite: "Cody", category: "Manager", currentSalary: 68000, meritPercent: 5.80, salary2025: 78000, bonus2025: 4889, bonusPercent: 6, totalComp: 84889, rating: 2 },
-            { name: "Bianca Polycarpe", title: "Chief of Staff", manager: "C Suite", cSuite: "C Suite", category: "Director", currentSalary: 175000, meritPercent: 4.00, salary2025: 182000, bonus2025: 35557, bonusPercent: 20, totalComp: 222557, rating: 3 },
-            { name: "Samantha Kapalin", title: "CX/Shade Matching Associate", manager: "Matt", cSuite: "Chrissy", category: "Below Manager", currentSalary: 58000, meritPercent: 4.00, salary2025: 60500, bonus2025: 5910, bonusPercent: 10, totalComp: 67910, rating: 3 },
-            { name: "Eliot Malone", title: "Senior Accountant", manager: "Bianca", cSuite: "C Suite", category: "Manager", currentSalary: 90000, meritPercent: 3.00, salary2025: 92500, bonus2025: 15361, bonusPercent: 17, totalComp: 110361, rating: 3 },
-            { name: "Ben Rosenwald", title: "Sr. Manager, Data", manager: "Bianca", cSuite: "Cody", category: "Senior Manager", currentSalary: 140000, meritPercent: 3.00, salary2025: 143000, bonus2025: 27938, bonusPercent: 20, totalComp: 183938, rating: 4 },
-            { name: "Paul Acquaviva", title: "Supply Chain Coordinator", manager: "Samantha L.", cSuite: "Chrissy", category: "Below Manager", currentSalary: 60000, meritPercent: 0.00, salary2025: 60000, bonus2025: 5861, bonusPercent: 10, totalComp: 67861, rating: 3 },
-            { name: "Whitney Blau", title: "Director of Retention", manager: "Cody", cSuite: "Cody", category: "Director", currentSalary: 155000, meritPercent: 3.00, salary2025: 170000, bonus2025: 41516, bonusPercent: 24, totalComp: 237516, rating: 4 },
-            { name: "Cameron Falco", title: "Video Editor", manager: "Erin", cSuite: "Cody", category: "Below Manager", currentSalary: 75000, meritPercent: 2.50, salary2025: 77000, bonus2025: 7522, bonusPercent: 10, totalComp: 86522, rating: 3 },
-            { name: "Joseph Dioslaki", title: "Jr. Content Producer & Editor", manager: "Erin", cSuite: "Cody", category: "Below Manager", currentSalary: 65000, meritPercent: 2.00, salary2025: 66500, bonus2025: 4169, bonusPercent: 6, totalComp: 72169, rating: 2 },
-            { name: "Samantha O'Hara", title: "Sr. Copywriter", manager: "Payal", cSuite: "Cody", category: "Manager", currentSalary: 85000, meritPercent: 0.00, salary2025: 85000, bonus2025: 10967, bonusPercent: 13, totalComp: 98967, rating: 3 },
-            { name: "Juliet Baker", title: "VP Of Retail", manager: "Cody", cSuite: "Cody", category: "Vice President", currentSalary: 250000, meritPercent: 0.00, salary2025: 250000, bonus2025: 32783, bonusPercent: 13, totalComp: 290783, rating: 3 },
-            { name: "Amanda Aldecoa", title: "Regional Director, Retail", manager: "Juliet", cSuite: "Cody", category: "Director", currentSalary: 160000, meritPercent: 0.00, salary2025: 160000, bonus2025: 5769, bonusPercent: 4, totalComp: 168769, rating: 3 },
-            { name: "Sam Brady", title: "Growth Marketing Manager", manager: "Whitney", cSuite: "Cody", category: "Manager", currentSalary: 115000, meritPercent: 0.00, salary2025: 115000, bonus2025: 5055, bonusPercent: 4, totalComp: 134055, rating: 3 },
-            { name: "Ali Wilson", title: "Business Operations Assistant", manager: "Chrissy", cSuite: "Chrissy", category: "Below Manager", currentSalary: 55000, meritPercent: 0.00, salary2025: 55000, bonus2025: 1719, bonusPercent: 3, totalComp: 57719, rating: null }
+            { name: "Christina DeVries", title: "COO", manager: "Cody", cSuite: "Board", category: "C-Suite", currentSalary: 300000, meritPercent: 1.0, proposedSalary: 303000, bonus2025: 0, bonusPercent: 0, totalComp: 303000, rating: null },
+            { name: "Cody Plofker", title: "CEO", manager: "Board", cSuite: "Board", category: "C-Suite", currentSalary: 300000, meritPercent: 1.0, proposedSalary: 303000, bonus2025: 0, bonusPercent: 0, totalComp: 303000, rating: null },
+            { name: "Aniseh Abukharma", title: "Director of Retail Operations", manager: "Juliet", cSuite: "Cody", category: "Director", currentSalary: 150000, meritPercent: 3.3, proposedSalary: 155000, bonus2025: 27206, bonusPercent: 18, totalComp: 182206, rating: 3 },
+            { name: "Erin Silverman", title: "Creative Director", manager: "Cody", cSuite: "Bobbi", category: "Director", currentSalary: 148000, meritPercent: 8.1, proposedSalary: 160000, bonus2025: 28915, bonusPercent: 20, totalComp: 188915, rating: 3 },
+            { name: "JT Kim", title: "Director of Logistics & Transportation", manager: "Matt", cSuite: "Chrissy", category: "Director", currentSalary: 140000, meritPercent: 2.9, proposedSalary: 144000, bonus2025: 27352, bonusPercent: 20, totalComp: 171352, rating: 3 },
+            { name: "Carly Steakin", title: "Marketing Operations Manager", manager: "Genevieve", cSuite: "Cody", category: "Manager", currentSalary: 87000, meritPercent: 3.4, proposedSalary: 90000, bonus2025: 12748, bonusPercent: 15, totalComp: 102748, rating: 3 },
+            { name: "Cheyenne Pellicoro", title: "Senior Manager Of Makeup Artistry and Education", manager: "Juliet", cSuite: "Bobbi", category: "Senior Manager", currentSalary: 125000, meritPercent: 13.6, proposedSalary: 142000, bonus2025: 18316, bonusPercent: 15, totalComp: 160316, rating: 3 },
+            { name: "Shane Duffy", title: "Information Systems Manager", manager: "Chrissy", cSuite: "Chrissy", category: "Manager", currentSalary: 92000, meritPercent: 10.9, proposedSalary: 102000, bonus2025: 12273, bonusPercent: 13, totalComp: 114273, rating: 3 },
+            { name: "Payal Patel", title: "Senior Director, Brand Marketing", manager: "Cody", cSuite: "Cody", category: "Senior Director", currentSalary: 185000, meritPercent: 3.2, proposedSalary: 191000, bonus2025: 45179, bonusPercent: 24, totalComp: 236179, rating: 3 },
+            { name: "Adrienne Haynes", title: "Product Development Manager", manager: "Nicole", cSuite: "Chrissy", category: "Manager", currentSalary: 90000, meritPercent: 3.3, proposedSalary: 93000, bonus2025: 13188, bonusPercent: 15, totalComp: 106188, rating: 3 },
+            { name: "Samantha Liegner", title: "Associate Manager Operations", manager: "Matt", cSuite: "Chrissy", category: "Below Manager", currentSalary: 78000, meritPercent: 10.3, proposedSalary: 86000, bonus2025: 7619, bonusPercent: 10, totalComp: 93619, rating: 3 },
+            { name: "Natalie Lopez", title: "Senior Director of Demand & Supply Planning", manager: "Chrissy", cSuite: "Chrissy", category: "Senior Director", currentSalary: 182000, meritPercent: 2.7, proposedSalary: 187000, bonus2025: 44447, bonusPercent: 24, totalComp: 231447, rating: 3 },
+            { name: "Kaitlyn Colucci", title: "Office Manager/HR Administrator", manager: "Bianca", cSuite: "Chrissy", category: "Below Manager", currentSalary: 70000, meritPercent: 1.4, proposedSalary: 71000, bonus2025: 8063, bonusPercent: 12, totalComp: 79063, rating: 2 },
+            { name: "Diana Horan", title: "Senior Graphic Designer", manager: "Erin", cSuite: "Cody", category: "Manager", currentSalary: 85000, meritPercent: 3.5, proposedSalary: 88000, bonus2025: 12455, bonusPercent: 15, totalComp: 100455, rating: 3 },
+            { name: "Alyssa Darlington", title: "Community Associate", manager: "Matt", cSuite: "Chrissy", category: "Below Manager", currentSalary: 61000, meritPercent: 1.6, proposedSalary: 62000, bonus2025: 5959, bonusPercent: 10, totalComp: 67959, rating: 2 },
+            { name: "Genevieve Outwater", title: "Sr. Manager, Marketing Ops", manager: "Payal", cSuite: "Cody", category: "Senior Manager", currentSalary: 120000, meritPercent: 8.3, proposedSalary: 130000, bonus2025: 17583, bonusPercent: 15, totalComp: 147583, rating: 3 },
+            { name: "Nicole Near", title: "Director of Product Development", manager: "Chrissy", cSuite: "Chrissy", category: "Director", currentSalary: 156000, meritPercent: 5.8, proposedSalary: 165000, bonus2025: 32662, bonusPercent: 21, totalComp: 197662, rating: 3 },
+            { name: "Emma Silverman", title: "Content Producer", manager: "Erin", cSuite: "Cody", category: "Manager", currentSalary: 80000, meritPercent: 25.0, proposedSalary: 100000, bonus2025: 11722, bonusPercent: 15, totalComp: 111722, rating: 3 },
+            { name: "Francesca Dygos", title: "Product Development Coordinator", manager: "Nicole", cSuite: "Chrissy", category: "Below Manager", currentSalary: 62000, meritPercent: 3.2, proposedSalary: 64000, bonus2025: 6056, bonusPercent: 10, totalComp: 70056, rating: 3 },
+            { name: "Dana Valencia", title: "Senior Director of QC and Regulatory Affairs", manager: "Chrissy", cSuite: "Chrissy", category: "Senior Director", currentSalary: 201500, meritPercent: 3.2, proposedSalary: 208000, bonus2025: 44801, bonusPercent: 22, totalComp: 252801, rating: 3 },
+            { name: "Ersa Qymyri", title: "Manager of Demand & Supply Planning", manager: "Natalie", cSuite: "Chrissy", category: "Manager", currentSalary: 96000, meritPercent: 3.1, proposedSalary: 99000, bonus2025: 14067, bonusPercent: 15, totalComp: 113067, rating: 3 },
+            { name: "Kaitlyn Quintavalle", title: "CX Shade Matching Associate", manager: "Matt", cSuite: "Chrissy", category: "Below Manager", currentSalary: 56160, meritPercent: 5.1, proposedSalary: 59000, bonus2025: 5486, bonusPercent: 10, totalComp: 64486, rating: 3 },
+            { name: "Hyun Kim", title: "Procurement Manager", manager: "Matt", cSuite: "Chrissy", category: "Manager", currentSalary: 110000, meritPercent: 9.1, proposedSalary: 120000, bonus2025: 18043, bonusPercent: 16, totalComp: 138043, rating: 4 },
+            { name: "Cecily Lentz", title: "Benefits & Payroll Administrator", manager: "Bianca", cSuite: "C Suite", category: "Manager", currentSalary: 74200, meritPercent: 2.4, proposedSalary: 76000, bonus2025: 10872, bonusPercent: 15, totalComp: 86872, rating: 3 },
+            { name: "Joanne Freeman", title: "AP Staff Accountant", manager: "Bianca", cSuite: "C Suite", category: "Below Manager", currentSalary: 76000, meritPercent: 2.6, proposedSalary: 78000, bonus2025: 6094, bonusPercent: 8, totalComp: 84094, rating: 2 },
+            { name: "Emily Wouters", title: "CX Makeup Artist", manager: "Matt", cSuite: "Chrissy", category: "Below Manager", currentSalary: 29120, meritPercent: 0.0, proposedSalary: 29000, bonus2025: 2912, bonusPercent: 10, totalComp: 31912, rating: 3 },
+            { name: "Gianna Glover", title: "Second Assistant to Founder", manager: "Bobbi", cSuite: "Bobbi", category: "Below Manager", currentSalary: 62000, meritPercent: 12.9, proposedSalary: 70000, bonus2025: 6200, bonusPercent: 10, totalComp: 76200, rating: 4 },
+            { name: "Courtney Edwards", title: "Executive Assistant to Founder", manager: "Bobbi", cSuite: "Bobbi", category: "Director", currentSalary: 130000, meritPercent: 2.3, proposedSalary: 133000, bonus2025: 26000, bonusPercent: 20, totalComp: 159000, rating: 2 },
+            { name: "Matthew Jadro", title: "Sr. Director of Supply Chain & CX", manager: "Chrissy", cSuite: "Chrissy", category: "Senior Director", currentSalary: 198000, meritPercent: 3.0, proposedSalary: 204000, bonus2025: 48354, bonusPercent: 24, totalComp: 252354, rating: 3 },
+            { name: "Katie Neglia", title: "Director of Packaging", manager: "Nicole", cSuite: "Chrissy", category: "Director", currentSalary: 150000, meritPercent: 6.7, proposedSalary: 160000, bonus2025: 31406, bonusPercent: 21, totalComp: 191406, rating: 3 },
+            { name: "Charlotte Newman", title: "Assistant to CMRO & Social Media Coordinator", manager: "Cody", cSuite: "Cody", category: "Manager", currentSalary: 78000, meritPercent: 2.6, proposedSalary: 80000, bonus2025: 4889, bonusPercent: 6, totalComp: 84889, rating: 2 },
+            { name: "Bianca Polycarpe", title: "Chief of Staff", manager: "C Suite", cSuite: "C Suite", category: "Director", currentSalary: 182000, meritPercent: 2.7, proposedSalary: 187000, bonus2025: 35557, bonusPercent: 20, totalComp: 222557, rating: 3 },
+            { name: "Samantha Kapalin", title: "CX/Shade Matching Associate", manager: "Matt", cSuite: "Chrissy", category: "Below Manager", currentSalary: 60500, meritPercent: 2.5, proposedSalary: 62000, bonus2025: 5910, bonusPercent: 10, totalComp: 67910, rating: 3 },
+            { name: "Eliot Malone", title: "Senior Accountant", manager: "Bianca", cSuite: "C Suite", category: "Manager", currentSalary: 92500, meritPercent: 2.7, proposedSalary: 95000, bonus2025: 15361, bonusPercent: 17, totalComp: 110361, rating: 3 },
+            { name: "Ben Rosenwald", title: "Sr. Manager, Data", manager: "Bianca", cSuite: "Cody", category: "Senior Manager", currentSalary: 143000, meritPercent: 9.1, proposedSalary: 156000, bonus2025: 27938, bonusPercent: 20, totalComp: 183938, rating: 4 },
+            { name: "Paul Acquaviva", title: "Supply Chain Coordinator", manager: "Samantha L.", cSuite: "Chrissy", category: "Below Manager", currentSalary: 60000, meritPercent: 3.3, proposedSalary: 62000, bonus2025: 5861, bonusPercent: 10, totalComp: 67861, rating: 3 },
+            { name: "Whitney Blau", title: "Director of Retention", manager: "Cody", cSuite: "Cody", category: "Director", currentSalary: 170000, meritPercent: 15.3, proposedSalary: 196000, bonus2025: 41516, bonusPercent: 24, totalComp: 237516, rating: 4 },
+            { name: "Cameron Falco", title: "Video Editor", manager: "Erin", cSuite: "Cody", category: "Below Manager", currentSalary: 77000, meritPercent: 2.6, proposedSalary: 79000, bonus2025: 7522, bonusPercent: 10, totalComp: 86522, rating: 3 },
+            { name: "Joseph Dioslaki", title: "Jr. Content Producer & Editor", manager: "Erin", cSuite: "Cody", category: "Below Manager", currentSalary: 66500, meritPercent: 2.3, proposedSalary: 68000, bonus2025: 4169, bonusPercent: 6, totalComp: 72169, rating: 2 },
+            { name: "Samantha O'Hara", title: "Sr. Copywriter", manager: "Payal", cSuite: "Cody", category: "Manager", currentSalary: 85000, meritPercent: 3.5, proposedSalary: 88000, bonus2025: 10967, bonusPercent: 13, totalComp: 98967, rating: 3 },
+            { name: "Juliet Baker", title: "VP Of Retail", manager: "Cody", cSuite: "Cody", category: "Vice President", currentSalary: 250000, meritPercent: 3.2, proposedSalary: 258000, bonus2025: 32783, bonusPercent: 13, totalComp: 290783, rating: 3 },
+            { name: "Amanda Aldecoa", title: "Regional Director, Retail", manager: "Juliet", cSuite: "Cody", category: "Director", currentSalary: 160000, meritPercent: 1.9, proposedSalary: 163000, bonus2025: 5769, bonusPercent: 4, totalComp: 168769, rating: 3 },
+            { name: "Sam Brady", title: "Growth Marketing Manager", manager: "Whitney", cSuite: "Cody", category: "Manager", currentSalary: 115000, meritPercent: 12.2, proposedSalary: 129000, bonus2025: 5055, bonusPercent: 4, totalComp: 134055, rating: 3 },
+            { name: "Ali Wilson", title: "Business Operations Assistant", manager: "Chrissy", cSuite: "Chrissy", category: "Below Manager", currentSalary: 55000, meritPercent: 1.8, proposedSalary: 56000, bonus2025: 1719, bonusPercent: 3, totalComp: 57719, rating: null }
         ];
 
         let filteredData = [...staffData];
@@ -831,12 +832,12 @@
         function updateSummary() {
             const totalHeadcount = filteredData.length;
             const totalCurrentSalary = filteredData.reduce((sum, s) => sum + s.currentSalary, 0);
-            const total2025Salary = filteredData.reduce((sum, s) => sum + s.salary2025, 0);
+            const totalProposedSalary = filteredData.reduce((sum, s) => sum + s.proposedSalary, 0);
             const totalBonus = filteredData.reduce((sum, s) => sum + s.bonus2025, 0);
             const totalComp = filteredData.reduce((sum, s) => sum + s.totalComp, 0);
             const avgMerit = filteredData.length > 0 ? (filteredData.reduce((sum, s) => sum + s.meritPercent, 0) / filteredData.length) : 0;
             const avgBonus = filteredData.length > 0 ? (filteredData.reduce((sum, s) => sum + s.bonusPercent, 0) / filteredData.length) : 0;
-            const meritIncrease = total2025Salary - totalCurrentSalary;
+            const meritIncrease = totalProposedSalary - totalCurrentSalary;
 
             document.getElementById('summaryGrid').innerHTML = `
                 <div class="summary-card">
@@ -845,13 +846,13 @@
                     <div class="subvalue">Full-time employees</div>
                 </div>
                 <div class="summary-card">
-                    <h3>Current Salary Total</h3>
+                    <h3>2025 Salary Total</h3>
                     <div class="value">${formatMoney(totalCurrentSalary)}</div>
-                    <div class="subvalue">Base salaries</div>
+                    <div class="subvalue">Current base salaries</div>
                 </div>
                 <div class="summary-card">
-                    <h3>2025 Salary Total</h3>
-                    <div class="value">${formatMoney(total2025Salary)}</div>
+                    <h3>2026 Salary Total</h3>
+                    <div class="value">${formatMoney(totalProposedSalary)}</div>
                     <div class="subvalue positive">+${formatMoney(meritIncrease)} merit</div>
                 </div>
                 <div class="summary-card">
@@ -926,7 +927,7 @@
                     <td><span class="category-badge ${getCategoryClass(s.category)}">${s.category}</span></td>
                     <td class="money">${formatMoney(s.currentSalary)}</td>
                     <td class="percent ${s.meritPercent > 0 ? 'positive' : ''}">${s.meritPercent.toFixed(1)}%</td>
-                    <td class="money">${formatMoney(s.salary2025)}</td>
+                    <td class="money">${formatMoney(s.proposedSalary)}</td>
                     <td class="money">${formatMoney(s.bonus2025)}</td>
                     <td class="percent">${s.bonusPercent}%</td>
                     <td class="money"><strong>${formatMoney(s.totalComp)}</strong></td>
