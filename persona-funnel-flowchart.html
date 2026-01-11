@@ -978,19 +978,25 @@
         }
 
         function selectPath(color) {
-            // Hide all results
+            const result = document.getElementById('result-' + color);
+            const paths = document.querySelectorAll('.decision-path');
+            const colorIndex = color === 'green' ? 0 : color === 'amber' ? 1 : 2;
+            const clickedPath = paths[colorIndex];
+
+            // If clicking the same one that's already open, close it
+            if (clickedPath.classList.contains('selected')) {
+                result.classList.remove('active');
+                clickedPath.classList.remove('selected');
+                return;
+            }
+
+            // Hide all results and remove selected state
             document.querySelectorAll('.decision-result').forEach(r => r.classList.remove('active'));
-            // Remove selected from all paths
             document.querySelectorAll('.decision-path').forEach(p => p.classList.remove('selected'));
 
             // Show selected result
-            const result = document.getElementById('result-' + color);
             result.classList.add('active');
-
-            // Mark selected path
-            const paths = document.querySelectorAll('.decision-path');
-            const colorIndex = color === 'green' ? 0 : color === 'amber' ? 1 : 2;
-            paths[colorIndex].classList.add('selected');
+            clickedPath.classList.add('selected');
         }
     </script>
 </body>
