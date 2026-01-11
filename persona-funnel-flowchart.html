@@ -31,67 +31,43 @@
             min-height: 100vh;
         }
 
-        /* Header */
-        .header {
-            background: var(--navy);
-            color: #fff;
-            text-align: center;
-            padding: 12px;
-            font-size: 13px;
-            letter-spacing: 0.5px;
-        }
-
-        .nav {
-            background: #fff;
-            border-bottom: 1px solid #e5e5e5;
-            padding: 20px 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .logo {
-            font-family: 'Cormorant Garamond', Georgia, serif;
-            font-size: 28px;
-            font-weight: 500;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-        }
-
-        /* Controls Bar */
-        .controls-bar {
-            position: sticky;
-            top: 0;
+        /* Floating Controls */
+        .controls-float {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
             z-index: 100;
             background: #fff;
-            border-bottom: 1px solid #e5e5e5;
-            padding: 10px 20px;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            padding: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             display: flex;
-            justify-content: center;
-            gap: 20px;
-            align-items: center;
+            flex-direction: column;
+            gap: 8px;
         }
 
         .control-group {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .control-group label {
-            font-size: 11px;
+            font-size: 9px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             color: var(--text-light);
+            min-width: 40px;
         }
 
         .control-btn {
             background: var(--cream);
             border: 1px solid #ddd;
-            padding: 6px 12px;
-            border-radius: 4px;
+            padding: 4px 8px;
+            border-radius: 3px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 10px;
             transition: all 0.2s;
         }
 
@@ -106,16 +82,16 @@
         }
 
         .zoom-display {
-            font-size: 12px;
-            min-width: 40px;
+            font-size: 10px;
+            min-width: 30px;
             text-align: center;
         }
 
         /* Main Container */
         .container {
-            max-width: 100%;
+            max-width: 900px;
             margin: 0 auto;
-            padding: 30px 20px;
+            padding: 20px;
             overflow-x: auto;
         }
 
@@ -180,8 +156,8 @@
         /* Phase */
         .phase {
             width: 100%;
-            max-width: 700px;
-            margin-bottom: 8px;
+            max-width: 600px;
+            margin-bottom: 6px;
         }
 
         .phase-label {
@@ -391,9 +367,9 @@
         /* Decision Flowchart */
         .decision-flowchart {
             display: none;
-            gap: 8px;
+            gap: 6px;
             width: 100%;
-            max-width: 700px;
+            max-width: 600px;
             margin: 0 auto;
         }
 
@@ -655,46 +631,6 @@
             margin: 0;
         }
 
-        /* Team Legend */
-        .team-legend {
-            position: fixed;
-            bottom: 24px;
-            left: 24px;
-            background: #fff;
-            border: 1px solid #e5e5e5;
-            border-radius: 4px;
-            padding: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        }
-
-        .team-legend h4 {
-            font-size: 10px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-light);
-            margin-bottom: 12px;
-        }
-
-        .team-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 13px;
-            margin: 8px 0;
-        }
-
-        .team-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-        }
-
-        .team-dot.research { background: var(--navy); }
-        .team-dot.creative { background: var(--gold); }
-        .team-dot.paid { background: #4169E1; }
-        .team-dot.lifecycle { background: #7c3aed; }
-
         /* Notes Section */
         .notes-section {
             margin-top: 24px;
@@ -769,30 +705,6 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        Persona Funnel Validation & Scaling Framework
-    </div>
-
-    <nav class="nav">
-        <div class="logo">Jones Road</div>
-    </nav>
-
-    <!-- Controls Bar -->
-    <div class="controls-bar">
-        <div class="control-group">
-            <label>Zoom</label>
-            <button class="control-btn" onclick="adjustZoom(-0.1)">−</button>
-            <span class="zoom-display" id="zoom-level">100%</span>
-            <button class="control-btn" onclick="adjustZoom(0.1)">+</button>
-            <button class="control-btn" onclick="resetZoom()">Reset</button>
-        </div>
-        <div class="control-group">
-            <label>Layout</label>
-            <button class="control-btn active" id="btn-vertical" onclick="setLayout('vertical')">Vertical</button>
-            <button class="control-btn" id="btn-horizontal" onclick="setLayout('horizontal')">Horizontal</button>
-        </div>
-    </div>
-
     <div class="container">
         <div class="page-title">
             <h1>Persona Funnel Framework</h1>
@@ -1469,13 +1381,19 @@
         </div>
     </div>
 
-    <!-- Team Legend -->
-    <div class="team-legend">
-        <h4>Team</h4>
-        <div class="team-item"><span class="team-dot research"></span> Research</div>
-        <div class="team-item"><span class="team-dot creative"></span> Creative</div>
-        <div class="team-item"><span class="team-dot paid"></span> Paid Strategy</div>
-        <div class="team-item"><span class="team-dot lifecycle"></span> Lifecycle</div>
+    <!-- Floating Controls -->
+    <div class="controls-float">
+        <div class="control-group">
+            <label>Zoom</label>
+            <button class="control-btn" onclick="adjustZoom(-0.1)">−</button>
+            <span class="zoom-display" id="zoom-level">100%</span>
+            <button class="control-btn" onclick="adjustZoom(0.1)">+</button>
+        </div>
+        <div class="control-group">
+            <label>Layout</label>
+            <button class="control-btn active" id="btn-vertical" onclick="setLayout('vertical')">↕</button>
+            <button class="control-btn" id="btn-horizontal" onclick="setLayout('horizontal')">↔</button>
+        </div>
     </div>
 
     <script>
