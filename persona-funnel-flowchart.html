@@ -492,6 +492,64 @@
         .team-dot.paid { background: #4169E1; }
         .team-dot.lifecycle { background: #7c3aed; }
 
+        /* Notes Section */
+        .notes-section {
+            margin-top: 24px;
+            border-top: 1px solid #ddd;
+            padding-top: 16px;
+        }
+
+        .notes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px 0;
+        }
+
+        .notes-header h4 {
+            margin-bottom: 0;
+        }
+
+        .notes-toggle {
+            font-size: 18px;
+            color: var(--navy);
+            font-weight: 600;
+            transition: transform 0.3s;
+        }
+
+        .notes-section.open .notes-toggle {
+            transform: rotate(45deg);
+        }
+
+        .notes-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .notes-section.open .notes-content {
+            max-height: 300px;
+        }
+
+        .notes-content textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            margin-top: 12px;
+            background: #fff;
+        }
+
+        .notes-content textarea:focus {
+            outline: none;
+            border-color: var(--navy);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .container { padding: 40px 20px; }
@@ -545,19 +603,30 @@
                         </div>
                         <div class="detail-section">
                             <h4>End Output: 1-Pager / Persona Brief</h4>
-                            <div class="brief-tags">
-                                <span class="brief-tag">Who they are</span>
-                                <span class="brief-tag">Professions</span>
-                                <span class="brief-tag">Demographics</span>
-                                <span class="brief-tag">Psychographics</span>
-                                <span class="brief-tag">Key motivations and desires</span>
-                                <span class="brief-tag">Why our brand appeals</span>
-                                <span class="brief-tag">4-6 core value props/angles to test</span>
-                                <span class="brief-tag">Creator profiles this persona follows</span>
-                                <span class="brief-tag">Creators that fit this persona</span>
-                                <span class="brief-tag">Successful non-competitive ads</span>
-                                <span class="brief-tag">Golden nugget reviews</span>
-                                <span class="brief-tag">Sample customer profiles</span>
+                            <ul>
+                                <li>Who they are</li>
+                                <li>Professions</li>
+                                <li>Demographics</li>
+                                <li>Psychographics</li>
+                                <li>Key motivations and desires</li>
+                                <li>Why our brand appeals</li>
+                                <li>4-6 core value props/angles to test</li>
+                                <li>Creator profiles this persona follows</li>
+                                <li>Creators that fit this persona</li>
+                                <li>Successful non-competitive ads</li>
+                                <li>Golden nugget reviews</li>
+                                <li>Sample customer profiles</li>
+                            </ul>
+                        </div>
+
+                        <!-- Notes Section -->
+                        <div class="notes-section">
+                            <div class="notes-header" onclick="toggleNotes('research-notes')">
+                                <h4>Notes</h4>
+                                <span class="notes-toggle">+</span>
+                            </div>
+                            <div class="notes-content" id="research-notes">
+                                <textarea placeholder="Add your notes here..."></textarea>
                             </div>
                         </div>
                     </div>
@@ -821,6 +890,12 @@
 
             panel.classList.toggle('open');
             node.classList.toggle('expanded');
+        }
+
+        function toggleNotes(id) {
+            const notesContent = document.getElementById(id);
+            const notesSection = notesContent.parentElement;
+            notesSection.classList.toggle('open');
         }
     </script>
 </body>
