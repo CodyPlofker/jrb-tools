@@ -297,6 +297,20 @@
             background: #e0e0e0;
         }
 
+        .btn-primary {
+            background: #111;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #333;
+        }
+
+        .btn-success {
+            background: #16a34a;
+            color: #fff;
+        }
+
         /* Charts Section */
         .charts-grid {
             display: grid;
@@ -640,6 +654,7 @@
                 <button class="btn btn-secondary" onclick="resetToOriginal()">Reset to Original</button>
                 <button class="btn btn-secondary" onclick="exportCSV()">Export CSV</button>
                 <button class="btn btn-secondary" onclick="window.print()">Print / PDF</button>
+                <button class="btn btn-primary" onclick="copyBoardLink()" id="copyLinkBtn">Copy Board Link</button>
             </div>
 
             <!-- Data Table -->
@@ -1028,11 +1043,93 @@
             localStorage.setItem('jr_merit_modifications', JSON.stringify(modifications));
         }
 
-        // Load saved modifications from localStorage
+        // Encode current data to a compact URL-safe string
+        function encodeDataToUrl() {
+            // Create compact array: [id, meritPercent, bonusPercent, deptIndex]
+            const deptList = ['Marketing', 'Operations', 'Creative', 'Product', 'CX', 'Finance & HR', 'Retail', 'Executive', 'QC & Regulatory', 'Data', 'IT'];
+            const data = staffData.map(s => [
+                s.id,
+                Math.round(s.meritPercent * 10) / 10, // 1 decimal
+                s.bonusPercent,
+                deptList.indexOf(s.department)
+            ]);
+            const json = JSON.stringify(data);
+            return btoa(json); // base64 encode
+        }
+
+        // Decode URL data back to modifications
+        function decodeDataFromUrl(encoded) {
+            try {
+                const deptList = ['Marketing', 'Operations', 'Creative', 'Product', 'CX', 'Finance & HR', 'Retail', 'Executive', 'QC & Regulatory', 'Data', 'IT'];
+                const json = atob(encoded); // base64 decode
+                const data = JSON.parse(json);
+                const modifications = {};
+                data.forEach(([id, merit, bonus, deptIdx]) => {
+                    modifications[id] = {
+                        meritPercent: merit,
+                        bonusPercent: bonus,
+                        department: deptList[deptIdx] || 'Operations'
+                    };
+                });
+                return modifications;
+            } catch (e) {
+                console.error('Failed to decode URL data:', e);
+                return null;
+            }
+        }
+
+        // Copy shareable board link to clipboard
+        function copyBoardLink() {
+            const encoded = encodeDataToUrl();
+            const url = window.location.origin + window.location.pathname + '?data=' + encoded;
+
+            navigator.clipboard.writeText(url).then(() => {
+                const btn = document.getElementById('copyLinkBtn');
+                const originalText = btn.textContent;
+                btn.textContent = 'Link Copied!';
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-success');
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('btn-success');
+                    btn.classList.add('btn-primary');
+                }, 2000);
+            }).catch(err => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = url;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('Board link copied to clipboard!');
+            });
+        }
+
+        // Load saved modifications - URL params take priority over localStorage
         function loadSavedChanges() {
-            const saved = localStorage.getItem('jr_merit_modifications');
-            if (saved) {
-                const modifications = JSON.parse(saved);
+            let modifications = null;
+
+            // Check URL first (for board viewing)
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlData = urlParams.get('data');
+            if (urlData) {
+                modifications = decodeDataFromUrl(urlData);
+                if (modifications) {
+                    console.log('Loaded data from shared link');
+                }
+            }
+
+            // Fall back to localStorage
+            if (!modifications) {
+                const saved = localStorage.getItem('jr_merit_modifications');
+                if (saved) {
+                    modifications = JSON.parse(saved);
+                }
+            }
+
+            // Apply modifications if any
+            if (modifications) {
                 staffData.forEach(s => {
                     if (modifications[s.id]) {
                         if (modifications[s.id].meritPercent !== undefined) {
