@@ -311,6 +311,113 @@
             color: #fff;
         }
 
+        .btn-danger {
+            background: #dc2626;
+            color: #fff;
+            padding: 6px 10px;
+            font-size: 11px;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        /* Scenario Management */
+        .scenario-section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .scenario-section h2 {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-right: 10px;
+        }
+
+        .scenario-select {
+            padding: 10px 14px;
+            font-size: 14px;
+            font-family: 'DM Sans', sans-serif;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            min-width: 200px;
+        }
+
+        .scenario-select:focus {
+            outline: none;
+            border-color: #111;
+        }
+
+        .scenario-name-input {
+            padding: 10px 14px;
+            font-size: 14px;
+            font-family: 'DM Sans', sans-serif;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            width: 200px;
+        }
+
+        .scenario-name-input:focus {
+            outline: none;
+            border-color: #111;
+        }
+
+        /* Department Metrics Table */
+        .dept-metrics-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            margin-bottom: 30px;
+        }
+
+        .dept-metrics-card h3 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 20px;
+        }
+
+        .dept-metrics-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .dept-metrics-table th,
+        .dept-metrics-table td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .dept-metrics-table th {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #666;
+            font-weight: 600;
+            background: #fafafa;
+        }
+
+        .dept-metrics-table tr:hover {
+            background: #fafafa;
+        }
+
+        .dept-metrics-table .money,
+        .dept-metrics-table .percent {
+            font-family: 'Space Mono', monospace;
+            text-align: right;
+        }
+
         /* Charts Section */
         .charts-grid {
             display: grid;
@@ -589,6 +696,39 @@
                 <!-- Populated by JS -->
             </div>
 
+            <!-- Scenario Management -->
+            <div class="scenario-section">
+                <h2>Scenarios</h2>
+                <select id="scenarioSelect" class="scenario-select" onchange="loadScenario()">
+                    <option value="">-- Current Working Data --</option>
+                </select>
+                <input type="text" id="scenarioName" class="scenario-name-input" placeholder="New scenario name...">
+                <button class="btn btn-primary" onclick="saveScenario()">Save Scenario</button>
+                <button class="btn btn-danger" onclick="deleteScenario()" id="deleteScenarioBtn" style="display:none;">Delete</button>
+            </div>
+
+            <!-- Department Metrics -->
+            <div class="dept-metrics-card">
+                <h3>Department Metrics Summary</h3>
+                <div class="table-wrapper">
+                    <table class="dept-metrics-table">
+                        <thead>
+                            <tr>
+                                <th>Department</th>
+                                <th>Headcount</th>
+                                <th class="percent">Avg Merit %</th>
+                                <th class="percent">Avg Bonus %</th>
+                                <th class="money">Total Bonus $</th>
+                                <th class="money">Total Comp</th>
+                            </tr>
+                        </thead>
+                        <tbody id="deptMetricsBody">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <!-- Filters -->
             <div class="filters">
                 <h2>Filters</h2>
@@ -807,7 +947,9 @@
         function initializeDashboard() {
             loadSavedChanges(); // Load any saved modifications first
             populateFilters();
+            populateScenarios();
             updateSummary();
+            renderDeptMetrics();
             renderTable();
             initCharts();
         }
@@ -1041,6 +1183,139 @@
                 modifications[s.id] = { meritPercent: s.meritPercent, bonusPercent: s.bonusPercent, department: s.department };
             });
             localStorage.setItem('jr_merit_modifications', JSON.stringify(modifications));
+        }
+
+        // ========================================
+        // SCENARIO MANAGEMENT
+        // ========================================
+        function getScenarios() {
+            const saved = localStorage.getItem('jr_scenarios');
+            return saved ? JSON.parse(saved) : {};
+        }
+
+        function saveScenarios(scenarios) {
+            localStorage.setItem('jr_scenarios', JSON.stringify(scenarios));
+        }
+
+        function populateScenarios() {
+            const scenarios = getScenarios();
+            const select = document.getElementById('scenarioSelect');
+            // Keep the first option
+            select.innerHTML = '<option value="">-- Current Working Data --</option>';
+            Object.keys(scenarios).sort().forEach(name => {
+                select.innerHTML += `<option value="${name}">${name}</option>`;
+            });
+        }
+
+        function saveScenario() {
+            const nameInput = document.getElementById('scenarioName');
+            const name = nameInput.value.trim();
+
+            if (!name) {
+                alert('Please enter a scenario name');
+                nameInput.focus();
+                return;
+            }
+
+            const scenarios = getScenarios();
+
+            if (scenarios[name]) {
+                if (!confirm(`Scenario "${name}" already exists. Overwrite?`)) {
+                    return;
+                }
+            }
+
+            // Save current staff data state
+            const data = {};
+            staffData.forEach(s => {
+                data[s.id] = { meritPercent: s.meritPercent, bonusPercent: s.bonusPercent, department: s.department };
+            });
+
+            scenarios[name] = {
+                data: data,
+                savedAt: new Date().toISOString()
+            };
+
+            saveScenarios(scenarios);
+            populateScenarios();
+
+            // Select the newly saved scenario
+            document.getElementById('scenarioSelect').value = name;
+            document.getElementById('deleteScenarioBtn').style.display = 'inline-block';
+            nameInput.value = '';
+
+            alert(`Scenario "${name}" saved!`);
+        }
+
+        function loadScenario() {
+            const select = document.getElementById('scenarioSelect');
+            const name = select.value;
+            const deleteBtn = document.getElementById('deleteScenarioBtn');
+
+            if (!name) {
+                // Load current working data (from localStorage)
+                deleteBtn.style.display = 'none';
+                loadSavedChanges();
+                filteredData = [...staffData];
+                updateSummary();
+                renderDeptMetrics();
+                renderTable();
+                updateCharts();
+                return;
+            }
+
+            const scenarios = getScenarios();
+            if (!scenarios[name]) {
+                alert('Scenario not found');
+                return;
+            }
+
+            // Apply scenario data to staffData
+            const data = scenarios[name].data;
+            staffData.forEach(s => {
+                if (data[s.id]) {
+                    s.meritPercent = data[s.id].meritPercent;
+                    s.bonusPercent = data[s.id].bonusPercent;
+                    s.department = data[s.id].department;
+                }
+            });
+
+            filteredData = [...staffData];
+            deleteBtn.style.display = 'inline-block';
+
+            // Update everything
+            updateSummary();
+            renderDeptMetrics();
+            renderTable();
+            updateCharts();
+        }
+
+        function deleteScenario() {
+            const select = document.getElementById('scenarioSelect');
+            const name = select.value;
+
+            if (!name) {
+                return;
+            }
+
+            if (!confirm(`Delete scenario "${name}"?`)) {
+                return;
+            }
+
+            const scenarios = getScenarios();
+            delete scenarios[name];
+            saveScenarios(scenarios);
+
+            populateScenarios();
+            document.getElementById('deleteScenarioBtn').style.display = 'none';
+
+            // Reload current working data
+            loadSavedChanges();
+            filteredData = [...staffData];
+            updateSummary();
+            renderDeptMetrics();
+            renderTable();
+            updateCharts();
         }
 
         // Encode current data to a compact URL-safe string
@@ -1287,13 +1562,41 @@
             filteredData.forEach(s => {
                 const dept = s.department;
                 if (!data[dept]) {
-                    data[dept] = { count: 0, totalComp: 0, totalSalary: 0 };
+                    data[dept] = { count: 0, totalComp: 0, totalSalary: 0, totalMerit: 0, totalBonusPct: 0, totalBonusDollars: 0 };
                 }
                 data[dept].count++;
                 data[dept].totalComp += getTotalComp(s);
                 data[dept].totalSalary += getProposedSalary(s);
+                data[dept].totalMerit += s.meritPercent;
+                data[dept].totalBonusPct += s.bonusPercent;
+                data[dept].totalBonusDollars += getBonus(s);
+            });
+            // Calculate averages
+            Object.keys(data).forEach(dept => {
+                data[dept].avgMerit = data[dept].count > 0 ? data[dept].totalMerit / data[dept].count : 0;
+                data[dept].avgBonusPct = data[dept].count > 0 ? data[dept].totalBonusPct / data[dept].count : 0;
             });
             return data;
+        }
+
+        function renderDeptMetrics() {
+            const deptData = getDataByDepartment();
+            const sortedDepts = Object.keys(deptData).sort();
+
+            const tbody = document.getElementById('deptMetricsBody');
+            tbody.innerHTML = sortedDepts.map(dept => {
+                const d = deptData[dept];
+                return `
+                    <tr>
+                        <td><strong>${dept}</strong></td>
+                        <td>${d.count}</td>
+                        <td class="percent">${d.avgMerit.toFixed(1)}%</td>
+                        <td class="percent">${d.avgBonusPct.toFixed(0)}%</td>
+                        <td class="money">${formatMoney(d.totalBonusDollars)}</td>
+                        <td class="money">${formatMoney(d.totalComp)}</td>
+                    </tr>
+                `;
+            }).join('');
         }
 
         function getMeritDistribution() {
@@ -1330,6 +1633,9 @@
             charts.dept.data.labels = Object.keys(deptData);
             charts.dept.data.datasets[0].data = Object.values(deptData).map(d => d.totalComp);
             charts.dept.update();
+
+            // Also update department metrics table
+            renderDeptMetrics();
         }
 
         function exportCSV() {
