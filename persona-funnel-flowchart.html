@@ -307,6 +307,64 @@
             margin-top: 6px;
         }
 
+        /* Thresholds Summary */
+        .thresholds-summary {
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            padding: 20px 24px;
+            width: 100%;
+        }
+
+        .thresholds-summary h4 {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-light);
+            margin-bottom: 16px;
+        }
+
+        .threshold-items {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .threshold-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 3px;
+            font-size: 13px;
+        }
+
+        .threshold-item strong {
+            min-width: 100px;
+        }
+
+        .threshold-item.green {
+            background: rgba(45, 106, 79, 0.08);
+            border-left: 3px solid var(--green);
+        }
+
+        .threshold-item.green strong { color: var(--green); }
+
+        .threshold-item.amber {
+            background: rgba(181, 101, 29, 0.08);
+            border-left: 3px solid var(--amber);
+        }
+
+        .threshold-item.amber strong { color: var(--amber); }
+
+        .threshold-item.red {
+            background: rgba(155, 44, 44, 0.08);
+            border-left: 3px solid var(--red);
+        }
+
+        .threshold-item.red strong { color: var(--red); }
+
         /* Decision Section */
         .decision-node {
             background: #fff;
@@ -658,12 +716,15 @@
                 <div class="detail-panel" id="mvp-detail">
                     <div class="detail-inner">
                         <div class="detail-section" style="margin-bottom: 24px;">
-                            <h4>Goal</h4>
-                            <p style="font-size: 14px; line-height: 1.7; padding-left: 18px;">
-                                Launch enough assets to rule out execution as barrier to success while keeping initial cost low enough to not create risk.
-                            </p>
+                            <h4>Goals</h4>
+                            <ul>
+                                <li>Launch enough assets to rule out execution as barrier to success while keeping initial cost low enough to not create risk</li>
+                                <li>Test viability of persona with low risk</li>
+                                <li>Test value props and angles</li>
+                                <li>Generate learnings to be used for future phases</li>
+                            </ul>
                         </div>
-                        <div class="detail-section" style="margin-bottom: 24px;">
+                        <div class="detail-section">
                             <h4>Testing Parameters</h4>
                             <ul>
                                 <li>Launch a toolkit of 12-50 diversified statics</li>
@@ -671,14 +732,6 @@
                                 <li>Test 2-4 products per initial persona batch</li>
                                 <li>Direct traffic to generic landing page or PDP</li>
                                 <li>Launch one ad set per persona and product</li>
-                            </ul>
-                        </div>
-                        <div class="detail-section">
-                            <h4>Decision Thresholds (within 5-7 days)</h4>
-                            <ul>
-                                <li><strong style="color: var(--green);">Green Light:</strong> $2k/day on a concept at 0.8 ROAS or higher at 60% New Visit Rate</li>
-                                <li><strong style="color: var(--amber);">Yellow Light:</strong> $1k/day on a concept at 0.6 ROAS or higher at 50% New Visit Rate</li>
-                                <li><strong style="color: var(--red);">Red Light:</strong> Minimal spend on a concept or &lt;0.5 ROAS and/or &lt;40% New Visit Rate</li>
                             </ul>
                         </div>
 
@@ -720,6 +773,27 @@
                 <div class="node navy">
                     <div class="node-title">Analyze Results</div>
                     <div class="node-subtitle">Within 5-7 days</div>
+                </div>
+
+                <div class="connector short"></div>
+
+                <!-- Decision Thresholds Card -->
+                <div class="thresholds-summary">
+                    <h4>Decision Thresholds</h4>
+                    <div class="threshold-items">
+                        <div class="threshold-item green">
+                            <strong>Green Light</strong>
+                            <span>$2k/day at ≥0.8 ROAS, ≥60% New Visit Rate</span>
+                        </div>
+                        <div class="threshold-item amber">
+                            <strong>Yellow Light</strong>
+                            <span>$1k/day at ≥0.6 ROAS, ≥50% New Visit Rate</span>
+                        </div>
+                        <div class="threshold-item red">
+                            <strong>Red Light</strong>
+                            <span>Minimal spend or &lt;0.5 ROAS, &lt;40% New Visit Rate</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
