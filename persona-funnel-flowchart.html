@@ -307,207 +307,114 @@
             margin-top: 6px;
         }
 
-        /* Thresholds Summary */
-        .thresholds-summary {
-            background: #fff;
-            border: 1px solid #e5e5e5;
-            border-radius: 4px;
-            padding: 20px 24px;
+        /* Decision Flowchart */
+        .decision-flowchart {
+            display: flex;
+            gap: 20px;
             width: 100%;
-        }
-
-        .thresholds-summary h4 {
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--text-light);
-            margin-bottom: 16px;
-        }
-
-        .threshold-items {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .threshold-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 14px;
-            border-radius: 3px;
-            font-size: 13px;
-        }
-
-        .threshold-item strong {
-            min-width: 100px;
-        }
-
-        .threshold-item.green {
-            background: rgba(45, 106, 79, 0.08);
-            border-left: 3px solid var(--green);
-        }
-
-        .threshold-item.green strong { color: var(--green); }
-
-        .threshold-item.amber {
-            background: rgba(181, 101, 29, 0.08);
-            border-left: 3px solid var(--amber);
-        }
-
-        .threshold-item.amber strong { color: var(--amber); }
-
-        .threshold-item.red {
-            background: rgba(155, 44, 44, 0.08);
-            border-left: 3px solid var(--red);
-        }
-
-        .threshold-item.red strong { color: var(--red); }
-
-        /* Decision Section */
-        .decision-node {
-            background: #fff;
-            border: 2px solid var(--navy);
-            border-radius: 4px;
-            padding: 20px 32px;
-            text-align: center;
-            max-width: 320px;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
-        .decision-node .node-title {
-            margin-bottom: 0;
-        }
-
-        /* Branches */
-        .branch-section {
-            display: flex;
-            gap: 24px;
-            margin: 32px 0;
-            position: relative;
-        }
-
-        .branch-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 10%;
-            right: 10%;
-            height: 2px;
-            background: linear-gradient(90deg, var(--green), var(--amber), var(--red));
-        }
-
-        .branch {
+        .decision-path {
             flex: 1;
+            background: #fff;
+            border-radius: 6px;
+            padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-top: 32px;
+            overflow: hidden;
+            border: 1px solid #e5e5e5;
         }
 
-        .branch-label {
+        .path-header {
+            width: 100%;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+        }
+
+        .path-header.green { background: var(--green); }
+        .path-header.amber { background: var(--amber); }
+        .path-header.red { background: var(--red); }
+
+        .path-header h3 {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 20px;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .path-icon {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .path-if, .path-then {
+            width: 100%;
+            padding: 16px 20px;
+        }
+
+        .if-label, .then-label {
+            display: inline-block;
             font-size: 10px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            padding: 6px 14px;
-            border-radius: 2px;
-            margin-bottom: 16px;
-        }
-
-        .branch-label.green {
-            background: rgba(45, 106, 79, 0.1);
-            color: var(--green);
-        }
-
-        .branch-label.amber {
-            background: rgba(181, 101, 29, 0.1);
-            color: var(--amber);
-        }
-
-        .branch-label.red {
-            background: rgba(155, 44, 44, 0.1);
-            color: var(--red);
-        }
-
-        /* Threshold Card */
-        .threshold-card {
-            background: #fff;
-            border: 1px solid #e5e5e5;
-            border-radius: 4px;
-            padding: 16px 20px;
-            width: 100%;
-            text-align: left;
-            margin-bottom: 16px;
-        }
-
-        .threshold-card h5 {
-            font-size: 10px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
             color: var(--text-light);
             margin-bottom: 10px;
+            background: var(--cream-dark);
+            padding: 4px 10px;
+            border-radius: 3px;
         }
 
-        .threshold-card ul {
+        .path-if ul, .path-then ul {
             list-style: none;
             font-size: 13px;
+            margin: 0;
+            padding: 0;
         }
 
-        .threshold-card li {
-            padding: 4px 0;
+        .path-if li, .path-then li {
+            padding: 5px 0;
+            padding-left: 16px;
+            position: relative;
         }
 
-        .branch .connector {
-            height: 20px;
+        .path-if li::before, .path-then li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--navy);
         }
 
-        .branch .connector.green { background: var(--green); }
-        .branch .connector.amber { background: var(--amber); }
-        .branch .connector.red { background: var(--red); }
+        .path-arrow {
+            font-size: 24px;
+            font-weight: bold;
+            padding: 8px 0;
+        }
 
-        .branch .node {
+        .path-arrow.green { color: var(--green); }
+        .path-arrow.amber { color: var(--amber); }
+        .path-arrow.red { color: var(--red); }
+
+        .path-outcome {
             width: 100%;
-        }
-
-        /* Loop indicator */
-        .loop-indicator {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            color: var(--amber);
-            margin-top: 16px;
-        }
-
-        .loop-indicator svg {
-            width: 16px;
-            height: 16px;
-        }
-
-        /* End marker */
-        .end-marker {
-            width: 12px;
-            height: 12px;
-            background: var(--red);
-            border-radius: 50%;
-            margin-top: 16px;
-        }
-
-        /* Continue badge */
-        .continue-badge {
-            background: var(--navy);
-            color: #fff;
-            font-size: 10px;
+            padding: 14px 20px;
+            text-align: center;
+            font-size: 13px;
             font-weight: 600;
-            letter-spacing: 1px;
             text-transform: uppercase;
-            padding: 6px 14px;
-            border-radius: 2px;
-            margin-top: 16px;
+            letter-spacing: 1px;
+            color: #fff;
         }
+
+        .path-outcome.green { background: var(--green); }
+        .path-outcome.amber { background: var(--amber); }
+        .path-outcome.red { background: var(--red); }
 
         /* Phase 4 */
         .phase-4 {
@@ -775,154 +682,104 @@
                     <div class="node-subtitle">Within 5-7 days</div>
                 </div>
 
-                <div class="connector short"></div>
-
-                <!-- Decision Thresholds Card -->
-                <div class="thresholds-summary">
-                    <h4>Decision Thresholds</h4>
-                    <div class="threshold-items">
-                        <div class="threshold-item green">
-                            <strong>Green Light</strong>
-                            <span>$2k/day at ≥0.8 ROAS, ≥60% New Visit Rate</span>
-                        </div>
-                        <div class="threshold-item amber">
-                            <strong>Yellow Light</strong>
-                            <span>$1k/day at ≥0.6 ROAS, ≥50% New Visit Rate</span>
-                        </div>
-                        <div class="threshold-item red">
-                            <strong>Red Light</strong>
-                            <span>Minimal spend or &lt;0.5 ROAS, &lt;40% New Visit Rate</span>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <div class="connector"></div>
 
-            <!-- DECISION -->
-            <div class="decision-node">
-                <div class="node-title">Decision Point</div>
-                <div class="node-subtitle">Evaluate against thresholds</div>
-            </div>
+            <!-- PHASE 3: DECISION FLOWCHART -->
+            <div class="phase" style="max-width: 100%;">
+                <span class="phase-label">Phase 3 — Scale, Iterate, or Cut</span>
 
-            <!-- BRANCHES -->
-            <div class="branch-section">
-                <!-- GREEN -->
-                <div class="branch">
-                    <span class="branch-label green">Green Light</span>
-
-                    <div class="threshold-card">
-                        <h5>Thresholds</h5>
-                        <ul>
-                            <li><strong>$2k/day</strong> on concept</li>
-                            <li><strong>≥ 0.8 ROAS</strong></li>
-                            <li><strong>≥ 60%</strong> New Visit Rate</li>
-                        </ul>
-                    </div>
-
-                    <div class="connector short green"></div>
-
-                    <div class="node green" onclick="toggleDetail('scale')">
-                        <div class="node-title">Scale Winners</div>
-                        <span class="expand-icon">▼</span>
-                    </div>
-
-                    <div class="detail-panel" id="scale-detail" style="width: 100%;">
-                        <div class="detail-inner">
-                            <div class="detail-section">
-                                <h4>Scaling Actions</h4>
-                                <ul>
-                                    <li>Scale within ad set & campaigns</li>
-                                    <li>Produce 2nd batch of statics</li>
-                                    <li>Create sub-persona batches</li>
-                                    <li>Animate to GIFs/short videos</li>
-                                    <li>Test awareness levels</li>
-                                    <li>Test unique mechanisms</li>
-                                </ul>
-                            </div>
+                <div class="decision-flowchart">
+                    <!-- GREEN PATH -->
+                    <div class="decision-path green">
+                        <div class="path-header green">
+                            <span class="path-icon">✓</span>
+                            <h3>Green Light</h3>
+                        </div>
+                        <div class="path-if">
+                            <span class="if-label">IF</span>
+                            <ul>
+                                <li>$2k/day on concept</li>
+                                <li>≥ 0.8 ROAS</li>
+                                <li>≥ 60% New Visit Rate</li>
+                            </ul>
+                        </div>
+                        <div class="path-arrow green">↓</div>
+                        <div class="path-then">
+                            <span class="then-label">THEN</span>
+                            <ul>
+                                <li>Scale within ad set & campaigns</li>
+                                <li>Produce 2nd batch of statics</li>
+                                <li>Create sub-persona batches</li>
+                                <li>Animate to GIFs/short videos</li>
+                                <li>Test awareness levels</li>
+                            </ul>
+                        </div>
+                        <div class="path-arrow green">↓</div>
+                        <div class="path-outcome green">
+                            Continue to Phase 4
                         </div>
                     </div>
 
-                    <div class="continue-badge">Continue to Phase 4</div>
-                </div>
-
-                <!-- YELLOW -->
-                <div class="branch">
-                    <span class="branch-label amber">Yellow Light</span>
-
-                    <div class="threshold-card">
-                        <h5>Thresholds</h5>
-                        <ul>
-                            <li><strong>$1k/day</strong> on concept</li>
-                            <li><strong>≥ 0.6 ROAS</strong></li>
-                            <li><strong>≥ 50%</strong> New Visit Rate</li>
-                        </ul>
-                    </div>
-
-                    <div class="connector short amber"></div>
-
-                    <div class="node amber" onclick="toggleDetail('iterate')">
-                        <div class="node-title">Iterate</div>
-                        <span class="expand-icon">▼</span>
-                    </div>
-
-                    <div class="detail-panel" id="iterate-detail" style="width: 100%;">
-                        <div class="detail-inner">
-                            <div class="detail-section">
-                                <h4>Iteration Actions</h4>
-                                <ul>
-                                    <li>Refine angle/messaging</li>
-                                    <li>Test new creative formats</li>
-                                    <li>Adjust targeting</li>
-                                    <li>Consider sub-segments</li>
-                                </ul>
-                            </div>
+                    <!-- YELLOW PATH -->
+                    <div class="decision-path amber">
+                        <div class="path-header amber">
+                            <span class="path-icon">⟳</span>
+                            <h3>Yellow Light</h3>
+                        </div>
+                        <div class="path-if">
+                            <span class="if-label">IF</span>
+                            <ul>
+                                <li>$1k/day on concept</li>
+                                <li>≥ 0.6 ROAS</li>
+                                <li>≥ 50% New Visit Rate</li>
+                            </ul>
+                        </div>
+                        <div class="path-arrow amber">↓</div>
+                        <div class="path-then">
+                            <span class="then-label">THEN</span>
+                            <ul>
+                                <li>Refine angle/messaging</li>
+                                <li>Test new creative formats</li>
+                                <li>Adjust targeting</li>
+                                <li>Consider sub-segments</li>
+                            </ul>
+                        </div>
+                        <div class="path-arrow amber">↓</div>
+                        <div class="path-outcome amber">
+                            ↻ Back to Phase 2
                         </div>
                     </div>
 
-                    <div class="loop-indicator">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M1 4v6h6M23 20v-6h-6"/>
-                            <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
-                        </svg>
-                        Back to Phase 2
-                    </div>
-                </div>
-
-                <!-- RED -->
-                <div class="branch">
-                    <span class="branch-label red">Red Light</span>
-
-                    <div class="threshold-card">
-                        <h5>Thresholds</h5>
-                        <ul>
-                            <li>Minimal spend</li>
-                            <li><strong>< 0.5 ROAS</strong></li>
-                            <li><strong>< 40%</strong> New Visit Rate</li>
-                        </ul>
-                    </div>
-
-                    <div class="connector short red"></div>
-
-                    <div class="node red" onclick="toggleDetail('cut')">
-                        <div class="node-title">Cut Losses</div>
-                        <span class="expand-icon">▼</span>
-                    </div>
-
-                    <div class="detail-panel" id="cut-detail" style="width: 100%;">
-                        <div class="detail-inner">
-                            <div class="detail-section">
-                                <h4>Cut Actions</h4>
-                                <ul>
-                                    <li>Cut losses immediately</li>
-                                    <li>Document learnings</li>
-                                    <li>Apply insights elsewhere</li>
-                                </ul>
-                            </div>
+                    <!-- RED PATH -->
+                    <div class="decision-path red">
+                        <div class="path-header red">
+                            <span class="path-icon">✕</span>
+                            <h3>Red Light</h3>
+                        </div>
+                        <div class="path-if">
+                            <span class="if-label">IF</span>
+                            <ul>
+                                <li>Minimal spend</li>
+                                <li>&lt; 0.5 ROAS</li>
+                                <li>&lt; 40% New Visit Rate</li>
+                            </ul>
+                        </div>
+                        <div class="path-arrow red">↓</div>
+                        <div class="path-then">
+                            <span class="then-label">THEN</span>
+                            <ul>
+                                <li>Cut losses immediately</li>
+                                <li>Document learnings</li>
+                                <li>Apply insights elsewhere</li>
+                            </ul>
+                        </div>
+                        <div class="path-arrow red">↓</div>
+                        <div class="path-outcome red">
+                            ● End
                         </div>
                     </div>
-
-                    <div class="end-marker"></div>
                 </div>
             </div>
 
