@@ -831,7 +831,7 @@
             <div class="phase" style="max-width: 100%;">
                 <span class="phase-label" style="background: var(--gold);">Decision Point</span>
 
-                <div class="decision-flowchart visible" id="phase3-flowchart">
+                <div class="decision-flowchart visible always-visible" id="phase3-flowchart">
                     <!-- GREEN PATH -->
                     <div class="decision-path" onclick="selectPath('green')">
                         <div class="path-header green">
@@ -1410,9 +1410,9 @@
                 }
             });
 
-            // Hide other flowcharts and their results
+            // Hide other flowcharts and their results (except always-visible ones)
             document.querySelectorAll('.decision-flowchart').forEach(f => {
-                if (f !== flowchart) {
+                if (f !== flowchart && !f.classList.contains('always-visible')) {
                     f.classList.remove('visible');
                 }
             });
