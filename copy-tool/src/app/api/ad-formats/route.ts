@@ -1,21 +1,53 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+import { put, list, head } from "@vercel/blob";
 import { AdFormat } from "@/types/ad-format";
 
-const AD_FORMATS_PATH = path.join(process.cwd(), "training-data/ad-formats/ad-formats.json");
+const FORMATS_BLOB_PATH = "ad-formats/ad-formats.json";
 
-function readFormats(): AdFormat[] {
+async function readFormats(): Promise<AdFormat[]> {
   try {
-    const data = fs.readFileSync(AD_FORMATS_PATH, "utf-8");
-    return JSON.parse(data);
-  } catch {
-    return [];
+    // Check if blob exists
+    const blobs = await list({ prefix: FORMATS_BLOB_PATH });
+    if (blobs.blobs.length === 0) {
+      // Try to load from bundled data as fallback
+      try {
+        const fs = await import("fs");
+        const path = await import("path");
+        const localPath = path.join(process.cwd(), "training-data/ad-formats/ad-formats.json");
+        const data = fs.readFileSync(localPath, "utf-8");
+        return JSON.parse(data);
+      } catch {
+        return [];
+      }
+    }
+
+    // Fetch the blob content
+    const blobInfo = blobs.blobs[0];
+    const response = await fetch(blobInfo.url);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error reading formats from blob:", error);
+    // Fallback to local file
+    try {
+      const fs = await import("fs");
+      const path = await import("path");
+      const localPath = path.join(process.cwd(), "training-data/ad-formats/ad-formats.json");
+      const data = fs.readFileSync(localPath, "utf-8");
+      return JSON.parse(data);
+    } catch {
+      return [];
+    }
   }
 }
 
-function writeFormats(formats: AdFormat[]): void {
-  fs.writeFileSync(AD_FORMATS_PATH, JSON.stringify(formats, null, 2));
+async function writeFormats(formats: AdFormat[]): Promise<void> {
+  const jsonContent = JSON.stringify(formats, null, 2);
+  await put(FORMATS_BLOB_PATH, jsonContent, {
+    access: "public",
+    contentType: "application/json",
+    addRandomSuffix: false,
+  });
 }
 
 function slugify(text: string): string {
@@ -27,7 +59,7 @@ function slugify(text: string): string {
 
 // GET all formats
 export async function GET() {
-  const formats = readFormats();
+  const formats = await readFormats();
   return NextResponse.json(formats);
 }
 
@@ -35,7 +67,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, description, specs, thumbnail, sampleImages } = body;
+    const { name, description, specs, thumbnail, sampleImages, category } = body;
 
     if (!name || !specs) {
       return NextResponse.json(
@@ -44,7 +76,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const formats = readFormats();
+    const formats = await readFormats();
 
     const id = slugify(name) + "-" + Date.now().toString(36);
 
@@ -56,16 +88,18 @@ export async function POST(request: NextRequest) {
       thumbnail: thumbnail || "",
       sampleImages: sampleImages || [],
       specs,
+      category: category || "Other",
     };
 
     formats.push(newFormat);
-    writeFormats(formats);
+    await writeFormats(formats);
 
     return NextResponse.json(newFormat, { status: 201 });
   } catch (error) {
     console.error("Error creating format:", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: "Failed to create format" },
+      { error: `Failed to create format: ${errorMessage}` },
       { status: 500 }
     );
   }

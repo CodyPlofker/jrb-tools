@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+import { put } from "@vercel/blob";
 
 export async function POST(request: NextRequest) {
   try {
@@ -24,33 +23,31 @@ export async function POST(request: NextRequest) {
 
     const extension = matches[1] === "jpeg" ? "jpg" : matches[1];
     const imageData = matches[2];
-
-    // Create format directory if it doesn't exist
-    const formatDir = path.join(process.cwd(), "public/ad-formats", formatId);
-    if (!fs.existsSync(formatDir)) {
-      fs.mkdirSync(formatDir, { recursive: true });
-    }
+    const contentType = `image/${matches[1]}`;
 
     // Generate filename
     const finalFilename = filename || `sample-${Date.now()}.${extension}`;
-    const filePath = path.join(formatDir, finalFilename);
+    const blobPath = `ad-formats/${formatId}/${finalFilename}`;
 
-    // Write file
+    // Convert base64 to buffer
     const buffer = Buffer.from(imageData, "base64");
-    fs.writeFileSync(filePath, buffer);
 
-    // Return the public URL path
-    const publicPath = `/ad-formats/${formatId}/${finalFilename}`;
+    // Upload to Vercel Blob
+    const blob = await put(blobPath, buffer, {
+      access: "public",
+      contentType,
+    });
 
     return NextResponse.json({
       success: true,
-      path: publicPath,
+      path: blob.url,
       filename: finalFilename,
     });
   } catch (error) {
     console.error("Error uploading image:", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: "Failed to upload image" },
+      { error: `Failed to upload image: ${errorMessage}` },
       { status: 500 }
     );
   }
