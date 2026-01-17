@@ -1,0 +1,454 @@
+[
+  {
+    "id": "miracle-balm",
+    "name": "Miracle Balm",
+    "category": "Face",
+    "price": "$38",
+    "description": "A light-reflecting balm that gives your skin a fresh, healthy glow. Functions as highlighter, blush, and bronzer.",
+    "keyBenefits": [
+      "Multi-use: highlighter, blush, bronzer",
+      "Light-reflecting for healthy glow",
+      "Dewy, natural finish",
+      "Buildable coverage"
+    ],
+    "shades": "13 shades including Au Naturel, Happy Hour, Bronze, Cocoa Bronze",
+    "bestFor": "Anyone wanting a quick, natural glow"
+  },
+  {
+    "id": "what-the-foundation",
+    "name": "What The Foundation",
+    "category": "Face",
+    "price": "$46",
+    "description": "Light-medium, buildable coverage foundation offering fresh, even complexion results.",
+    "keyBenefits": [
+      "Buildable coverage",
+      "Fresh, even complexion",
+      "Ultra-nourishing formula",
+      "Vegan"
+    ],
+    "shades": "16 shades from Alabaster to Espresso",
+    "bestFor": "Those who want skin-like coverage"
+  },
+  {
+    "id": "just-enough-tinted-moisturizer",
+    "name": "Just Enough Tinted Moisturizer",
+    "category": "Face",
+    "price": "$44",
+    "description": "Lightweight tinted moisturizer that smooths and evens skin tone with hydrating ingredients and non-comedogenic formula.",
+    "keyBenefits": [
+      "Lightweight coverage",
+      "Hydrating formula",
+      "Non-comedogenic",
+      "Smooths and evens skin tone"
+    ],
+    "shades": "16 shades from Alabaster to Espresso",
+    "bestFor": "Everyday natural coverage"
+  },
+  {
+    "id": "the-face-pencil",
+    "name": "The Face Pencil",
+    "category": "Face",
+    "price": "$28",
+    "description": "A creamy yet dense concealer that provides buildable coverage for concealing redness and evening skin tone.",
+    "keyBenefits": [
+      "Buildable coverage",
+      "Creamy formula",
+      "Conceals redness",
+      "Evens skin tone"
+    ],
+    "shades": "25 shades",
+    "bestFor": "Targeted concealing and coverage"
+  },
+  {
+    "id": "gel-bronzer",
+    "name": "Gel Bronzer",
+    "category": "Face",
+    "price": "$36",
+    "description": "A sheer, lightweight skin tint that offers a natural suntanned look with a barely there feel.",
+    "keyBenefits": [
+      "Sheer, lightweight",
+      "Natural suntanned look",
+      "Barely there feel",
+      "Vegan"
+    ],
+    "shades": "Light, Medium, Dark",
+    "bestFor": "Natural sun-kissed warmth"
+  },
+  {
+    "id": "tinted-face-powder",
+    "name": "Tinted Face Powder",
+    "category": "Face",
+    "price": "$30",
+    "description": "Ultra-lightweight setting powder designed for seamless blending, minimizing shine.",
+    "keyBenefits": [
+      "Ultra-lightweight",
+      "Minimizes shine",
+      "Seamless blending",
+      "Sets makeup"
+    ],
+    "shades": "Untinted, Pink, Rose, Yellow, Light, Medium, Dark, Deep",
+    "bestFor": "Setting makeup and controlling shine"
+  },
+  {
+    "id": "everyday-sunscreen",
+    "name": "Everyday Sunscreen",
+    "category": "Skincare",
+    "price": "$42",
+    "description": "Broad spectrum mineral SPF 30 with color-correcting pigments to offset white cast. Non-comedogenic.",
+    "keyBenefits": [
+      "Mineral SPF 30",
+      "Color-correcting pigments",
+      "No white cast",
+      "Non-comedogenic"
+    ],
+    "shades": "Untinted, Sandy, Peachy, Golden, Apricot",
+    "bestFor": "Daily sun protection without white cast"
+  },
+  {
+    "id": "the-mascara",
+    "name": "The Mascara",
+    "category": "Eyes",
+    "price": "$28",
+    "description": "An inky, ultra-pigmented black mascara with conditioning formula that separates, lifts, and volumizes.",
+    "keyBenefits": [
+      "Ultra-pigmented",
+      "Conditioning formula",
+      "Separates and lifts",
+      "Volumizes",
+      "Vegan"
+    ],
+    "shades": "Pitch Black",
+    "bestFor": "Natural, defined lashes with volume"
+  },
+  {
+    "id": "the-best-pencil",
+    "name": "The Best Pencil",
+    "category": "Eyes",
+    "price": "$24",
+    "description": "A precise eyeliner offering crisp line that glides on seamlessly, highly pigmented.",
+    "keyBenefits": [
+      "Precise application",
+      "Glides on seamlessly",
+      "Highly pigmented",
+      "Long-wearing"
+    ],
+    "shades": "Black, Brown, Onyx, Ivy, Violet, Navy",
+    "bestFor": "Crisp, defined eye lines"
+  },
+  {
+    "id": "gel-liner",
+    "name": "Gel Liner",
+    "category": "Eyes",
+    "price": "$32",
+    "description": "Richly pigmented eyeliner with water and transfer-resistant creamy gel formula.",
+    "keyBenefits": [
+      "Richly pigmented",
+      "Water-resistant",
+      "Transfer-resistant",
+      "Creamy gel formula",
+      "Vegan"
+    ],
+    "shades": "Black, Brown, Navy, Violet",
+    "bestFor": "Smudge-proof, long-lasting eye looks"
+  },
+  {
+    "id": "just-a-sec",
+    "name": "Just A Sec",
+    "category": "Eyes",
+    "price": "$28",
+    "description": "Weightless, cushiony eyeshadow adding luminous color to lids and brow bone.",
+    "keyBenefits": [
+      "Weightless formula",
+      "Cushiony texture",
+      "Luminous color",
+      "Easy application"
+    ],
+    "shades": "Golden Peach, Pewter, Bronze, Linen, Topaz, Baby Pink, Cool Brown, Cool Taupe",
+    "bestFor": "Quick, effortless eye color"
+  },
+  {
+    "id": "sparkle-wash",
+    "name": "Sparkle Wash",
+    "category": "Eyes",
+    "price": "$26",
+    "description": "Shimmering, dimensional liquid eyeshadow for customizable sparkle intensity.",
+    "keyBenefits": [
+      "Shimmering finish",
+      "Dimensional color",
+      "Customizable intensity",
+      "Liquid formula"
+    ],
+    "shades": "Barely Pink, Gilded, So Pretty, Midas, Bronze",
+    "bestFor": "Adding sparkle and dimension"
+  },
+  {
+    "id": "the-best-blush",
+    "name": "The Best Blush",
+    "category": "Cheeks",
+    "price": "$30",
+    "description": "A buildable powder blush for a natural flush of color.",
+    "keyBenefits": [
+      "Buildable coverage",
+      "Natural flush",
+      "Powder formula",
+      "Long-wearing"
+    ],
+    "shades": "Multiple shades including POP",
+    "bestFor": "Natural, buildable cheek color"
+  },
+  {
+    "id": "cool-gloss",
+    "name": "Cool Gloss",
+    "category": "Lips",
+    "price": "$24",
+    "description": "Lightweight and ultra-moisturizing lip gloss with natural peppermint.",
+    "keyBenefits": [
+      "Lightweight",
+      "Ultra-moisturizing",
+      "Natural peppermint",
+      "Non-sticky"
+    ],
+    "shades": "9 shades including Peony, Pastel Pink, Rosy, Nude Beige, Original, Great Red",
+    "bestFor": "Glossy, hydrated lips"
+  },
+  {
+    "id": "the-lippie-stick",
+    "name": "The Lippie Stick",
+    "category": "Lips",
+    "price": "$24",
+    "description": "Dense and cushiony lip balm with plant-based oils and cocoa butter in 11 tinted shades.",
+    "keyBenefits": [
+      "Dense and cushiony",
+      "Plant-based oils",
+      "Cocoa butter",
+      "Tinted color"
+    ],
+    "shades": "11 tinted shades",
+    "bestFor": "Nourishing lip color"
+  },
+  {
+    "id": "the-classic-lip",
+    "name": "The Classic Lip",
+    "category": "Lips",
+    "price": "$30",
+    "description": "Lightweight, richly pigmented lipstick with satin finish.",
+    "keyBenefits": [
+      "Lightweight formula",
+      "Richly pigmented",
+      "Satin finish",
+      "Comfortable wear"
+    ],
+    "shades": "12 shades including Nudist, Coral, Tulip, Chocolate",
+    "bestFor": "Classic, elegant lip color"
+  },
+  {
+    "id": "miracle-cream",
+    "name": "Miracle Cream",
+    "category": "Skincare",
+    "price": "$42",
+    "description": "Nourishing face cream for hydrated, healthy-looking skin.",
+    "keyBenefits": [
+      "Deeply nourishing",
+      "Hydrating formula",
+      "Healthy-looking skin",
+      "Daily moisturizer"
+    ],
+    "shades": "N/A",
+    "bestFor": "Daily facial hydration"
+  },
+  {
+    "id": "light-moisture-cream",
+    "name": "Light Moisture Cream",
+    "category": "Skincare",
+    "price": "$42",
+    "description": "Lightweight moisturizer for balanced hydration.",
+    "keyBenefits": [
+      "Lightweight formula",
+      "Balanced hydration",
+      "Non-greasy",
+      "Vegan"
+    ],
+    "shades": "N/A",
+    "bestFor": "Oily or combination skin"
+  },
+  {
+    "id": "oil-free-moisturizer",
+    "name": "Oil-Free Moisturizer",
+    "category": "Skincare",
+    "price": "$42",
+    "description": "Oil-free hydration for a balanced complexion.",
+    "keyBenefits": [
+      "Oil-free formula",
+      "Balanced hydration",
+      "Non-comedogenic",
+      "Vegan"
+    ],
+    "shades": "N/A",
+    "bestFor": "Oily skin types"
+  },
+  {
+    "id": "rich-eye-cream",
+    "name": "Rich Eye Cream",
+    "category": "Skincare",
+    "price": "$42",
+    "description": "Ultra-nourishing boost of moisture enriched with Niacinamide and Ceramides.",
+    "keyBenefits": [
+      "Ultra-nourishing",
+      "Niacinamide",
+      "Ceramides",
+      "Vegan"
+    ],
+    "shades": "N/A",
+    "bestFor": "Dry under-eye area"
+  },
+  {
+    "id": "eye-cream",
+    "name": "Eye Cream",
+    "category": "Skincare",
+    "price": "$36",
+    "description": "Pillowy to the touch eye cream with macadamia seed oil and trehalose.",
+    "keyBenefits": [
+      "Pillowy texture",
+      "Macadamia seed oil",
+      "Trehalose",
+      "Nourishing"
+    ],
+    "shades": "N/A",
+    "bestFor": "Delicate eye area care"
+  },
+  {
+    "id": "multivitamin-serum",
+    "name": "Multivitamin Serum",
+    "category": "Skincare",
+    "price": "$52",
+    "description": "Vitamin-rich serum for radiant, healthy skin.",
+    "keyBenefits": [
+      "Vitamin-rich formula",
+      "Radiant skin",
+      "Healthy complexion",
+      "Vegan"
+    ],
+    "shades": "N/A",
+    "bestFor": "Boosting skin radiance"
+  },
+  {
+    "id": "soft-skin-cream-cleanser",
+    "name": "Soft Skin Cream Cleanser",
+    "category": "Skincare",
+    "price": "$30",
+    "description": "Luxurious facial wash that leaves skin feeling moisturized and velvety soft.",
+    "keyBenefits": [
+      "Luxurious formula",
+      "Moisturizing",
+      "Velvety soft finish",
+      "Vegan"
+    ],
+    "shades": "N/A",
+    "bestFor": "Gentle daily cleansing"
+  },
+  {
+    "id": "body-cream",
+    "name": "Body Cream",
+    "category": "Body",
+    "price": "$44",
+    "description": "Deeply nourishing cream enriched with sodium hyaluronate, natural oils, and ceramides.",
+    "keyBenefits": [
+      "Deeply nourishing",
+      "Sodium hyaluronate",
+      "Natural oils",
+      "Ceramides"
+    ],
+    "shades": "N/A",
+    "bestFor": "Intense body hydration"
+  },
+  {
+    "id": "body-lotion",
+    "name": "Body Lotion",
+    "category": "Body",
+    "price": "$44",
+    "description": "Lightweight moisturizer with sodium hyaluronate, squalane, and ceramides for daily hydration.",
+    "keyBenefits": [
+      "Lightweight",
+      "Sodium hyaluronate",
+      "Squalane",
+      "Ceramides"
+    ],
+    "shades": "N/A",
+    "bestFor": "Daily body hydration"
+  },
+  {
+    "id": "body-oil",
+    "name": "Body Oil",
+    "category": "Body",
+    "price": "$52",
+    "description": "Reparative blend of nourishing oils for radiant, glowing skin.",
+    "keyBenefits": [
+      "Reparative formula",
+      "Nourishing oils",
+      "Radiant glow",
+      "Fast-absorbing"
+    ],
+    "shades": "N/A",
+    "bestFor": "Luxurious body glow"
+  },
+  {
+    "id": "body-scrub",
+    "name": "Body Scrub",
+    "category": "Body",
+    "price": "$38",
+    "description": "Gentle exfoliant featuring natural bamboo powder for softer, brighter skin.",
+    "keyBenefits": [
+      "Gentle exfoliation",
+      "Natural bamboo powder",
+      "Softer skin",
+      "Brighter complexion"
+    ],
+    "shades": "N/A",
+    "bestFor": "Body exfoliation"
+  },
+  {
+    "id": "shower-gel",
+    "name": "Shower Gel",
+    "category": "Body",
+    "price": "$36",
+    "description": "Refreshing body wash that cleans and conditions with nourishing ingredients.",
+    "keyBenefits": [
+      "Refreshing clean",
+      "Conditioning formula",
+      "Nourishing ingredients",
+      "Vegan"
+    ],
+    "shades": "Shower, Citrus Spa scents",
+    "bestFor": "Daily cleansing"
+  },
+  {
+    "id": "dusty-rose-kit",
+    "name": "The Dusty Rose Kit",
+    "category": "Kits",
+    "price": "TBD",
+    "description": "A limited-edition kit featuring a cool, rosy pink color story across face, eyes, and lips. Includes the new exclusive Gel Tint in Dusty Rose, Just A Sec eyeshadow with shimmer, The Lippie Stick in Dusty Rose, and a limited edition snack bag. Tagline: Pretty in Pink.",
+    "keyBenefits": [
+      "Coordinated color story across face, eyes, and lips",
+      "Exclusive NEW Gel Tint - creates natural luminosity with sheer, lightweight feel",
+      "Multi-use products that simplify your routine",
+      "Limited edition with exclusive snack bag"
+    ],
+    "shades": "Dusty Rose - cool, rosy pink sheer tint",
+    "bestFor": "Fair to medium skin tones seeking a fresh, rosy glow"
+  },
+  {
+    "id": "sunkissed-kit",
+    "name": "The Sunkissed Kit",
+    "category": "Kits",
+    "price": "TBD",
+    "description": "A limited-edition kit featuring a warm, bronzy color story across face, eyes, and lips. Includes the new exclusive Gel Tint in Sunkissed, Just A Sec eyeshadow, The Lippie Stick in Sunkissed, and a limited edition snack bag. Tagline: Pretty in Bronze.",
+    "keyBenefits": [
+      "Coordinated color story across face, eyes, and lips",
+      "Exclusive NEW Gel Tint - deep reddish bronze sheer tint",
+      "Multi-use products that simplify your routine",
+      "Limited edition with exclusive snack bag"
+    ],
+    "shades": "Sunkissed - deep reddish bronze sheer tint",
+    "bestFor": "Light to dark skin tones seeking warm, bronzy glow"
+  }
+]
