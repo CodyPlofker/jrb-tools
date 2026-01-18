@@ -23,7 +23,9 @@ async function readFormats(): Promise<AdFormat[]> {
 
     // Fetch the blob content
     const blobInfo = blobs.blobs[0];
-    const response = await fetch(blobInfo.url, { cache: "no-store" });
+    // Add timestamp to bust CDN cache
+    const urlWithCacheBust = `${blobInfo.url}?t=${Date.now()}`;
+    const response = await fetch(urlWithCacheBust, { cache: "no-store" });
     const data = await response.json();
     return data;
   } catch (error) {
