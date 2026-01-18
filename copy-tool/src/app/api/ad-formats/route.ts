@@ -47,6 +47,7 @@ async function writeFormats(formats: AdFormat[]): Promise<void> {
     access: "public",
     contentType: "application/json",
     addRandomSuffix: false,
+    allowOverwrite: true,
   });
 }
 
