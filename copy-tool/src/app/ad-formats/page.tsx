@@ -218,7 +218,31 @@ export default function AdFormatsPage() {
     image: string;
   }) => {
     try {
-      // Create the format
+      // Generate a temporary ID for the image upload
+      const tempId = `temp-${Date.now().toString(36)}`;
+      let thumbnail = "";
+      let sampleImages: string[] = [];
+
+      // Upload the image first if provided
+      if (data.image) {
+        const uploadResponse = await fetch("/api/ad-formats/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            image: data.image,
+            formatId: tempId,
+            filename: "sample-1.jpg",
+          }),
+        });
+
+        if (uploadResponse.ok) {
+          const uploadResult = await uploadResponse.json();
+          thumbnail = uploadResult.path;
+          sampleImages = [uploadResult.path];
+        }
+      }
+
+      // Create the format with thumbnail included
       const response = await fetch("/api/ad-formats", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -226,38 +250,12 @@ export default function AdFormatsPage() {
           name: data.name,
           description: data.description,
           specs: data.specs,
+          thumbnail,
+          sampleImages,
         }),
       });
 
       if (!response.ok) throw new Error("Failed to create format");
-
-      const newFormat = await response.json();
-
-      // Upload the image as first sample
-      if (data.image) {
-        const uploadResponse = await fetch("/api/ad-formats/upload", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            image: data.image,
-            formatId: newFormat.id,
-            filename: "sample-1.jpg",
-          }),
-        });
-
-        if (uploadResponse.ok) {
-          const uploadResult = await uploadResponse.json();
-          // Update format with thumbnail and sample
-          await fetch(`/api/ad-formats/${newFormat.id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              thumbnail: uploadResult.path,
-              sampleImages: [uploadResult.path],
-            }),
-          });
-        }
-      }
 
       // Refresh formats list
       await loadFormats();
