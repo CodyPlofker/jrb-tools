@@ -841,6 +841,9 @@
         .channel-badge.lp { background: #6366f1; color: #fff; }
         .channel-badge.popup { background: #ec4899; color: #fff; }
         .channel-badge.retention { background: #14b8a6; color: #fff; }
+        .channel-badge.email { background: #f59e0b; color: #fff; }
+        .channel-badge.sms { background: #10b981; color: #fff; }
+        .channel-badge.directmail { background: #8b5cf6; color: #fff; }
 
         /* Channel Layers - Always visible when present */
         .channel-layer {
@@ -865,6 +868,21 @@
             border-color: #14b8a6;
         }
 
+        .channel-layer.email {
+            background: rgba(245, 158, 11, 0.08);
+            border-color: #f59e0b;
+        }
+
+        .channel-layer.sms {
+            background: rgba(16, 185, 129, 0.08);
+            border-color: #10b981;
+        }
+
+        .channel-layer.directmail {
+            background: rgba(139, 92, 246, 0.08);
+            border-color: #8b5cf6;
+        }
+
         .channel-layer-title {
             font-size: 11px;
             font-weight: 600;
@@ -879,6 +897,9 @@
         .channel-layer.landing-pages .channel-layer-title { color: #6366f1; }
         .channel-layer.popups .channel-layer-title { color: #ec4899; }
         .channel-layer.retention .channel-layer-title { color: #14b8a6; }
+        .channel-layer.email .channel-layer-title { color: #f59e0b; }
+        .channel-layer.sms .channel-layer-title { color: #10b981; }
+        .channel-layer.directmail .channel-layer-title { color: #8b5cf6; }
 
         .channel-layer-title::before {
             content: '◆';
@@ -907,6 +928,62 @@
         .channel-layer.landing-pages li::before { color: #6366f1; }
         .channel-layer.popups li::before { color: #ec4899; }
         .channel-layer.retention li::before { color: #14b8a6; }
+        .channel-layer.email li::before { color: #f59e0b; }
+        .channel-layer.sms li::before { color: #10b981; }
+        .channel-layer.directmail li::before { color: #8b5cf6; }
+
+        /* Channel Filter Controls */
+        .channel-filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .channel-filter-btn {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 8px;
+            padding: 3px 6px;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .channel-filter-btn:hover {
+            border-color: var(--navy);
+        }
+
+        .channel-filter-btn.active {
+            color: #fff;
+        }
+
+        .channel-filter-btn.active.lp { background: #6366f1; border-color: #6366f1; }
+        .channel-filter-btn.active.popup { background: #ec4899; border-color: #ec4899; }
+        .channel-filter-btn.active.email { background: #f59e0b; border-color: #f59e0b; }
+        .channel-filter-btn.active.sms { background: #10b981; border-color: #10b981; }
+        .channel-filter-btn.active.directmail { background: #8b5cf6; border-color: #8b5cf6; }
+
+        .channel-filter-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .channel-filter-dot.lp { background: #6366f1; }
+        .channel-filter-dot.popup { background: #ec4899; }
+        .channel-filter-dot.email { background: #f59e0b; }
+        .channel-filter-dot.sms { background: #10b981; }
+        .channel-filter-dot.directmail { background: #8b5cf6; }
+
+        /* Hide channel layers when filter is off */
+        .channel-layer.hidden {
+            display: none;
+        }
 
         /* Page Views */
         .page-view {
@@ -917,11 +994,11 @@
             display: block;
         }
 
-        /* Personas Page - Tree Visualization */
+        /* Personas Page - Tree Visualization with SVG Lines */
         .personas-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 40px;
+            gap: 60px;
             justify-content: center;
             margin-top: 24px;
         }
@@ -930,8 +1007,50 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-width: 280px;
-            max-width: 320px;
+            min-width: 320px;
+            max-width: 380px;
+            position: relative;
+        }
+
+        .persona-tree-inner {
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .persona-tree svg.connection-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .persona-tree svg.connection-lines line {
+            stroke: var(--navy);
+            stroke-width: 2;
+            opacity: 0.3;
+            transition: opacity 0.2s, stroke 0.2s;
+        }
+
+        .persona-tree svg.connection-lines line.testing {
+            stroke: var(--amber);
+            opacity: 0.5;
+        }
+
+        .persona-tree svg.connection-lines line.tested {
+            stroke: var(--green);
+            opacity: 0.5;
+        }
+
+        .persona-tree svg.connection-lines line.winner {
+            stroke: var(--green);
+            stroke-width: 3;
+            opacity: 0.8;
         }
 
         .persona-node {
@@ -944,6 +1063,7 @@
             cursor: pointer;
             transition: all 0.2s;
             box-shadow: 0 4px 12px rgba(26, 58, 92, 0.3);
+            z-index: 2;
         }
 
         .persona-node:hover {
@@ -964,51 +1084,72 @@
             margin: 0;
         }
 
-        .tree-connector {
-            width: 2px;
-            height: 20px;
-            background: var(--navy);
+        .angles-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            max-width: 340px;
+            padding: 20px 16px 16px;
+            margin-top: 40px;
             position: relative;
+            z-index: 1;
+            background: var(--cream);
+            border-radius: 16px;
+            border: 1px solid #ddd;
         }
 
-        .tree-connector::after {
-            content: '';
+        .angles-container::before {
+            content: 'VALUE PROPS / ANGLES';
             position: absolute;
-            bottom: 0;
+            top: -10px;
             left: 50%;
             transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-top: 6px solid var(--navy);
+            background: #fff;
+            padding: 2px 10px;
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: var(--text-light);
+            border-radius: 8px;
+            border: 1px solid #ddd;
         }
 
+        /* Legacy tree connector - hidden but keep for backwards compat */
+        .tree-connector {
+            display: none;
+        }
+
+        /* Legacy angles-cloud - converted to angles-container */
         .angles-cloud {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 8px;
-            max-width: 300px;
+            gap: 10px;
+            max-width: 340px;
+            padding: 20px 16px 16px;
+            margin-top: 40px;
             position: relative;
-            padding: 12px;
+            z-index: 1;
             background: var(--cream);
-            border-radius: 12px;
+            border-radius: 16px;
             border: 1px solid #ddd;
         }
 
         .angles-cloud::before {
             content: 'VALUE PROPS / ANGLES';
             position: absolute;
-            top: -8px;
+            top: -10px;
             left: 50%;
             transform: translateX(-50%);
             background: #fff;
-            padding: 0 8px;
+            padding: 2px 10px;
             font-size: 9px;
             font-weight: 600;
             letter-spacing: 0.5px;
             color: var(--text-light);
+            border-radius: 8px;
+            border: 1px solid #ddd;
         }
 
         .angle-node {
@@ -1273,6 +1414,310 @@
             color: var(--navy);
         }
 
+        /* Ad Formats Page */
+        .formats-page-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .formats-page-header p {
+            color: var(--text-light);
+            font-size: 13px;
+        }
+
+        .formats-matrix-container {
+            overflow-x: auto;
+        }
+
+        .formats-matrix {
+            display: grid;
+            grid-template-columns: 180px repeat(3, 1fr);
+            gap: 1px;
+            background: #ddd;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            min-width: 800px;
+        }
+
+        .matrix-header {
+            background: var(--navy);
+            color: #fff;
+            padding: 14px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .matrix-header.corner {
+            background: var(--navy-light);
+        }
+
+        .matrix-row-header {
+            background: var(--cream);
+            padding: 14px 16px;
+            font-weight: 600;
+            font-size: 12px;
+            color: var(--navy);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .matrix-row-header .persona-mini {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--navy);
+        }
+
+        .matrix-cell {
+            background: #fff;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-height: 100px;
+        }
+
+        .matrix-cell:hover {
+            background: var(--cream);
+        }
+
+        .matrix-cell-status {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .cell-status-tag {
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+
+        .cell-status-tag.untested {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .cell-status-tag.testing {
+            background: rgba(181, 101, 29, 0.1);
+            color: var(--amber);
+        }
+
+        .cell-status-tag.winner {
+            background: rgba(45, 106, 79, 0.1);
+            color: var(--green);
+        }
+
+        .matrix-cell-angles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .cell-angle-chip {
+            font-size: 9px;
+            padding: 3px 8px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .cell-angle-chip:hover {
+            border-color: var(--navy);
+        }
+
+        .cell-angle-chip.selected {
+            background: var(--navy);
+            color: #fff;
+            border-color: var(--navy);
+        }
+
+        .cell-add-btn {
+            font-size: 10px;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 4px 8px;
+            border: 1px dashed #ddd;
+            border-radius: 4px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .cell-add-btn:hover {
+            border-color: var(--navy);
+            color: var(--navy);
+        }
+
+        /* Format Templates Section */
+        .format-templates {
+            margin-top: 40px;
+        }
+
+        .format-templates h3 {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 22px;
+            color: var(--navy);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .format-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .format-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        .format-card:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .format-card-header {
+            background: var(--navy);
+            color: #fff;
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .format-card-header h4 {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 16px;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .format-type-badge {
+            font-size: 9px;
+            padding: 3px 8px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+        }
+
+        .format-card-body {
+            padding: 16px;
+        }
+
+        .format-preview {
+            background: var(--cream);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .format-preview .hook {
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 8px;
+        }
+
+        .format-preview .body-text {
+            color: var(--text);
+        }
+
+        .format-preview .cta {
+            margin-top: 8px;
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .format-preview ul {
+            margin: 8px 0;
+            padding-left: 16px;
+        }
+
+        .format-preview li {
+            margin: 4px 0;
+        }
+
+        .format-card-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 11px;
+            color: var(--text-light);
+        }
+
+        .format-card-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .format-card-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .format-action-btn {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 11px;
+            font-weight: 500;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #fff;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .format-action-btn:hover {
+            border-color: var(--navy);
+            color: var(--navy);
+        }
+
+        .format-action-btn.primary {
+            background: var(--navy);
+            color: #fff;
+            border-color: var(--navy);
+        }
+
+        .format-action-btn.primary:hover {
+            background: var(--navy-light);
+        }
+
+        /* Add Format Button */
+        .add-format-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+            border: 2px dashed #ddd;
+            border-radius: 12px;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: all 0.2s;
+        }
+
+        .add-format-card:hover {
+            border-color: var(--navy);
+            color: var(--navy);
+        }
+
+        .add-format-card .plus-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .container { padding: 40px 20px; }
@@ -1297,6 +1742,7 @@
             <button class="nav-tab active" onclick="showPage('flowchart')">Funnel Flow</button>
             <button class="nav-tab" onclick="showPage('personas')">Personas & Angles</button>
             <button class="nav-tab" onclick="showPage('brief')">Brief Template</button>
+            <button class="nav-tab" onclick="showPage('formats')">Ad Formats</button>
         </div>
 
         <!-- FLOWCHART PAGE -->
@@ -1629,10 +2075,11 @@
                         <div class="channel-trigger-badges">
                             <span class="channel-badge lp">LPs</span>
                             <span class="channel-badge popup">Popups</span>
+                            <span class="channel-badge email">Email</span>
                         </div>
                     </div>
 
-                    <!-- Channel Layers - Always visible -->
+                    <!-- Channel Layers - All channels visible with filter control -->
                     <div class="channel-layer landing-pages">
                         <div class="channel-layer-title">Landing Pages</div>
                         <ul>
@@ -1649,6 +2096,16 @@
                             <li>Persona-targeted popup messaging</li>
                             <li>Angle-specific offers and hooks</li>
                             <li>Exit-intent with persona pain points</li>
+                        </ul>
+                    </div>
+
+                    <div class="channel-layer email">
+                        <div class="channel-layer-title">Email</div>
+                        <ul>
+                            <li>Welcome flows tailored to persona</li>
+                            <li>Abandon cart with persona-specific copy</li>
+                            <li>Browse abandon with relevant angles</li>
+                            <li>Post-purchase education sequence</li>
                         </ul>
                     </div>
 
@@ -1791,19 +2248,31 @@
                         <span class="channel-trigger-icon">🎯</span>
                         <span><strong>Unlock Retention:</strong> Partnerships scaling = time to personalize retention</span>
                         <div class="channel-trigger-badges">
-                            <span class="channel-badge retention">Retention</span>
+                            <span class="channel-badge sms">SMS</span>
+                            <span class="channel-badge directmail">Mail</span>
                         </div>
                     </div>
 
-                    <!-- Channel Layer - Retention -->
-                    <div class="channel-layer retention">
-                        <div class="channel-layer-title">Retention Flows</div>
+                    <!-- Channel Layers - Retention Channels -->
+                    <div class="channel-layer sms">
+                        <div class="channel-layer-title">SMS</div>
                         <ul>
-                            <li>Tailor email flows by persona segments</li>
-                            <li>SMS sequences with persona-specific messaging</li>
-                            <li>Direct mail campaigns for high-value personas</li>
-                            <li>Post-purchase nurture by persona type</li>
-                            <li>Win-back flows with persona-relevant angles</li>
+                            <li>Welcome SMS with persona-specific offer</li>
+                            <li>Abandon cart SMS sequence</li>
+                            <li>Shipping/delivery updates</li>
+                            <li>Flash sale alerts for this persona</li>
+                            <li>Re-engagement campaigns</li>
+                        </ul>
+                    </div>
+
+                    <div class="channel-layer directmail">
+                        <div class="channel-layer-title">Direct Mail</div>
+                        <ul>
+                            <li>High-value customer mailers</li>
+                            <li>Catalog with persona-curated products</li>
+                            <li>Win-back postcards for lapsed customers</li>
+                            <li>Thank you cards for VIP personas</li>
+                            <li>Seasonal campaigns targeting this persona</li>
                         </ul>
                     </div>
 
@@ -2306,6 +2775,201 @@
         </div>
         <!-- END BRIEF TEMPLATE PAGE -->
 
+        <!-- AD FORMATS PAGE -->
+        <div class="page-view" id="page-formats">
+            <div class="formats-page-header">
+                <p>Matrix view: Personas × Ad Formats. Click cells to track testing progress.</p>
+            </div>
+
+            <!-- Formats Matrix -->
+            <div class="formats-matrix-container">
+                <div class="formats-matrix">
+                    <!-- Header Row -->
+                    <div class="matrix-header corner">Persona / Format</div>
+                    <div class="matrix-header">Comparison Hook</div>
+                    <div class="matrix-header">Benefits List</div>
+                    <div class="matrix-header">Before/After</div>
+
+                    <!-- Row 1: Minimalist Professional -->
+                    <div class="matrix-row-header">
+                        <span class="persona-mini"></span>
+                        The Minimalist Professional
+                    </div>
+                    <div class="matrix-cell">
+                        <div class="matrix-cell-status">
+                            <span class="cell-status-tag winner">1 Winner</span>
+                        </div>
+                        <div class="matrix-cell-angles">
+                            <span class="cell-angle-chip selected">5-min routine</span>
+                            <span class="cell-angle-chip">Clean ingredients</span>
+                        </div>
+                    </div>
+                    <div class="matrix-cell">
+                        <div class="matrix-cell-status">
+                            <span class="cell-status-tag testing">Testing</span>
+                        </div>
+                        <div class="matrix-cell-angles">
+                            <span class="cell-angle-chip selected">Confidence boost</span>
+                        </div>
+                    </div>
+                    <div class="matrix-cell">
+                        <div class="matrix-cell-status">
+                            <span class="cell-status-tag untested">Untested</span>
+                        </div>
+                        <div class="cell-add-btn">+ Add angle</div>
+                    </div>
+
+                    <!-- Row 2: Natural Beauty Seeker -->
+                    <div class="matrix-row-header">
+                        <span class="persona-mini"></span>
+                        The Natural Beauty Seeker
+                    </div>
+                    <div class="matrix-cell">
+                        <div class="matrix-cell-status">
+                            <span class="cell-status-tag testing">Testing</span>
+                        </div>
+                        <div class="matrix-cell-angles">
+                            <span class="cell-angle-chip selected">Clean beauty</span>
+                        </div>
+                    </div>
+                    <div class="matrix-cell">
+                        <div class="matrix-cell-status">
+                            <span class="cell-status-tag untested">Untested</span>
+                        </div>
+                        <div class="cell-add-btn">+ Add angle</div>
+                    </div>
+                    <div class="matrix-cell">
+                        <div class="matrix-cell-status">
+                            <span class="cell-status-tag untested">Untested</span>
+                        </div>
+                        <div class="cell-add-btn">+ Add angle</div>
+                    </div>
+
+                    <!-- Row 3: Mature Elegance -->
+                    <div class="matrix-row-header">
+                        <span class="persona-mini"></span>
+                        The Mature Elegance
+                    </div>
+                    <div class="matrix-cell">
+                        <div class="matrix-cell-status">
+                            <span class="cell-status-tag untested">Untested</span>
+                        </div>
+                        <div class="cell-add-btn">+ Add angle</div>
+                    </div>
+                    <div class="matrix-cell">
+                        <div class="matrix-cell-status">
+                            <span class="cell-status-tag untested">Untested</span>
+                        </div>
+                        <div class="cell-add-btn">+ Add angle</div>
+                    </div>
+                    <div class="matrix-cell">
+                        <div class="matrix-cell-status">
+                            <span class="cell-status-tag untested">Untested</span>
+                        </div>
+                        <div class="cell-add-btn">+ Add angle</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Format Templates -->
+            <div class="format-templates">
+                <h3>Ad Format Templates</h3>
+                <div class="format-cards">
+                    <!-- Comparison Hook Card -->
+                    <div class="format-card">
+                        <div class="format-card-header">
+                            <h4>Comparison Hook</h4>
+                            <span class="format-type-badge">STATIC</span>
+                        </div>
+                        <div class="format-card-body">
+                            <div class="format-preview">
+                                <div class="hook">[Alternative] VS [Your Product]</div>
+                                <div class="body-text">
+                                    <strong>Starbucks Matcha:</strong> 28g sugar, artificial ingredients<br>
+                                    <strong>Your Matcha:</strong> 0g sugar, organic, clean energy
+                                </div>
+                                <div class="cta">Make the switch →</div>
+                            </div>
+                            <div class="format-card-meta">
+                                <span>📐 1080×1080</span>
+                                <span>🎯 Awareness</span>
+                                <span>📊 Used 12x</span>
+                            </div>
+                            <div class="format-card-actions">
+                                <button class="format-action-btn">View Examples</button>
+                                <button class="format-action-btn primary">Use Template</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Benefits List Card -->
+                    <div class="format-card">
+                        <div class="format-card-header">
+                            <h4>Benefits List</h4>
+                            <span class="format-type-badge">STATIC</span>
+                        </div>
+                        <div class="format-card-body">
+                            <div class="format-preview">
+                                <div class="hook">[Number] Reasons to Try [Product]</div>
+                                <ul>
+                                    <li>✓ Benefit 1 with emotional trigger</li>
+                                    <li>✓ Benefit 2 with proof point</li>
+                                    <li>✓ Benefit 3 with outcome</li>
+                                    <li>✓ Benefit 4 with differentiator</li>
+                                    <li>✓ Benefit 5 with social proof</li>
+                                    <li>✓ Benefit 6 with urgency</li>
+                                </ul>
+                                <div class="cta">Shop Now →</div>
+                            </div>
+                            <div class="format-card-meta">
+                                <span>📐 1080×1350</span>
+                                <span>🎯 Conversion</span>
+                                <span>📊 Used 8x</span>
+                            </div>
+                            <div class="format-card-actions">
+                                <button class="format-action-btn">View Examples</button>
+                                <button class="format-action-btn primary">Use Template</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Before/After Card -->
+                    <div class="format-card">
+                        <div class="format-card-header">
+                            <h4>Before / After</h4>
+                            <span class="format-type-badge">STATIC</span>
+                        </div>
+                        <div class="format-card-body">
+                            <div class="format-preview">
+                                <div class="hook">The [Timeframe] Transformation</div>
+                                <div class="body-text">
+                                    <strong>Before:</strong> [Pain point / problem state]<br>
+                                    <strong>After:</strong> [Desired outcome / transformation]
+                                </div>
+                                <div class="cta">Start your journey →</div>
+                            </div>
+                            <div class="format-card-meta">
+                                <span>📐 1080×1080</span>
+                                <span>🎯 Social Proof</span>
+                                <span>📊 Used 5x</span>
+                            </div>
+                            <div class="format-card-actions">
+                                <button class="format-action-btn">View Examples</button>
+                                <button class="format-action-btn primary">Use Template</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Add Format Card -->
+                    <div class="add-format-card" onclick="alert('Add format functionality coming soon!')">
+                        <span class="plus-icon">+</span>
+                        <span>Add Format Template</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END AD FORMATS PAGE -->
+
     </div>
 
     <!-- Floating Controls -->
@@ -2321,9 +2985,57 @@
             <button class="control-btn active" id="btn-vertical" onclick="setLayout('vertical')">↕</button>
             <button class="control-btn" id="btn-horizontal" onclick="setLayout('horizontal')">↔</button>
         </div>
+        <div class="channel-filters">
+            <div class="control-group" style="flex-direction: column; align-items: flex-start;">
+                <label style="margin-bottom: 4px;">Channels</label>
+                <div class="channel-filter-row">
+                    <button class="channel-filter-btn active lp" onclick="toggleChannel('lp')">
+                        <span class="channel-filter-dot lp"></span>LPs
+                    </button>
+                    <button class="channel-filter-btn active popup" onclick="toggleChannel('popup')">
+                        <span class="channel-filter-dot popup"></span>Popups
+                    </button>
+                    <button class="channel-filter-btn active email" onclick="toggleChannel('email')">
+                        <span class="channel-filter-dot email"></span>Email
+                    </button>
+                    <button class="channel-filter-btn active sms" onclick="toggleChannel('sms')">
+                        <span class="channel-filter-dot sms"></span>SMS
+                    </button>
+                    <button class="channel-filter-btn active directmail" onclick="toggleChannel('directmail')">
+                        <span class="channel-filter-dot directmail"></span>Mail
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
+        // Channel Filter State
+        const channelFilters = {
+            lp: true,
+            popup: true,
+            email: true,
+            sms: true,
+            directmail: true
+        };
+
+        function toggleChannel(channel) {
+            channelFilters[channel] = !channelFilters[channel];
+
+            // Update button state
+            const btn = document.querySelector(`.channel-filter-btn.${channel}`);
+            if (btn) {
+                btn.classList.toggle('active', channelFilters[channel]);
+            }
+
+            // Update channel layers visibility
+            const channelClass = channel === 'lp' ? 'landing-pages' :
+                                 channel === 'popup' ? 'popups' : channel;
+            document.querySelectorAll(`.channel-layer.${channelClass}`).forEach(layer => {
+                layer.classList.toggle('hidden', !channelFilters[channel]);
+            });
+        }
+
         // Page Navigation
         function showPage(page) {
             // Hide all pages
@@ -2336,6 +3048,10 @@
             // Show/hide flowchart controls
             const controls = document.getElementById('flowchart-controls');
             controls.style.display = page === 'flowchart' ? 'flex' : 'none';
+            // Initialize connection lines when switching to personas page
+            if (page === 'personas') {
+                setTimeout(initConnectionLines, 50);
+            }
         }
 
         // Cycle Angle Status (untested -> testing -> tested -> winner -> untested)
@@ -2355,7 +3071,79 @@
             if (statuses[nextIndex]) {
                 element.classList.add(statuses[nextIndex]);
             }
+
+            // Update connecting lines
+            const tree = element.closest('.persona-tree');
+            if (tree) {
+                updateConnectionLines(tree);
+            }
         }
+
+        // Draw SVG connecting lines from persona to each angle
+        function updateConnectionLines(tree) {
+            const svg = tree.querySelector('svg.connection-lines');
+            const personaNode = tree.querySelector('.persona-node');
+            const anglesContainer = tree.querySelector('.angles-cloud') || tree.querySelector('.angles-container');
+            const angleNodes = tree.querySelectorAll('.angle-node');
+
+            if (!svg || !personaNode || !anglesContainer || angleNodes.length === 0) return;
+
+            // Clear existing lines
+            svg.innerHTML = '';
+
+            // Get tree bounding rect for relative positioning
+            const treeRect = tree.getBoundingClientRect();
+
+            // Get persona node center bottom
+            const personaRect = personaNode.getBoundingClientRect();
+            const personaX = personaRect.left + personaRect.width / 2 - treeRect.left;
+            const personaY = personaRect.bottom - treeRect.top;
+
+            // Draw line to each angle node
+            angleNodes.forEach((angle, index) => {
+                const angleRect = angle.getBoundingClientRect();
+                const angleX = angleRect.left + angleRect.width / 2 - treeRect.left;
+                const angleY = angleRect.top - treeRect.top;
+
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', personaX);
+                line.setAttribute('y1', personaY);
+                line.setAttribute('x2', angleX);
+                line.setAttribute('y2', angleY);
+
+                // Set line class based on angle status
+                if (angle.classList.contains('winner')) {
+                    line.classList.add('winner');
+                } else if (angle.classList.contains('tested')) {
+                    line.classList.add('tested');
+                } else if (angle.classList.contains('testing')) {
+                    line.classList.add('testing');
+                }
+
+                svg.appendChild(line);
+            });
+        }
+
+        // Initialize all connection lines
+        function initConnectionLines() {
+            document.querySelectorAll('.persona-tree').forEach(tree => {
+                // Add SVG element if not exists
+                if (!tree.querySelector('svg.connection-lines')) {
+                    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                    svg.classList.add('connection-lines');
+                    tree.insertBefore(svg, tree.firstChild);
+                }
+                updateConnectionLines(tree);
+            });
+        }
+
+        // Initialize on page load and when switching to personas page
+        window.addEventListener('load', () => {
+            setTimeout(initConnectionLines, 100);
+        });
+        window.addEventListener('resize', () => {
+            document.querySelectorAll('.persona-tree').forEach(updateConnectionLines);
+        });
 
         // Zoom and Layout Controls
         let currentZoom = 1;
