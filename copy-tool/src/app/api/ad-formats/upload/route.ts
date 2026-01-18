@@ -36,6 +36,7 @@ export async function POST(request: NextRequest) {
     const blob = await put(blobPath, buffer, {
       access: "public",
       contentType,
+      allowOverwrite: true,
     });
 
     return NextResponse.json({
