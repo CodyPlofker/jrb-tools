@@ -225,7 +225,6 @@ export default function AdFormatsPage() {
 
       // Upload the image first if provided
       if (data.image) {
-        console.log("Uploading image...");
         const uploadResponse = await fetch("/api/ad-formats/upload", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -237,18 +236,12 @@ export default function AdFormatsPage() {
         });
 
         const uploadResult = await uploadResponse.json();
-        console.log("Upload response:", uploadResult);
 
         if (uploadResponse.ok && uploadResult.path) {
           thumbnail = uploadResult.path;
           sampleImages = [uploadResult.path];
-          console.log("Thumbnail set to:", thumbnail);
-        } else {
-          console.error("Upload failed:", uploadResult);
         }
       }
-
-      console.log("Creating format with:", { name: data.name, thumbnail, sampleImages });
 
       // Create the format with thumbnail included
       const response = await fetch("/api/ad-formats", {
@@ -262,9 +255,6 @@ export default function AdFormatsPage() {
           sampleImages,
         }),
       });
-
-      const result = await response.json();
-      console.log("Create format response:", result);
 
       if (!response.ok) throw new Error("Failed to create format");
 

@@ -1,0 +1,116 @@
+[
+  {
+    "id": "dedicated-educator",
+    "name": "The Dedicated Educator",
+    "overview": "Teachers, professors, and school administrators who spend their days in front of students and colleagues. They need to look presentable and approachable, are practical spenders who value products that last and work effectively. They prioritize a routine that is quick for early mornings and durable enough to last through a school day.",
+    "demographics": {
+      "profession": "K-12 Teachers, University Professors, School Administrators",
+      "socioeconomicStatus": "Middle Class; educated and budget-conscious but willing to pay for quality",
+      "familyStatus": "Often married, community-focused",
+      "geography": "Suburban and rural towns across the US"
+    },
+    "keyMotivations": [
+      "Durability (lasts all school day)",
+      "Value for money",
+      "Approachability and natural look",
+      "Quick morning application"
+    ],
+    "whyBrandAppeals": "Educators need a look that is professional but not distracting. Jones Road offers a 'your skin but better' look that is perfect for the classroom. The longevity of the products and the fact that a little goes a long way appeals to their practical nature.",
+    "customerBasePercentage": 15
+  },
+  {
+    "id": "ageless-matriarch",
+    "name": "The Ageless Matriarch",
+    "overview": "Sophisticated, mature women (typically 60+) who value grace, quality, and simplicity over trends. Often retired or semi-retired but remains highly active in community, philanthropy, and family life. Has substantial purchasing power and is drawn to products that enhance natural beauty without settling into fine lines or feeling heavy.",
+    "demographics": {
+      "profession": "Retired executives, community volunteers, or business owners",
+      "socioeconomicStatus": "High net worth; owns high-value property and has significant discretionary income",
+      "familyStatus": "Married, often with adult children and grandchildren",
+      "geography": "Suburban or affluent vacation areas (e.g., Naples, FL; Scottsdale, AZ; Coastal MA)"
+    },
+    "keyMotivations": [
+      "Hydration and comfort for mature skin",
+      "Simplifying the beauty routine",
+      "Trust in the Bobbi Brown legacy",
+      "Products that enhance rather than cover up"
+    ],
+    "whyBrandAppeals": "Jones Road's specific focus on 'no-makeup makeup' and formulations like Miracle Balm are perfect for mature skin that needs moisture and a natural glow rather than heavy powders. The brand's messaging about embracing one's age resonates deeply with her life stage.",
+    "customerBasePercentage": 15
+  },
+  {
+    "id": "high-powered-executive",
+    "name": "The High-Powered Executive",
+    "overview": "Women in high-level leadership roles (VP, C-Suite, Director) who are time-poor but financially abundant. They need to look polished and professional for Zoom calls and board meetings but don't have time for complex beauty routines. They value efficiency, efficacy, and 'clean' ingredients because they are health-conscious about their high-stress lifestyles.",
+    "demographics": {
+      "profession": "Corporate Executives (VPs, Directors), Attorneys, Finance Professionals",
+      "socioeconomicStatus": "Very High; top tier earners with significant assets",
+      "familyStatus": "Married, often juggling demanding careers with family life",
+      "geography": "Major metropolitan hubs and affluent suburbs (NYC, Chicago, Bay Area, DC)"
+    },
+    "keyMotivations": [
+      "Time-saving efficiency",
+      "Looking polished and awake for professional settings",
+      "High-performance clean ingredients",
+      "Status associated with a curated, high-end brand"
+    ],
+    "whyBrandAppeals": "The 'five-minute face' concept is the primary draw; these women need to look authoritative yet fresh without spending 30 minutes in front of a mirror. The clean beauty aspect appeals to their desire for health and longevity amidst a stressful career.",
+    "customerBasePercentage": 20
+  },
+  {
+    "id": "wellness-healthcare-practitioner",
+    "name": "The Wellness & Healthcare Practitioner",
+    "overview": "Doctors, nurses, therapists, and nutritionists who prioritize health, ingredients, and science. They are educated about what they put on their bodies and are drawn to the 'clean beauty' aspect. They often work long shifts and need makeup that doesn't feel heavy or clog pores, and that makes them look rested despite fatigue.",
+    "demographics": {
+      "profession": "Physicians, Nurses, Psychologists, Nutritionists",
+      "socioeconomicStatus": "Upper-Middle to High; educated professionals with steady income",
+      "familyStatus": "Varied; often balancing intense careers with family",
+      "geography": "Spread across the US, often near major medical centers or university towns"
+    },
+    "keyMotivations": [
+      "Clean, non-toxic formulations",
+      "Looking rested and 'awake' during long shifts",
+      "Skin-nourishing ingredients",
+      "Simplicity and speed of application"
+    ],
+    "whyBrandAppeals": "The stringent exclusion of harmful ingredients appeals to their medical knowledge and desire for safety. The Miracle Balm specifically appeals to this group for adding a healthy glow to tired skin during demanding work schedules.",
+    "customerBasePercentage": 15
+  },
+  {
+    "id": "busy-suburban-supermom",
+    "name": "The Busy Suburban Super-Mom",
+    "overview": "Women in their 30s to 50s juggling active family lives, often with part-time or full-time careers. Deeply involved in their communities (PTA, boosters, sports). They want to look put-together for school drop-offs, sports games, and community events but have very little time for self-care. They seek a 'fresh' look that hides exhaustion.",
+    "demographics": {
+      "profession": "Marketing, HR, Admin, or Stay-at-Home Parents with high volunteer activity",
+      "socioeconomicStatus": "Middle to Upper-Middle Class; stable households",
+      "familyStatus": "Married with school-aged children",
+      "geography": "Suburban areas (e.g., suburbs of Chicago, Atlanta, Dallas)"
+    },
+    "keyMotivations": [
+      "Convenience and speed",
+      "Versatile, multi-purpose products",
+      "Looking like a 'better version of themselves'",
+      "Social proof (brand popularity among peers)"
+    ],
+    "whyBrandAppeals": "Jones Road offers a solution to the 'tired mom' face. Products that can be applied with fingers in the car or quickly in the bathroom suit their on-the-go lifestyle. The brand empowers them to feel confident without a heavy mask of makeup.",
+    "customerBasePercentage": 20
+  },
+  {
+    "id": "creative-entrepreneur",
+    "name": "The Creative Entrepreneur",
+    "overview": "Artists, designers, photographers, and small business owners who value aesthetics and authenticity. They view makeup as a tool for self-expression but prefer a natural, artistic touch over a heavily contoured look. They appreciate the brand's minimalistic packaging and Bobbi Brown's history as an artist herself.",
+    "demographics": {
+      "profession": "Artists, Graphic Designers, Photographers, Interior Designers",
+      "socioeconomicStatus": "Varied, but generally middle to upper-middle class; values investing in quality",
+      "familyStatus": "Varied; often independent or in creative partnerships",
+      "geography": "Arts-centric communities, coastal cities, and cultural hubs"
+    },
+    "keyMotivations": [
+      "Aesthetics and packaging",
+      "High-quality textures and pigments",
+      "Supporting a founder-led brand",
+      "Creativity and versatility of products"
+    ],
+    "whyBrandAppeals": "The brand's minimalist aesthetic aligns with their personal style. As creatives, they appreciate the multi-purpose nature of the products (like using a balm for cheeks and lips) and the focus on enhancing natural features rather than masking them.",
+    "customerBasePercentage": 10
+  }
+]
