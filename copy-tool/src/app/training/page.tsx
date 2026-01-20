@@ -55,6 +55,7 @@ const categories = [
   { id: "products", name: "Products", description: "Product catalog and details" },
   { id: "reviews", name: "Reviews", description: "Customer reviews and testimonials" },
   { id: "performance", name: "Performance", description: "Winning ads and metrics" },
+  { id: "compliance", name: "Compliance", description: "Regulatory claims and callouts" },
 ];
 
 export default function TrainingPage() {

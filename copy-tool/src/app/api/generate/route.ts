@@ -115,6 +115,9 @@ function buildSystemPrompt(
   // Product catalog
   const productCatalog = readTrainingFile("products/products.json");
 
+  // Compliance/Regulatory rules
+  const complianceRules = readTrainingFile("compliance/product-claims.md");
+
   // Frameworks
   const awarenessLevels = readTrainingFile("frameworks/awareness-levels.md");
   const marketSophistication = readTrainingFile("frameworks/market-sophistication.md");
@@ -143,6 +146,10 @@ ${customerReviews ? customerReviews.substring(0, 8000) : "No reviews loaded"}
 ## PRODUCT CATALOG
 
 ${productCatalog ? productCatalog.substring(0, 4000) : "No product catalog loaded"}
+
+## REGULATORY COMPLIANCE - CRITICAL
+
+${complianceRules ? complianceRules : "No compliance rules loaded"}
 
 ## DIRECT RESPONSE FRAMEWORKS
 
@@ -195,6 +202,13 @@ IMPORTANT:
 - Use soft benefit language (comfort, enhance, support - not fight, eliminate, combat)
 - Remember: beauty is a Level 5 market - lead with identity, not just claims
 - Keep the appropriate length and tone for the selected channel
+
+REGULATORY COMPLIANCE - CRITICAL:
+- ONLY use product claims that are explicitly listed in the Regulatory Compliance section above
+- Never claim "long-wear", "all-day wear", or specific percentages unless explicitly approved for that product
+- Never claim "non-comedogenic" or "dermatologist tested" unless listed for that specific product
+- Never claim "24-hour hydration" unless it's listed in the product's approved claims
+- When in doubt, use softer language like "helps", "may improve", or "designed to"
 
 Output only the copy - no explanations, no meta-commentary. Just the ready-to-use copy.
 `;
