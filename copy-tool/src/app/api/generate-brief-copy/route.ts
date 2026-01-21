@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     const anthropic = new Anthropic({ apiKey });
 
     const body = await request.json();
-    const { persona, product, angle, format } = body;
+    const { persona, product, angle, angleNotes, format } = body;
 
     if (!persona || !product || !angle || !format) {
       return NextResponse.json(
@@ -39,6 +39,19 @@ export async function POST(request: NextRequest) {
       `- ${p.zone} (${p.position}, style: ${p.style})`
     ).join("\n");
 
+    // Check if this is a general brand ad (no specific product)
+    const isGeneralBrandAd = product.id === 'general' || product.id === 'brand-value-props';
+
+    const productSection = isGeneralBrandAd
+      ? `BRAND: Jones Road Beauty
+- Clean beauty brand founded by Bobbi Brown
+- Philosophy: Less is more, real skin, effortless beauty
+- Key messaging: Clean ingredients, easy application, makeup that works with your skin`
+      : `PRODUCT: ${product.name} (${product.price})
+- ${product.description || "No description"}
+- Key benefits: ${(product.keyBenefits || []).join(", ") || "Not specified"}
+- Best for: ${product.bestFor || "Everyone"}`;
+
     const prompt = `You are a world-class direct response copywriter for Jones Road Beauty, a clean beauty brand founded by Bobbi Brown.
 
 Generate ad copy for the following brief:
@@ -47,12 +60,10 @@ PERSONA: ${persona.name}
 - ${persona.overview || "No overview"}
 - Key motivations: ${(persona.keyMotivations || []).join(", ") || "Not specified"}
 
-PRODUCT: ${product.name} (${product.price})
-- ${product.description || "No description"}
-- Key benefits: ${(product.keyBenefits || []).join(", ") || "Not specified"}
-- Best for: ${product.bestFor || "Everyone"}
+${productSection}
 
 ANGLE TO EMPHASIZE: ${angle}
+${angleNotes ? `ADDITIONAL ANGLE NOTES: ${angleNotes}` : ''}
 
 AD FORMAT: ${format.name}
 Copy zones needed:
@@ -63,7 +74,7 @@ ${format.specs.styleNotes ? `Style notes: ${format.specs.styleNotes}` : ""}
 Write compelling, conversion-focused copy for each zone. The copy should:
 1. Speak directly to the ${persona.name} persona's motivations
 2. Lead with the "${angle}" angle
-3. Highlight ${product.name}'s benefits naturally
+${isGeneralBrandAd ? '3. Focus on Jones Road Beauty brand values and philosophy' : `3. Highlight ${product.name}'s benefits naturally`}
 4. Use Jones Road's voice: confident, honest, no-BS, warm but direct
 5. Avoid: excessive emojis, clickbait, fake urgency, "clean beauty" clichés
 

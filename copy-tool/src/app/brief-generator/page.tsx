@@ -19,7 +19,7 @@ export default function BriefGeneratorPage() {
   // Selection state
   const [selectedPersona, setSelectedPersona] = useState<Persona | null>(null);
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
-  const [selectedAngles, setSelectedAngles] = useState<string[]>([]);
+  const [selectedAngles, setSelectedAngles] = useState<{ angle: string; notes: string }[]>([]);
   const [selectedFormats, setSelectedFormats] = useState<AdFormat[]>([]);
   const [customAngles, setCustomAngles] = useState<string[]>([]);
   const [newCustomAngle, setNewCustomAngle] = useState("");
@@ -41,6 +41,9 @@ export default function BriefGeneratorPage() {
   const [existingBoards, setExistingBoards] = useState<BriefBoard[]>([]);
   const [selectedBoardId, setSelectedBoardId] = useState<string | null>(null);
   const [saveMode, setSaveMode] = useState<"new" | "existing">("new");
+
+  // Image lightbox state
+  const [enlargedImage, setEnlargedImage] = useState<string | null>(null);
 
   useEffect(() => {
     loadData();
@@ -87,7 +90,7 @@ export default function BriefGeneratorPage() {
 
   const removeCustomAngle = (angle: string) => {
     setCustomAngles(customAngles.filter(a => a !== angle));
-    setSelectedAngles(selectedAngles.filter(a => a !== angle));
+    setSelectedAngles(selectedAngles.filter(a => a.angle !== angle));
   };
 
   const handleProductToggle = (product: Product) => {
@@ -102,11 +105,15 @@ export default function BriefGeneratorPage() {
 
   const handleAngleToggle = (angle: string) => {
     setSelectedAngles((prev) =>
-      prev.includes(angle)
-        ? prev.filter((a) => a !== angle)
-        : prev.length < 5
-        ? [...prev, angle]
-        : prev
+      prev.some((a) => a.angle === angle)
+        ? prev.filter((a) => a.angle !== angle)
+        : [...prev, { angle, notes: '' }]
+    );
+  };
+
+  const updateAngleNotes = (angle: string, notes: string) => {
+    setSelectedAngles((prev) =>
+      prev.map((a) => a.angle === angle ? { ...a, notes } : a)
     );
   };
 
@@ -133,6 +140,7 @@ export default function BriefGeneratorPage() {
           persona: brief.persona,
           product: brief.product,
           angle: brief.angle,
+          angleNotes: brief.angleNotes,
           format: brief.format,
         }),
       });
@@ -160,13 +168,14 @@ export default function BriefGeneratorPage() {
 
     // Generate all combinations first
     for (const product of selectedProducts) {
-      for (const angle of selectedAngles) {
+      for (const angleObj of selectedAngles) {
         for (const format of selectedFormats) {
           const brief: Brief = {
-            id: `${selectedPersona.id}-${product.id}-${angle.slice(0, 10)}-${format.id}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+            id: `${selectedPersona.id}-${product.id}-${angleObj.angle.slice(0, 10)}-${format.id}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
             persona: selectedPersona,
             product: product,
-            angle: angle,
+            angle: angleObj.angle,
+            angleNotes: angleObj.notes || undefined,
             format: {
               id: format.id,
               name: format.name,
@@ -511,7 +520,7 @@ export default function BriefGeneratorPage() {
           <div>
             <h2 className="text-2xl font-semibold text-[var(--foreground)] mb-2">Select Products</h2>
             <p className="text-[var(--muted)] mb-6">
-              Choose up to 4 products to feature ({selectedProducts.length}/4 selected)
+              Choose up to 4 products ({selectedProducts.length}/4 selected)
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -536,6 +545,35 @@ export default function BriefGeneratorPage() {
                   <p className="text-sm text-[var(--muted)] mt-2 line-clamp-2">{product.description}</p>
                 </button>
               ))}
+
+              {/* Brand Value Props Option */}
+              <button
+                onClick={() => handleProductToggle({
+                  id: 'brand-value-props',
+                  name: 'Brand Value Props',
+                  category: 'Brand',
+                  price: '',
+                  description: 'General Jones Road Beauty brand messaging - clean beauty philosophy, Bobbi Brown heritage, real skin approach',
+                  keyBenefits: ['Clean beauty', 'Easy application', 'Natural ingredients', 'Real skin philosophy'],
+                  shades: [],
+                  bestFor: 'All skin types'
+                })}
+                disabled={selectedProducts.length >= 4 && !selectedProducts.some((p) => p.id === 'brand-value-props')}
+                className={`text-left p-4 rounded-xl border-2 transition-all cursor-pointer ${
+                  selectedProducts.some((p) => p.id === 'brand-value-props')
+                    ? "border-[var(--accent)] bg-[var(--accent)]/10"
+                    : selectedProducts.length >= 4
+                    ? "border-[var(--card-border)] bg-[var(--card)] opacity-50"
+                    : "border-[var(--card-border)] bg-[var(--card)] hover:border-[var(--muted-dim)]"
+                }`}
+              >
+                <div className="flex justify-between items-start">
+                  <h3 className="font-semibold text-[var(--foreground)]">Brand Value Props</h3>
+                  <span className="text-xs text-[var(--accent)] bg-[var(--accent)]/10 px-2 py-0.5 rounded">General</span>
+                </div>
+                <p className="text-xs text-[var(--accent)] mt-1">Brand</p>
+                <p className="text-sm text-[var(--muted)] mt-2 line-clamp-2">General Jones Road Beauty brand messaging - no specific product focus</p>
+              </button>
             </div>
           </div>
         )}
@@ -545,42 +583,56 @@ export default function BriefGeneratorPage() {
           <div>
             <h2 className="text-2xl font-semibold text-[var(--foreground)] mb-2">Select Angles to Test</h2>
             <p className="text-[var(--muted)] mb-6">
-              Choose up to 5 key motivations for {selectedPersona.name} ({selectedAngles.length}/5 selected)
+              Select angles for {selectedPersona.name} ({selectedAngles.length} selected)
             </p>
 
             {/* Preset Angles */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {selectedPersona.keyMotivations.map((angle, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleAngleToggle(angle)}
-                  disabled={selectedAngles.length >= 5 && !selectedAngles.includes(angle)}
-                  className={`text-left p-4 rounded-xl border-2 transition-all cursor-pointer ${
-                    selectedAngles.includes(angle)
+              {selectedPersona.keyMotivations.map((angle, index) => {
+                const isSelected = selectedAngles.some((a) => a.angle === angle);
+                const angleData = selectedAngles.find((a) => a.angle === angle);
+                return (
+                  <div key={index} className={`rounded-xl border-2 transition-all ${
+                    isSelected
                       ? "border-[var(--accent)] bg-[var(--accent)]/10"
-                      : selectedAngles.length >= 5
-                      ? "border-[var(--card-border)] bg-[var(--card)] opacity-50"
                       : "border-[var(--card-border)] bg-[var(--card)] hover:border-[var(--muted-dim)]"
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                        selectedAngles.includes(angle)
-                          ? "border-[var(--accent)] bg-[var(--accent)]"
-                          : "border-[var(--muted-dim)]"
-                      }`}
+                  }`}>
+                    <button
+                      onClick={() => handleAngleToggle(angle)}
+                      className="w-full text-left p-4 cursor-pointer"
                     >
-                      {selectedAngles.includes(angle) && (
-                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                      )}
-                    </div>
-                    <span className="font-medium text-[var(--foreground)]">{angle}</span>
+                      <div className="flex items-center gap-3">
+                        <div
+                          className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                            isSelected
+                              ? "border-[var(--accent)] bg-[var(--accent)]"
+                              : "border-[var(--muted-dim)]"
+                          }`}
+                        >
+                          {isSelected && (
+                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                        </div>
+                        <span className="font-medium text-[var(--foreground)]">{angle}</span>
+                      </div>
+                    </button>
+                    {isSelected && (
+                      <div className="px-4 pb-4">
+                        <textarea
+                          value={angleData?.notes || ''}
+                          onChange={(e) => updateAngleNotes(angle, e.target.value)}
+                          onClick={(e) => e.stopPropagation()}
+                          placeholder="Add notes for this angle (optional)..."
+                          className="w-full text-sm bg-[var(--background)] border border-[var(--card-border)] text-[var(--foreground)] rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[var(--accent)] resize-none"
+                          rows={2}
+                        />
+                      </div>
+                    )}
                   </div>
-                </button>
-              ))}
+                );
+              })}
             </div>
 
             {/* Custom Angles Section */}
@@ -603,7 +655,7 @@ export default function BriefGeneratorPage() {
                 />
                 <button
                   onClick={addCustomAngle}
-                  disabled={!newCustomAngle.trim() || selectedAngles.length >= 5}
+                  disabled={!newCustomAngle.trim()}
                   className="px-4 py-3 bg-[var(--accent)] text-white rounded-lg hover:opacity-90 disabled:opacity-50 transition-opacity cursor-pointer flex items-center gap-2"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -616,49 +668,64 @@ export default function BriefGeneratorPage() {
               {/* Custom Angles List */}
               {customAngles.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {customAngles.map((angle, index) => (
-                    <div
-                      key={`custom-${index}`}
-                      className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all ${
-                        selectedAngles.includes(angle)
-                          ? "border-[var(--accent)] bg-[var(--accent)]/10"
-                          : selectedAngles.length >= 5
-                          ? "border-[var(--card-border)] bg-[var(--card)] opacity-50"
-                          : "border-[var(--card-border)] bg-[var(--card)]"
-                      }`}
-                    >
-                      <button
-                        onClick={() => handleAngleToggle(angle)}
-                        disabled={selectedAngles.length >= 5 && !selectedAngles.includes(angle)}
-                        className="flex items-center gap-3 flex-1 text-left cursor-pointer"
+                  {customAngles.map((angle, index) => {
+                    const isSelected = selectedAngles.some((a) => a.angle === angle);
+                    const angleData = selectedAngles.find((a) => a.angle === angle);
+                    return (
+                      <div
+                        key={`custom-${index}`}
+                        className={`rounded-xl border-2 transition-all ${
+                          isSelected
+                            ? "border-[var(--accent)] bg-[var(--accent)]/10"
+                            : "border-[var(--card-border)] bg-[var(--card)]"
+                        }`}
                       >
-                        <div
-                          className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                            selectedAngles.includes(angle)
-                              ? "border-[var(--accent)] bg-[var(--accent)]"
-                              : "border-[var(--muted-dim)]"
-                          }`}
-                        >
-                          {selectedAngles.includes(angle) && (
-                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        <div className="flex items-center justify-between p-4">
+                          <button
+                            onClick={() => handleAngleToggle(angle)}
+                            className="flex items-center gap-3 flex-1 text-left cursor-pointer"
+                          >
+                            <div
+                              className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                                isSelected
+                                  ? "border-[var(--accent)] bg-[var(--accent)]"
+                                  : "border-[var(--muted-dim)]"
+                              }`}
+                            >
+                              {isSelected && (
+                                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
+                              )}
+                            </div>
+                            <span className="font-medium text-[var(--foreground)]">{angle}</span>
+                            <span className="text-xs text-[var(--accent)] bg-[var(--accent)]/10 px-2 py-0.5 rounded">Custom</span>
+                          </button>
+                          <button
+                            onClick={() => removeCustomAngle(angle)}
+                            className="p-1 text-[var(--muted)] hover:text-red-500 transition-colors cursor-pointer"
+                            title="Remove custom angle"
+                          >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                             </svg>
-                          )}
+                          </button>
                         </div>
-                        <span className="font-medium text-[var(--foreground)]">{angle}</span>
-                        <span className="text-xs text-[var(--accent)] bg-[var(--accent)]/10 px-2 py-0.5 rounded">Custom</span>
-                      </button>
-                      <button
-                        onClick={() => removeCustomAngle(angle)}
-                        className="p-1 text-[var(--muted)] hover:text-red-500 transition-colors cursor-pointer"
-                        title="Remove custom angle"
-                      >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
-                    </div>
-                  ))}
+                        {isSelected && (
+                          <div className="px-4 pb-4">
+                            <textarea
+                              value={angleData?.notes || ''}
+                              onChange={(e) => updateAngleNotes(angle, e.target.value)}
+                              onClick={(e) => e.stopPropagation()}
+                              placeholder="Add notes for this angle (optional)..."
+                              className="w-full text-sm bg-[var(--background)] border border-[var(--card-border)] text-[var(--foreground)] rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[var(--accent)] resize-none"
+                              rows={2}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -772,7 +839,7 @@ export default function BriefGeneratorPage() {
                 <div className="flex flex-wrap gap-2">
                   {selectedAngles.map((a, i) => (
                     <span key={i} className="text-sm bg-[var(--input-bg)] text-[var(--foreground)] px-2 py-1 rounded">
-                      {a.length > 30 ? a.slice(0, 30) + "..." : a}
+                      {a.angle.length > 30 ? a.angle.slice(0, 30) + "..." : a.angle}
                     </span>
                   ))}
                 </div>
@@ -872,13 +939,13 @@ export default function BriefGeneratorPage() {
 
             {/* Organized by Angle */}
             <div className="space-y-8">
-              {selectedAngles.map((angle) => {
-                const angleBriefs = generatedBriefs.filter((b) => b.angle === angle);
+              {selectedAngles.map((angleObj) => {
+                const angleBriefs = generatedBriefs.filter((b) => b.angle === angleObj.angle);
                 return (
-                  <div key={angle} className="bg-[var(--card)] border border-[var(--card-border)] rounded-xl overflow-hidden">
+                  <div key={angleObj.angle} className="bg-[var(--card)] border border-[var(--card-border)] rounded-xl overflow-hidden">
                     {/* Angle Header */}
                     <div className="px-4 py-3 bg-[var(--input-bg)] border-b border-[var(--card-border)]">
-                      <h3 className="font-semibold text-[var(--foreground)]">{angle}</h3>
+                      <h3 className="font-semibold text-[var(--foreground)]">{angleObj.angle}</h3>
                       <p className="text-xs text-[var(--muted)]">{angleBriefs.length} briefs</p>
                     </div>
 
@@ -1019,7 +1086,11 @@ export default function BriefGeneratorPage() {
               {/* Brief Info Row */}
               <div className="flex gap-4 items-start">
                 {/* Reference Thumbnail */}
-                <div className="w-24 h-24 bg-[var(--input-bg)] rounded-lg overflow-hidden flex-shrink-0">
+                <button
+                  onClick={() => selectedBrief.format.thumbnail && setEnlargedImage(selectedBrief.format.thumbnail)}
+                  className={`w-24 h-24 bg-[var(--input-bg)] rounded-lg overflow-hidden flex-shrink-0 ${selectedBrief.format.thumbnail ? 'cursor-zoom-in hover:ring-2 hover:ring-[var(--accent)]' : ''}`}
+                  disabled={!selectedBrief.format.thumbnail}
+                >
                   {selectedBrief.format.thumbnail ? (
                     <img src={selectedBrief.format.thumbnail} alt="" className="w-full h-full object-cover" />
                   ) : (
@@ -1029,12 +1100,15 @@ export default function BriefGeneratorPage() {
                       </svg>
                     </div>
                   )}
-                </div>
+                </button>
                 {/* Info Grid */}
                 <div className="flex-1 grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
                   <div><span className="text-[var(--muted)]">PERSONA:</span> <span className="text-[var(--foreground)]">{selectedBrief.persona.name}</span></div>
                   <div><span className="text-[var(--muted)]">PRODUCT:</span> <span className="text-[var(--foreground)]">{selectedBrief.product.name}</span></div>
                   <div className="col-span-2"><span className="text-[var(--muted)]">ANGLE:</span> <span className="text-[var(--foreground)]">{selectedBrief.angle}</span></div>
+                  {selectedBrief.angleNotes && (
+                    <div className="col-span-2"><span className="text-[var(--muted)]">ANGLE NOTES:</span> <span className="text-[var(--foreground)] italic">{selectedBrief.angleNotes}</span></div>
+                  )}
                   <div className="col-span-2"><span className="text-[var(--muted)]">FORMAT:</span> <span className="text-[var(--foreground)]">{selectedBrief.format.name}</span></div>
                 </div>
               </div>
@@ -1088,6 +1162,7 @@ export default function BriefGeneratorPage() {
                 ) : (
                   <>
                     <button onClick={() => { setSelectedBrief(null); setIsEditing(false); }} className="px-4 py-2 text-sm text-[var(--muted)] hover:text-[var(--foreground)] cursor-pointer">Close</button>
+                    <button onClick={startEditing} className="px-4 py-2 text-sm border border-[var(--card-border)] text-[var(--foreground)] rounded-lg hover:bg-[var(--input-bg)] cursor-pointer">Edit</button>
                     <button className="px-4 py-2 text-sm bg-[var(--accent)] text-white rounded-lg hover:opacity-90 cursor-pointer">Regenerate Copy</button>
                   </>
                 )}
@@ -1213,6 +1288,29 @@ export default function BriefGeneratorPage() {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Image Lightbox */}
+      {enlargedImage && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 cursor-zoom-out"
+          onClick={() => setEnlargedImage(null)}
+        >
+          <button
+            onClick={() => setEnlargedImage(null)}
+            className="absolute top-4 right-4 p-2 text-white/70 hover:text-white transition-colors"
+          >
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          <img
+            src={enlargedImage}
+            alt="Reference image"
+            className="max-w-[90vw] max-h-[90vh] object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
         </div>
       )}
     </div>

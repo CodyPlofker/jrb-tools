@@ -31,6 +31,7 @@ export interface Brief {
   persona: Persona;
   product: Product;
   angle: string; // The key motivation being tested
+  angleNotes?: string; // Additional notes/context for the angle
   format: {
     id: string;
     name: string;
