@@ -555,7 +555,7 @@ export default function BriefGeneratorPage() {
                   price: '',
                   description: 'General Jones Road Beauty brand messaging - clean beauty philosophy, Bobbi Brown heritage, real skin approach',
                   keyBenefits: ['Clean beauty', 'Easy application', 'Natural ingredients', 'Real skin philosophy'],
-                  shades: [],
+                  shades: '',
                   bestFor: 'All skin types'
                 })}
                 disabled={selectedProducts.length >= 4 && !selectedProducts.some((p) => p.id === 'brand-value-props')}
