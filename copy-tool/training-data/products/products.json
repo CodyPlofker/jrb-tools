@@ -450,5 +450,43 @@
     ],
     "shades": "Sunkissed - deep reddish bronze sheer tint",
     "bestFor": "Light to dark skin tones seeking warm, bronzy glow"
+  },
+  {
+    "id": "the-eyeshadow-stick",
+    "name": "The Eyeshadow Stick",
+    "category": "Eyes",
+    "price": "$32",
+    "description": "A creamy, highly pigmented shadow stick that transforms your eye look without trying. Glides on effortlessly and blends with just your fingertip for a seamless, buildable finish.",
+    "keyBenefits": [
+      "One-swipe application",
+      "Blends with fingertip",
+      "Buildable coverage",
+      "Long-lasting wear",
+      "No fallout",
+      "Crease-resistant"
+    ],
+    "shades": "Cream, Sand, Taupe, Toffee, Smokey Grey, Brown",
+    "bestFor": "Quick, effortless eye color",
+    "launchDate": "February 10, 2026",
+    "launchTier": "1",
+    "tagline": "Not-So-Basic Basics",
+    "whyWeLoveIt": "One stick, unlimited looks. Whether you want a subtle wash of color or a more dramatic smoky eye, this stick does it all with zero effort. It's the easiest way to elevate your eye look in seconds.",
+    "howItsDifferent": "The secret is its formula—creamy enough to glide on smoothly but with enough grip to stay put all day. Unlike powders that can crease or fall out, this stick formula melts into your skin and sets beautifully.",
+    "howToUse": "Apply directly to eyelids and blend using your fingertip or a brush. Layer for more intensity or use as a base for powder shadows.",
+    "whoItsFor": "Even if you're someone who doesn't typically wear eyeshadow, this stick makes it foolproof. Perfect for makeup minimalists who want maximum impact with minimal effort.",
+    "keyIngredients": "Vitamin E, Soybean Oil, Jojoba Esters",
+    "finish": "Creamy matte to subtle sheen depending on shade",
+    "formula": "Creamy stick formula",
+    "claims": [
+      "Dermatologist tested",
+      "Ophthalmologist tested",
+      "Suitable for sensitive eyes",
+      "Vegan"
+    ],
+    "weight": "1.5g / 0.05oz",
+    "availability": [
+      "JonesRoadBeauty.com",
+      "All Jones Road stores"
+    ]
   }
 ]

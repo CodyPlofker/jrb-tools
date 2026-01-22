@@ -84,6 +84,8 @@ export default function BriefGeneratorPage() {
     const trimmed = newCustomAngle.trim();
     if (trimmed && !customAngles.includes(trimmed) && !selectedPersona?.keyMotivations.includes(trimmed)) {
       setCustomAngles([...customAngles, trimmed]);
+      // Auto-select the custom angle when added
+      setSelectedAngles([...selectedAngles, { angle: trimmed, notes: '' }]);
       setNewCustomAngle("");
     }
   };
@@ -512,6 +514,42 @@ export default function BriefGeneratorPage() {
                 </button>
               ))}
             </div>
+
+            {/* No Persona Option */}
+            <div className="mt-6 pt-6 border-t border-[var(--card-border)]">
+              <button
+                onClick={() => handlePersonaSelect({
+                  id: "no-persona",
+                  name: "General Audience",
+                  overview: "General product announcement without targeting a specific persona",
+                  demographics: {
+                    profession: "General audience",
+                    socioeconomicStatus: "",
+                    familyStatus: "",
+                    geography: "",
+                  },
+                  keyMotivations: [],
+                  whyBrandAppeals: "",
+                })}
+                className={`w-full text-left p-3 rounded-lg border transition-all cursor-pointer ${
+                  selectedPersona?.id === "no-persona"
+                    ? "border-[var(--accent)] bg-[var(--accent)]/10"
+                    : "border-[var(--card-border)] bg-[var(--card)] hover:border-[var(--muted-dim)]"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-[var(--input-bg)] flex items-center justify-center flex-shrink-0">
+                    <svg className="w-4 h-4 text-[var(--muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-[var(--foreground)]">General Audience</h3>
+                    <p className="text-xs text-[var(--muted)]">For broad product launches without persona targeting</p>
+                  </div>
+                </div>
+              </button>
+            </div>
           </div>
         )}
 
@@ -583,10 +621,14 @@ export default function BriefGeneratorPage() {
           <div>
             <h2 className="text-2xl font-semibold text-[var(--foreground)] mb-2">Select Angles to Test</h2>
             <p className="text-[var(--muted)] mb-6">
-              Select angles for {selectedPersona.name} ({selectedAngles.length} selected)
+              {selectedPersona.id === "no-persona"
+                ? `Add custom angles for your briefs (${selectedAngles.length} selected)`
+                : `Select angles for ${selectedPersona.name} (${selectedAngles.length} selected)`
+              }
             </p>
 
-            {/* Preset Angles */}
+            {/* Preset Angles - only show if persona has motivations */}
+            {selectedPersona.keyMotivations.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {selectedPersona.keyMotivations.map((angle, index) => {
                 const isSelected = selectedAngles.some((a) => a.angle === angle);
@@ -634,14 +676,17 @@ export default function BriefGeneratorPage() {
                 );
               })}
             </div>
+            )}
 
             {/* Custom Angles Section */}
-            <div className="mt-8">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="flex-1 h-px bg-[var(--card-border)]" />
-                <span className="text-sm text-[var(--muted)]">Or add custom angle</span>
-                <div className="flex-1 h-px bg-[var(--card-border)]" />
-              </div>
+            <div className={selectedPersona.keyMotivations.length > 0 ? "mt-8" : ""}>
+              {selectedPersona.keyMotivations.length > 0 && (
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="flex-1 h-px bg-[var(--card-border)]" />
+                  <span className="text-sm text-[var(--muted)]">Or add custom angle</span>
+                  <div className="flex-1 h-px bg-[var(--card-border)]" />
+                </div>
+              )}
 
               {/* Add Custom Angle Input */}
               <div className="flex gap-2 mb-4">
