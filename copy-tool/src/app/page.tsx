@@ -396,6 +396,12 @@ export default function Home() {
             >
               Personas
             </a>
+            <a
+              href="/gtm"
+              className="text-sm text-[var(--muted)] hover:text-[var(--foreground)] cursor-pointer transition-colors"
+            >
+              GTM Workflow
+            </a>
             <button
               onClick={toggleTheme}
               className="theme-toggle"
