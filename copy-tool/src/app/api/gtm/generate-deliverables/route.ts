@@ -6,15 +6,11 @@ import { put } from "@vercel/blob";
 import {
   PMCDocument,
   CreativeBrief,
-  PaidSocialStrategy,
-  PaidSocialDeliverable,
   LaunchTier,
   ChannelStrategies,
   ChannelDeliverables,
   ChannelId,
-  EmailStrategy,
   EmailDeliverable,
-  SMSStrategy,
   SMSDeliverable,
   OrganicSocialStrategy,
   OrganicDeliverable,
@@ -22,14 +18,8 @@ import {
   InfluencerDeliverable,
   RetailStrategy,
   RetailDeliverable,
-  PRStrategy,
-  PRDeliverable,
-  WebStrategy,
-  WebDeliverable,
   RetentionStrategy,
   RetentionDeliverables,
-  RetentionEmailItem,
-  RetentionSMSItem,
   CreativeStrategy,
   CreativeDeliverable,
   EcomStrategy,
@@ -61,294 +51,6 @@ function getApiKey(): string | undefined {
 // ============================================
 // PAID SOCIAL DELIVERABLES
 // ============================================
-async function generatePaidSocialDeliverables(
-  anthropic: Anthropic,
-  strategy: PaidSocialStrategy,
-  pmc: PMCDocument,
-  creativeBrief: CreativeBrief,
-  productName: string
-): Promise<PaidSocialDeliverable[]> {
-  // Load meta ads training data
-  let metaAdsGuide = "";
-  try {
-    metaAdsGuide = fs.readFileSync(
-      path.join(process.cwd(), "training-data/channels/meta-ads.md"),
-      "utf-8"
-    );
-  } catch {
-    console.log("Meta ads guide not found");
-  }
-
-  const deliverables: PaidSocialDeliverable[] = [];
-
-  for (const concept of strategy.concepts) {
-    for (const format of concept.formats) {
-      const prompt = `You are a world-class direct response copywriter for Jones Road Beauty.
-
-Generate ad copy for this creative concept:
-
-PRODUCT: ${productName}
-CONCEPT: ${concept.name}
-ANGLE: ${concept.angle}
-HOOK FORMULA: ${concept.hookFormula}
-KEY MESSAGE: ${concept.keyMessage}
-FORMAT: ${format}
-
-PMC REFERENCE:
-- Tagline: ${pmc.tagline}
-- What It Is: ${pmc.whatItIs}
-- Why We Love It: ${pmc.whyWeLoveIt}
-- Who It's For: ${pmc.whoItsFor}
-
-${metaAdsGuide ? `AD COPY GUIDELINES:\n${metaAdsGuide.slice(0, 1500)}...\n` : ""}
-
-COPY REQUIREMENTS:
-${format === "static" ? `
-For STATIC ads, provide:
-- primaryText: 1-3 sentences for the ad caption (125 chars ideal, 250 max for Meta)
-- headline: 5-7 words (40 chars max)
-- linkDescription: 1 line supporting text (25 chars)
-- creativeHeadline: Text overlay for the image (15-25 chars)
-- subhead: Supporting text on image (20-40 chars)
-- cta: Call to action (2-4 words)
-- badge: Optional proof point (10-15 chars, e.g., "8 Shades", "Clinically Tested")
-` : format === "video" ? `
-For VIDEO ads, provide:
-- primaryText: 1-3 sentences for the ad caption
-- headline: 5-7 words
-- linkDescription: 1 line supporting text
-- hook: The first 3 seconds hook/text overlay (very short, attention-grabbing)
-` : `
-For CAROUSEL ads, provide:
-- primaryText: 1-3 sentences introducing the carousel
-- headline: 5-7 words
-- linkDescription: 1 line supporting text
-`}
-
-Apply the ${concept.hookFormula} hook formula:
-${concept.hookFormula === "problem-first" ? "Lead with the problem, then present the solution" : ""}
-${concept.hookFormula === "identity-first" ? "Lead with who this is for, make them feel seen" : ""}
-${concept.hookFormula === "contrarian" ? "Challenge what they think they know, flip the script" : ""}
-${concept.hookFormula === "direct-benefit" ? "Lead with the biggest benefit, be direct" : ""}
-
-Jones Road voice: confident, honest, warm, direct. No fluff, no fake urgency.
-
-Return ONLY a JSON object with the copy fields. Example for static:
-{
-  "primaryText": "...",
-  "headline": "...",
-  "linkDescription": "...",
-  "creativeHeadline": "...",
-  "subhead": "...",
-  "cta": "...",
-  "badge": "..."
-}
-
-No explanation, just the JSON.`;
-
-      const response = await anthropic.messages.create({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1024,
-        messages: [{ role: "user", content: prompt }],
-      });
-
-      const textContent = response.content.find((c) => c.type === "text");
-      if (!textContent || textContent.type !== "text") continue;
-
-      let copy: PaidSocialDeliverable["copy"];
-      try {
-        const jsonMatch = textContent.text.match(/\{[\s\S]*\}/);
-        if (jsonMatch) {
-          copy = JSON.parse(jsonMatch[0]);
-        } else {
-          continue;
-        }
-      } catch {
-        console.error("Error parsing copy for", concept.name, format);
-        continue;
-      }
-
-      deliverables.push({
-        id: `${concept.id}-${format}-${Date.now()}`,
-        conceptId: concept.id,
-        conceptName: concept.name,
-        format,
-        copy,
-        status: "generated",
-      });
-    }
-  }
-
-  return deliverables;
-}
-
-// ============================================
-// EMAIL DELIVERABLES
-// ============================================
-async function generateEmailDeliverables(
-  anthropic: Anthropic,
-  strategy: EmailStrategy,
-  pmc: PMCDocument,
-  creativeBrief: CreativeBrief,
-  productName: string
-): Promise<EmailDeliverable[]> {
-  const deliverables: EmailDeliverable[] = [];
-
-  for (const item of strategy.sequence) {
-    const prompt = `You are an expert email copywriter for Jones Road Beauty, a clean beauty brand founded by Bobbi Brown.
-
-Generate email copy for this sequence item:
-
-PRODUCT: ${productName}
-EMAIL TYPE: ${item.type}
-NAME: ${item.name}
-TIMING: ${item.timing}
-GOAL: ${item.goal}
-KEY MESSAGE: ${item.keyMessage}
-SUBJECT LINE IDEAS: ${item.subjectLineIdeas.join(", ")}
-
-OVERALL THEME: ${strategy.overallTheme}
-SUBJECT LINE APPROACH: ${strategy.subjectLineApproach}
-
-PMC REFERENCE:
-- Tagline: ${pmc.tagline}
-- What It Is: ${pmc.whatItIs}
-- Why We Love It: ${pmc.whyWeLoveIt}
-- Who It's For: ${pmc.whoItsFor}
-- How To Use: ${pmc.howToUse}
-
-CREATIVE BRIEF:
-- Key Benefits: ${creativeBrief.keyBenefits.join(", ")}
-- Target: ${creativeBrief.targetDemographic}
-
-Write the email copy with:
-- subjectLine: Compelling subject line (40-60 chars) based on the approach given
-- preheader: Preview text that complements the subject (50-100 chars)
-- headline: Main headline in the email body
-- body: 2-4 paragraphs of email body copy, natural and conversational
-- cta: Primary call-to-action button text (2-5 words)
-
-Jones Road voice: confident, honest, warm, direct. Like talking to a friend who happens to be a makeup expert.
-
-Return ONLY a JSON object:
-{
-  "subjectLine": "...",
-  "preheader": "...",
-  "headline": "...",
-  "body": "...",
-  "cta": "..."
-}`;
-
-    const response = await anthropic.messages.create({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 1500,
-      messages: [{ role: "user", content: prompt }],
-    });
-
-    const textContent = response.content.find((c) => c.type === "text");
-    if (!textContent || textContent.type !== "text") continue;
-
-    let copy: EmailDeliverable["copy"];
-    try {
-      const jsonMatch = textContent.text.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        copy = JSON.parse(jsonMatch[0]);
-      } else {
-        continue;
-      }
-    } catch {
-      console.error("Error parsing email copy for", item.name);
-      continue;
-    }
-
-    deliverables.push({
-      id: `email-${item.id}-${Date.now()}`,
-      sequenceItemId: item.id,
-      type: item.type,
-      name: item.name,
-      copy,
-      status: "generated",
-    });
-  }
-
-  return deliverables;
-}
-
-// ============================================
-// SMS DELIVERABLES
-// ============================================
-async function generateSMSDeliverables(
-  anthropic: Anthropic,
-  strategy: SMSStrategy,
-  pmc: PMCDocument,
-  productName: string
-): Promise<SMSDeliverable[]> {
-  const deliverables: SMSDeliverable[] = [];
-
-  for (const item of strategy.messages) {
-    const prompt = `You are an expert SMS copywriter for Jones Road Beauty.
-
-Generate SMS message for:
-
-PRODUCT: ${productName}
-MESSAGE TYPE: ${item.type}
-TIMING: ${item.timing}
-GOAL: ${item.goal}
-KEY MESSAGE: ${item.keyMessage}
-
-TONE NOTES: ${strategy.toneNotes}
-
-PMC REFERENCE:
-- Tagline: ${pmc.tagline}
-- What It Is: ${pmc.whatItIs}
-
-Write an SMS message that:
-- Is 160 characters or less (ideal) or up to 320 chars max
-- Feels personal and urgent without being spammy
-- Includes a clear value proposition
-- Has a sense of exclusivity for SMS subscribers
-
-Return ONLY a JSON object:
-{
-  "message": "...",
-  "link": "jonesroadbeauty.com/..."
-}`;
-
-    const response = await anthropic.messages.create({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 500,
-      messages: [{ role: "user", content: prompt }],
-    });
-
-    const textContent = response.content.find((c) => c.type === "text");
-    if (!textContent || textContent.type !== "text") continue;
-
-    let copy: SMSDeliverable["copy"];
-    try {
-      const jsonMatch = textContent.text.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        copy = JSON.parse(jsonMatch[0]);
-      } else {
-        continue;
-      }
-    } catch {
-      console.error("Error parsing SMS copy for", item.type);
-      continue;
-    }
-
-    deliverables.push({
-      id: `sms-${item.id}-${Date.now()}`,
-      sequenceItemId: item.id,
-      type: item.type,
-      name: `${item.type} - ${item.timing}`,
-      copy,
-      status: "generated",
-    });
-  }
-
-  return deliverables;
-}
-
 // ============================================
 // RETENTION DELIVERABLES (Email + SMS combined)
 // ============================================
@@ -759,7 +461,7 @@ PMC REFERENCE:
 - What It Is: ${pmc.whatItIs}
 - Why We Love It: ${pmc.whyWeLoveIt}
 - How It's Different: ${pmc.howItsDifferent}
-${pmc.bobbisQuotes?.length ? `- Bobbi's Quotes: ${pmc.bobbisQuotes.map(q => \`"\${q.quote}"\`).join("; ")}` : ""}
+${pmc.bobbisQuotes?.length ? `- Bobbi's Quotes: ${pmc.bobbisQuotes.map(q => '"' + q.quote + '"').join("; ")}` : ""}
 
 Write a press release with:
 - title: Headline for the release
@@ -858,20 +560,27 @@ async function generateOrganicDeliverables(
 ): Promise<OrganicDeliverable[]> {
   const deliverables: OrganicDeliverable[] = [];
 
-  for (const post of strategy.posts) {
-    const platformNotes = strategy.platformNotes[post.platform] || "";
+  // Combine all platform posts with their platform info
+  const allPosts: Array<{ post: typeof strategy.instagramPosts[0]; platform: 'instagram' | 'tiktok' | 'youtube' }> = [
+    ...(strategy.instagramPosts || []).map(post => ({ post, platform: 'instagram' as const })),
+    ...(strategy.tiktokPosts || []).map(post => ({ post, platform: 'tiktok' as const })),
+    ...(strategy.youtubePosts || []).map(post => ({ post, platform: 'youtube' as const })),
+  ];
+
+  for (const { post, platform } of allPosts) {
+    const platformNotes = strategy.platformNotes?.[platform] || "";
 
     const prompt = `You are an expert organic social media copywriter for Jones Road Beauty.
 
 Generate social post copy for:
 
 PRODUCT: ${productName}
-PLATFORM: ${post.platform}
+PLATFORM: ${platform}
 FORMAT: ${post.format}
 TIMING: ${post.timing}
 CONCEPT: ${post.concept}
-KEY MESSAGE: ${post.keyMessage}
 
+STRATEGIC CONTEXT: ${strategy.strategicSummary}
 PLATFORM NOTES: ${platformNotes}
 
 PMC REFERENCE:
@@ -897,36 +606,32 @@ Return ONLY a JSON object:
   "hashtags": ["...", "..."]${post.format === "reel" || post.format === "short" ? ',\n  "hook": "..."' : ''}
 }`;
 
-    const response = await anthropic.messages.create({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 1000,
-      messages: [{ role: "user", content: prompt }],
-    });
-
-    const textContent = response.content.find((c) => c.type === "text");
-    if (!textContent || textContent.type !== "text") continue;
-
-    let copy: OrganicDeliverable["copy"];
     try {
+      const response = await anthropic.messages.create({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        messages: [{ role: "user", content: prompt }],
+      });
+
+      const textContent = response.content.find((c) => c.type === "text");
+      if (!textContent || textContent.type !== "text") continue;
+
       const jsonMatch = textContent.text.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
-        copy = JSON.parse(jsonMatch[0]);
-      } else {
-        continue;
+        const copy = JSON.parse(jsonMatch[0]);
+        deliverables.push({
+          id: `organic-${post.id}-${Date.now()}`,
+          postItemId: post.id,
+          platform,
+          format: post.format,
+          copy,
+          status: "generated",
+        });
       }
-    } catch {
-      console.error("Error parsing organic copy for", post.concept);
+    } catch (error) {
+      console.error("Error parsing organic copy for", post.concept, error);
       continue;
     }
-
-    deliverables.push({
-      id: `organic-${post.id}-${Date.now()}`,
-      postItemId: post.id,
-      platform: post.platform,
-      format: post.format,
-      copy,
-      status: "generated",
-    });
   }
 
   return deliverables;
@@ -1177,228 +882,6 @@ Return ONLY a JSON object:
 }
 
 // ============================================
-// PR DELIVERABLES
-// ============================================
-async function generatePRDeliverables(
-  anthropic: Anthropic,
-  strategy: PRStrategy,
-  pmc: PMCDocument,
-  creativeBrief: CreativeBrief,
-  productName: string
-): Promise<PRDeliverable[]> {
-  const deliverables: PRDeliverable[] = [];
-  const types: PRDeliverable["type"][] = ["press-release", "media-pitch", "fact-sheet"];
-
-  for (const type of types) {
-    const prompt = `You are an expert PR copywriter for Jones Road Beauty, founded by makeup legend Bobbi Brown.
-
-Generate ${type} for:
-
-PRODUCT: ${productName}
-LAUNCH DATE: ${creativeBrief.launchDate}
-ANGLE: ${strategy.angle}
-KEY MESSAGES: ${strategy.keyMessages.join("; ")}
-PRESS RELEASE OUTLINE: ${strategy.pressReleaseOutline}
-TARGET OUTLETS: ${strategy.targetOutlets.join(", ")}
-
-PMC REFERENCE:
-- Tagline: ${pmc.tagline}
-- What It Is: ${pmc.whatItIs}
-- Why We Love It: ${pmc.whyWeLoveIt}
-- How It's Different: ${pmc.howItsDifferent}
-${pmc.bobbisQuotes?.length ? `- Bobbi's Quotes: ${pmc.bobbisQuotes.map(q => `"${q.quote}"`).join("; ")}` : ""}
-
-${type === "press-release" ? `
-PRESS RELEASE format:
-- title: Headline for the release
-- body: Full press release with proper structure (dateline, lead, body, boilerplate)
-- boilerplate: About Jones Road Beauty paragraph
-` : type === "media-pitch" ? `
-MEDIA PITCH format:
-- title: Email subject line for editors
-- body: Short, personalized pitch email (150-250 words)
-` : `
-FACT SHEET format:
-- title: "Product Name Fact Sheet"
-- body: Bulleted facts about the product (ingredients, benefits, price, availability)
-`}
-
-Return ONLY a JSON object:
-{
-  "title": "...",
-  "body": "...",
-  "boilerplate": "..." // only for press-release
-}`;
-
-    const response = await anthropic.messages.create({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 2000,
-      messages: [{ role: "user", content: prompt }],
-    });
-
-    const textContent = response.content.find((c) => c.type === "text");
-    if (!textContent || textContent.type !== "text") continue;
-
-    let copy: PRDeliverable["copy"];
-    try {
-      const jsonMatch = textContent.text.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        copy = JSON.parse(jsonMatch[0]);
-      } else {
-        continue;
-      }
-    } catch {
-      console.error("Error parsing PR copy for", type);
-      continue;
-    }
-
-    deliverables.push({
-      id: `pr-${type}-${Date.now()}`,
-      type,
-      copy,
-      status: "generated",
-    });
-  }
-
-  return deliverables;
-}
-
-// ============================================
-// WEB DELIVERABLES
-// ============================================
-async function generateWebDeliverables(
-  anthropic: Anthropic,
-  strategy: WebStrategy,
-  pmc: PMCDocument,
-  creativeBrief: CreativeBrief,
-  productName: string
-): Promise<WebDeliverable[]> {
-  const deliverables: WebDeliverable[] = [];
-
-  // PDP Copy
-  const pdpPrompt = `You are an expert web copywriter for Jones Road Beauty.
-
-Generate PDP (Product Detail Page) copy for:
-
-PRODUCT: ${productName}
-
-STRATEGY:
-- Headline: ${strategy.pdpSections.headline}
-- Subhead: ${strategy.pdpSections.subhead}
-- Benefit Bullets: ${strategy.pdpSections.benefitBullets.join("; ")}
-- How To Use: ${strategy.pdpSections.howToUse}
-
-PMC REFERENCE:
-- Tagline: ${pmc.tagline}
-- What It Is: ${pmc.whatItIs}
-- Why We Love It: ${pmc.whyWeLoveIt}
-- How To Use: ${pmc.howToUse}
-- Who It's For: ${pmc.whoItsFor}
-
-Write the PDP with:
-- headline: Main product name/headline
-- subhead: Supporting tagline
-- body: Product description paragraph (2-3 sentences)
-- bullets: 4-6 benefit bullets
-- cta: Add to bag CTA text
-
-Return ONLY a JSON object:
-{
-  "headline": "...",
-  "subhead": "...",
-  "body": "...",
-  "bullets": ["...", "..."],
-  "cta": "..."
-}`;
-
-  const pdpResponse = await anthropic.messages.create({
-    model: "claude-sonnet-4-20250514",
-    max_tokens: 1000,
-    messages: [{ role: "user", content: pdpPrompt }],
-  });
-
-  const pdpContent = pdpResponse.content.find((c) => c.type === "text");
-  if (pdpContent && pdpContent.type === "text") {
-    try {
-      const jsonMatch = pdpContent.text.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        const copy = JSON.parse(jsonMatch[0]);
-        deliverables.push({
-          id: `web-pdp-${Date.now()}`,
-          type: "pdp",
-          copy,
-          status: "generated",
-        });
-      }
-    } catch {
-      console.error("Error parsing PDP copy");
-    }
-  }
-
-  // Landing Page if strategy includes it
-  if (strategy.landingPageConcept) {
-    const lpPrompt = `You are an expert web copywriter for Jones Road Beauty.
-
-Generate landing page copy for:
-
-PRODUCT: ${productName}
-LANDING PAGE CONCEPT: ${strategy.landingPageConcept}
-
-PMC REFERENCE:
-- Tagline: ${pmc.tagline}
-- What It Is: ${pmc.whatItIs}
-- Why We Love It: ${pmc.whyWeLoveIt}
-- How It's Different: ${pmc.howItsDifferent}
-
-CREATIVE BRIEF:
-- Key Benefits: ${creativeBrief.keyBenefits.join(", ")}
-- Target: ${creativeBrief.targetDemographic}
-
-Write landing page sections:
-- headline: Hero headline
-- subhead: Hero subhead
-- body: Main value proposition paragraph
-- bullets: 3-5 key benefits
-- cta: Primary CTA button
-
-Return ONLY a JSON object:
-{
-  "headline": "...",
-  "subhead": "...",
-  "body": "...",
-  "bullets": ["...", "..."],
-  "cta": "..."
-}`;
-
-    const lpResponse = await anthropic.messages.create({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 1000,
-      messages: [{ role: "user", content: lpPrompt }],
-    });
-
-    const lpContent = lpResponse.content.find((c) => c.type === "text");
-    if (lpContent && lpContent.type === "text") {
-      try {
-        const jsonMatch = lpContent.text.match(/\{[\s\S]*\}/);
-        if (jsonMatch) {
-          const copy = JSON.parse(jsonMatch[0]);
-          deliverables.push({
-            id: `web-landing-${Date.now()}`,
-            type: "landing-page",
-            copy,
-            status: "generated",
-          });
-        }
-      } catch {
-        console.error("Error parsing landing page copy");
-      }
-    }
-  }
-
-  return deliverables;
-}
-
-// ============================================
 // MAIN HANDLER
 // ============================================
 export async function POST(request: NextRequest) {
@@ -1418,7 +901,6 @@ export async function POST(request: NextRequest) {
       tier,
       pmc,
       creativeBrief,
-      strategy, // Legacy paid social strategy
       channelStrategies,
       selectedChannels,
       productName,
@@ -1427,7 +909,6 @@ export async function POST(request: NextRequest) {
       tier: LaunchTier;
       pmc: PMCDocument;
       creativeBrief: CreativeBrief;
-      strategy?: PaidSocialStrategy;
       channelStrategies?: ChannelStrategies;
       selectedChannels?: ChannelId[];
       productName: string;
@@ -1482,13 +963,19 @@ export async function POST(request: NextRequest) {
           break;
 
         case "organic-social":
-          if (channelStrategies?.organicSocial?.posts?.length) {
-            channelDeliverables.organicSocial = await generateOrganicDeliverables(
-              anthropic,
-              channelStrategies.organicSocial,
-              pmc,
-              productName
-            );
+          if (channelStrategies?.organicSocial) {
+            const organic = channelStrategies.organicSocial;
+            const hasPosts = (organic.instagramPosts?.length || 0) +
+                            (organic.tiktokPosts?.length || 0) +
+                            (organic.youtubePosts?.length || 0) > 0;
+            if (hasPosts) {
+              channelDeliverables.organicSocial = await generateOrganicDeliverables(
+                anthropic,
+                organic,
+                pmc,
+                productName
+              );
+            }
           }
           break;
 
@@ -1557,7 +1044,6 @@ export async function POST(request: NextRequest) {
           const updatedLaunch = {
             ...launch,
             channelDeliverables,
-            deliverables: channelDeliverables.paidSocial || [], // Legacy support
             status: "complete",
             updatedAt: new Date().toISOString(),
           };
@@ -1575,7 +1061,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       channelDeliverables,
-      deliverables: channelDeliverables.paidSocial || [], // Legacy support
     });
   } catch (error) {
     console.error("Error generating deliverables:", error);

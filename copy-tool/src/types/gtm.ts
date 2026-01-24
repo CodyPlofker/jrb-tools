@@ -350,12 +350,6 @@ export interface ChannelDeliverables {
   ecom?: EcomDeliverable[];
   prAffiliate?: PRAffiliateDeliverable[];
   retail?: RetailDeliverable[];
-  // Legacy support - keep for backwards compatibility
-  paidSocial?: PaidSocialDeliverable[];
-  email?: EmailDeliverable[];
-  sms?: SMSDeliverable[];
-  pr?: PRDeliverable[];
-  web?: WebDeliverable[];
 }
 
 // Retention deliverables (emails + SMS)

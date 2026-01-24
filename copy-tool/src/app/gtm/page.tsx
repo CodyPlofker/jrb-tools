@@ -303,7 +303,7 @@ export default function GTMPage() {
                         {tier.replace("tier-", "Tier ")}
                       </div>
                       <div className="text-xs text-[var(--muted)] mt-0.5">
-                        {TIER_CONFIG[tier].conceptCount.min}-{TIER_CONFIG[tier].conceptCount.max} concepts
+                        {TIER_CONFIG[tier].creative.concepts.min}-{TIER_CONFIG[tier].creative.concepts.max} concepts
                       </div>
                     </button>
                   ))}

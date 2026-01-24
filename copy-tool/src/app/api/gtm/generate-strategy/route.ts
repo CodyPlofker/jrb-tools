@@ -296,7 +296,7 @@ async function generatePaidMediaStrategy(
     };
   }
 
-  const allChannels = ["meta", "tiktok", "google", "youtube", "pinterest", "ctv", "applovin", "programmatic"];
+  const allChannels = ["meta", "tiktok", "google", "youtube", "pinterest", "ctv", "applovin", "programmatic"] as const;
   const enabledChannels = paidConfig.channels;
 
   const prompt = `You are a senior paid media strategist for Jones Road Beauty.
@@ -339,8 +339,8 @@ Return ONLY valid JSON:
     ${allChannels.map(ch => `{
       "id": "${ch}",
       "name": "${ch}",
-      "enabled": ${enabledChannels.includes(ch)},
-      "budgetPercent": ${enabledChannels.includes(ch) ? Math.round(100 / enabledChannels.length) : 0},
+      "enabled": ${(enabledChannels as readonly string[]).includes(ch)},
+      "budgetPercent": ${(enabledChannels as readonly string[]).includes(ch) ? Math.round(100 / enabledChannels.length) : 0},
       "notes": "Brief notes on ${ch} approach"
     }`).join(",\n    ")}
   ],

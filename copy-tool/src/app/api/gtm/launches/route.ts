@@ -56,8 +56,9 @@ export async function POST(request: NextRequest) {
       rawNotes: body.rawNotes || "",
       pmc: body.pmc,
       creativeBrief: body.creativeBrief,
-      paidSocialStrategy: body.paidSocialStrategy,
-      deliverables: body.deliverables,
+      channelStrategies: body.channelStrategies,
+      selectedChannels: body.selectedChannels,
+      channelDeliverables: body.channelDeliverables,
     };
 
     // Save to blob storage

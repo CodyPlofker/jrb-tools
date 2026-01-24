@@ -5,14 +5,14 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
   GTMLaunch,
-  PaidSocialDeliverable,
+  CreativeDeliverable,
   EmailDeliverable,
   SMSDeliverable,
   OrganicDeliverable,
   InfluencerDeliverable,
   RetailDeliverable,
-  PRDeliverable,
-  WebDeliverable,
+  EcomDeliverable,
+  PRAffiliateDeliverable,
   ChannelDeliverables,
   ChannelId,
   CHANNEL_CONFIG,
@@ -32,7 +32,7 @@ export default function DeliverablesPage() {
   const [activeTab, setActiveTab] = useState<ChannelId>("retention");
 
   // Legacy state for backwards compatibility
-  const [deliverables, setDeliverables] = useState<PaidSocialDeliverable[]>([]);
+  const [deliverables, setDeliverables] = useState<CreativeDeliverable[]>([]);
   const [selectedDeliverable, setSelectedDeliverable] = useState<string | null>(null);
   const [filterFormat, setFilterFormat] = useState<string>("all");
   const [filterConcept, setFilterConcept] = useState<string>("all");
@@ -82,7 +82,7 @@ export default function DeliverablesPage() {
   };
 
   const generateDeliverables = async () => {
-    if (!launch?.selectedChannels?.length && !launch?.paidSocialStrategy?.concepts?.length) {
+    if (!launch?.selectedChannels?.length && !launch?.channelStrategies) {
       alert("Please complete the strategy step first");
       return;
     }
@@ -97,7 +97,6 @@ export default function DeliverablesPage() {
           tier: launch.tier,
           pmc: launch.pmc,
           creativeBrief: launch.creativeBrief,
-          strategy: launch.paidSocialStrategy,
           channelStrategies: launch.channelStrategies,
           selectedChannels: launch.selectedChannels,
           productName: launch.product || launch.name,
@@ -116,7 +115,6 @@ export default function DeliverablesPage() {
       // Save status
       await saveLaunch({
         channelDeliverables: data.channelDeliverables,
-        deliverables: data.deliverables,
         status: "complete",
       });
     } catch (error) {
@@ -154,28 +152,34 @@ export default function DeliverablesPage() {
     }
   };
 
-  const updatePaidSocialDeliverable = (id: string, updates: Partial<PaidSocialDeliverable>) => {
-    const updated = (channelDeliverables.paidSocial || deliverables).map((d) =>
+  const updatePaidSocialDeliverable = (id: string, updates: Partial<CreativeDeliverable>) => {
+    const updated = (channelDeliverables.creative || deliverables).map((d) =>
       d.id === id ? { ...d, ...updates, status: "edited" as const } : d
     );
-    if (channelDeliverables.paidSocial) {
-      setChannelDeliverables({ ...channelDeliverables, paidSocial: updated });
+    if (channelDeliverables.creative) {
+      setChannelDeliverables({ ...channelDeliverables, creative: updated });
     }
     setDeliverables(updated);
   };
 
   const updateEmailDeliverable = (id: string, updates: Partial<EmailDeliverable>) => {
-    const updated = (channelDeliverables.email || []).map((d) =>
+    const updated = (channelDeliverables.retention?.emails || []).map((d) =>
       d.id === id ? { ...d, ...updates, status: "edited" as const } : d
     );
-    setChannelDeliverables({ ...channelDeliverables, email: updated });
+    setChannelDeliverables({
+      ...channelDeliverables,
+      retention: { ...channelDeliverables.retention, emails: updated, sms: channelDeliverables.retention?.sms || [] }
+    });
   };
 
   const updateSMSDeliverable = (id: string, updates: Partial<SMSDeliverable>) => {
-    const updated = (channelDeliverables.sms || []).map((d) =>
+    const updated = (channelDeliverables.retention?.sms || []).map((d) =>
       d.id === id ? { ...d, ...updates, status: "edited" as const } : d
     );
-    setChannelDeliverables({ ...channelDeliverables, sms: updated });
+    setChannelDeliverables({
+      ...channelDeliverables,
+      retention: { ...channelDeliverables.retention, emails: channelDeliverables.retention?.emails || [], sms: updated }
+    });
   };
 
   const updateOrganicDeliverable = (id: string, updates: Partial<OrganicDeliverable>) => {
@@ -199,18 +203,18 @@ export default function DeliverablesPage() {
     setChannelDeliverables({ ...channelDeliverables, retail: updated });
   };
 
-  const updatePRDeliverable = (id: string, updates: Partial<PRDeliverable>) => {
-    const updated = (channelDeliverables.pr || []).map((d) =>
+  const updatePRAffiliateDeliverable = (id: string, updates: Partial<PRAffiliateDeliverable>) => {
+    const updated = (channelDeliverables.prAffiliate || []).map((d) =>
       d.id === id ? { ...d, ...updates, status: "edited" as const } : d
     );
-    setChannelDeliverables({ ...channelDeliverables, pr: updated });
+    setChannelDeliverables({ ...channelDeliverables, prAffiliate: updated });
   };
 
-  const updateWebDeliverable = (id: string, updates: Partial<WebDeliverable>) => {
-    const updated = (channelDeliverables.web || []).map((d) =>
+  const updateEcomDeliverable = (id: string, updates: Partial<EcomDeliverable>) => {
+    const updated = (channelDeliverables.ecom || []).map((d) =>
       d.id === id ? { ...d, ...updates, status: "edited" as const } : d
     );
-    setChannelDeliverables({ ...channelDeliverables, web: updated });
+    setChannelDeliverables({ ...channelDeliverables, ecom: updated });
   };
 
   const copyToClipboard = (text: string) => {
@@ -219,14 +223,13 @@ export default function DeliverablesPage() {
 
   const exportAll = () => {
     const exportData = {
-      paidSocial: channelDeliverables.paidSocial || deliverables,
-      email: channelDeliverables.email,
-      sms: channelDeliverables.sms,
+      retention: channelDeliverables.retention,
+      creative: channelDeliverables.creative || deliverables,
       organicSocial: channelDeliverables.organicSocial,
       influencer: channelDeliverables.influencer,
+      ecom: channelDeliverables.ecom,
+      prAffiliate: channelDeliverables.prAffiliate,
       retail: channelDeliverables.retail,
-      pr: channelDeliverables.pr,
-      web: channelDeliverables.web,
     };
 
     const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
@@ -240,7 +243,6 @@ export default function DeliverablesPage() {
 
   const hasAnyDeliverables = () => {
     return (
-      // New channel structure
       (channelDeliverables.retention?.emails?.length || 0) > 0 ||
       (channelDeliverables.retention?.sms?.length || 0) > 0 ||
       (channelDeliverables.creative?.length || 0) > 0 ||
@@ -249,12 +251,6 @@ export default function DeliverablesPage() {
       (channelDeliverables.ecom?.length || 0) > 0 ||
       (channelDeliverables.prAffiliate?.length || 0) > 0 ||
       (channelDeliverables.retail?.length || 0) > 0 ||
-      // Legacy support
-      (channelDeliverables.paidSocial?.length || 0) > 0 ||
-      (channelDeliverables.email?.length || 0) > 0 ||
-      (channelDeliverables.sms?.length || 0) > 0 ||
-      (channelDeliverables.pr?.length || 0) > 0 ||
-      (channelDeliverables.web?.length || 0) > 0 ||
       deliverables.length > 0
     );
   };
@@ -265,15 +261,12 @@ export default function DeliverablesPage() {
       launch?.channelStrategies?.retention?.emailItems?.length ||
       launch?.channelStrategies?.retention?.smsItems?.length ||
       launch?.channelStrategies?.creative?.concepts?.length ||
-      launch?.channelStrategies?.['paid-media']?.channelAllocations?.length ||
-      launch?.channelStrategies?.['organic-social']?.instagramPosts?.length ||
+      launch?.channelStrategies?.paidMedia?.channels?.length ||
+      launch?.channelStrategies?.organicSocial?.instagramPosts?.length ||
       launch?.channelStrategies?.influencer?.strategicSummary ||
       launch?.channelStrategies?.ecom?.placements?.length ||
-      launch?.channelStrategies?.['pr-affiliate']?.strategicSummary ||
-      launch?.channelStrategies?.retail?.activations?.length ||
-      // Legacy support
-      launch?.paidSocialStrategy?.concepts?.length ||
-      launch?.channelStrategies?.paidSocial?.concepts?.length
+      launch?.channelStrategies?.prAffiliate?.strategicSummary ||
+      launch?.channelStrategies?.retail?.activations?.length
     );
   };
 
@@ -429,13 +422,13 @@ export default function DeliverablesPage() {
                 if (!config) return null; // Skip if channel not in new config
 
                 const hasContent =
-                  (ch === "retention" && (channelDeliverables.retention?.emails?.length || channelDeliverables.retention?.sms?.length || channelDeliverables.email?.length || channelDeliverables.sms?.length)) ||
-                  (ch === "creative" && (channelDeliverables.creative?.length || channelDeliverables.paidSocial?.length)) ||
+                  (ch === "retention" && (channelDeliverables.retention?.emails?.length || channelDeliverables.retention?.sms?.length)) ||
+                  (ch === "creative" && channelDeliverables.creative?.length) ||
                   (ch === "paid-media" && channelDeliverables.paidMedia?.length) ||
                   (ch === "organic-social" && channelDeliverables.organicSocial?.length) ||
                   (ch === "influencer" && channelDeliverables.influencer?.length) ||
-                  (ch === "ecom" && (channelDeliverables.ecom?.length || channelDeliverables.web?.length)) ||
-                  (ch === "pr-affiliate" && (channelDeliverables.prAffiliate?.length || channelDeliverables.pr?.length)) ||
+                  (ch === "ecom" && channelDeliverables.ecom?.length) ||
+                  (ch === "pr-affiliate" && channelDeliverables.prAffiliate?.length) ||
                   (ch === "retail" && channelDeliverables.retail?.length);
 
                 return (
@@ -463,8 +456,8 @@ export default function DeliverablesPage() {
             <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-6">
               {activeTab === "retention" && (
                 <RetentionDeliverablesView
-                  emailDeliverables={channelDeliverables.retention?.emails || channelDeliverables.email || []}
-                  smsDeliverables={channelDeliverables.retention?.sms || channelDeliverables.sms || []}
+                  emailDeliverables={channelDeliverables.retention?.emails || []}
+                  smsDeliverables={channelDeliverables.retention?.sms || []}
                   onUpdateEmail={updateEmailDeliverable}
                   onUpdateSMS={updateSMSDeliverable}
                   copyToClipboard={copyToClipboard}
@@ -472,8 +465,8 @@ export default function DeliverablesPage() {
               )}
               {activeTab === "creative" && (
                 <PaidSocialDeliverablesView
-                  deliverables={channelDeliverables.creative || channelDeliverables.paidSocial || deliverables}
-                  concepts={launch.channelStrategies?.creative?.concepts || launch.channelStrategies?.paidSocial?.concepts || launch.paidSocialStrategy?.concepts || []}
+                  deliverables={channelDeliverables.creative || deliverables}
+                  concepts={launch.channelStrategies?.creative?.concepts || []}
                   onUpdate={updatePaidSocialDeliverable}
                   copyToClipboard={copyToClipboard}
                   selectedDeliverable={selectedDeliverable}
@@ -486,7 +479,7 @@ export default function DeliverablesPage() {
               )}
               {activeTab === "paid-media" && (
                 <PaidMediaDeliverablesView
-                  strategy={launch.channelStrategies?.['paid-media']}
+                  strategy={launch.channelStrategies?.paidMedia}
                 />
               )}
               {activeTab === "organic-social" && (
@@ -505,15 +498,15 @@ export default function DeliverablesPage() {
               )}
               {activeTab === "ecom" && (
                 <WebDeliverablesView
-                  deliverables={channelDeliverables.ecom || channelDeliverables.web || []}
-                  onUpdate={updateWebDeliverable}
+                  deliverables={channelDeliverables.ecom || []}
+                  onUpdate={updateEcomDeliverable}
                   copyToClipboard={copyToClipboard}
                 />
               )}
               {activeTab === "pr-affiliate" && (
                 <PRDeliverablesView
-                  deliverables={channelDeliverables.prAffiliate || channelDeliverables.pr || []}
-                  onUpdate={updatePRDeliverable}
+                  deliverables={channelDeliverables.prAffiliate || []}
+                  onUpdate={updatePRAffiliateDeliverable}
                   copyToClipboard={copyToClipboard}
                 />
               )}
@@ -533,7 +526,7 @@ export default function DeliverablesPage() {
           <div className="flex items-center justify-between mt-6 pt-6 border-t border-[var(--card-border)]">
             <div className="flex items-center gap-4">
               <button
-                onClick={() => saveLaunch({ channelDeliverables, deliverables })}
+                onClick={() => saveLaunch({ channelDeliverables })}
                 disabled={isSaving}
                 className="text-sm text-[var(--muted)] hover:text-[var(--foreground)] transition-colors cursor-pointer"
               >
@@ -585,9 +578,9 @@ function PaidSocialDeliverablesView({
   filterConcept,
   setFilterConcept,
 }: {
-  deliverables: PaidSocialDeliverable[];
+  deliverables: CreativeDeliverable[];
   concepts: { id: string; name: string }[];
-  onUpdate: (id: string, updates: Partial<PaidSocialDeliverable>) => void;
+  onUpdate: (id: string, updates: Partial<CreativeDeliverable>) => void;
   copyToClipboard: (text: string) => void;
   selectedDeliverable: string | null;
   setSelectedDeliverable: (id: string | null) => void;
@@ -932,14 +925,15 @@ function EmailDeliverablesView({
 
             <div>
               <div className="flex items-center justify-between mb-1">
-                <label className="text-xs text-[var(--muted)]">Subject Line</label>
-                <button onClick={() => copyToClipboard(selectedEmail.copy.subjectLine)} className="text-xs text-[var(--accent)] hover:underline cursor-pointer">Copy</button>
+                <label className="text-xs text-[var(--muted)]">Subject Lines</label>
+                <button onClick={() => copyToClipboard(selectedEmail.copy.subjectLines?.join('\n') || '')} className="text-xs text-[var(--accent)] hover:underline cursor-pointer">Copy</button>
               </div>
-              <input
-                type="text"
-                value={selectedEmail.copy.subjectLine}
-                onChange={(e) => onUpdate(selectedEmail.id, { copy: { ...selectedEmail.copy, subjectLine: e.target.value } })}
+              <textarea
+                value={selectedEmail.copy.subjectLines?.join('\n') || ''}
+                onChange={(e) => onUpdate(selectedEmail.id, { copy: { ...selectedEmail.copy, subjectLines: e.target.value.split('\n') } })}
+                rows={3}
                 className="w-full p-3 bg-[var(--input-bg)] border border-[var(--card-border)] rounded-lg text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--accent)]"
+                placeholder="One subject line per line"
               />
             </div>
 
@@ -1151,14 +1145,15 @@ function RetentionDeliverablesView({
 
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <label className="text-xs text-[var(--muted)]">Subject Line</label>
-                    <button onClick={() => copyToClipboard(selectedEmailData.copy.subjectLine)} className="text-xs text-[var(--accent)] hover:underline cursor-pointer">Copy</button>
+                    <label className="text-xs text-[var(--muted)]">Subject Lines</label>
+                    <button onClick={() => copyToClipboard(selectedEmailData.copy.subjectLines?.join('\n') || '')} className="text-xs text-[var(--accent)] hover:underline cursor-pointer">Copy</button>
                   </div>
-                  <input
-                    type="text"
-                    value={selectedEmailData.copy.subjectLine}
-                    onChange={(e) => onUpdateEmail(selectedEmailData.id, { copy: { ...selectedEmailData.copy, subjectLine: e.target.value } })}
+                  <textarea
+                    value={selectedEmailData.copy.subjectLines?.join('\n') || ''}
+                    onChange={(e) => onUpdateEmail(selectedEmailData.id, { copy: { ...selectedEmailData.copy, subjectLines: e.target.value.split('\n') } })}
+                    rows={3}
                     className="w-full p-3 bg-[var(--input-bg)] border border-[var(--card-border)] rounded-lg text-base text-[var(--foreground)] focus:outline-none focus:border-[var(--accent)]"
+                    placeholder="One subject line per line"
                   />
                 </div>
 
@@ -1463,10 +1458,10 @@ function InfluencerDeliverablesView({
       </div>
 
       <div>
-        <label className="text-xs text-[var(--muted)] mb-1 block">Key Messaging Summary</label>
+        <label className="text-xs text-[var(--muted)] mb-1 block">Brief Document</label>
         <textarea
-          value={brief.copy.keyMessaging}
-          onChange={(e) => onUpdate(brief.id, { copy: { ...brief.copy, keyMessaging: e.target.value } })}
+          value={brief.copy.briefDocument || ''}
+          onChange={(e) => onUpdate(brief.id, { copy: { ...brief.copy, briefDocument: e.target.value } })}
           rows={4}
           className="w-full p-3 bg-[var(--input-bg)] border border-[var(--card-border)] rounded-lg text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--accent)] resize-none"
         />
@@ -1475,16 +1470,16 @@ function InfluencerDeliverablesView({
       <div>
         <label className="text-xs text-[var(--muted)] mb-2 block">Talking Points</label>
         <div className="space-y-2">
-          {brief.copy.talkingPointsList.map((point, i) => (
+          {(brief.copy.talkingPoints || []).map((point, i) => (
             <div key={i} className="flex items-start gap-2">
               <span className="text-[var(--muted)] text-sm mt-2">{i + 1}.</span>
               <input
                 type="text"
                 value={point}
                 onChange={(e) => {
-                  const updated = [...brief.copy.talkingPointsList];
+                  const updated = [...(brief.copy.talkingPoints || [])];
                   updated[i] = e.target.value;
-                  onUpdate(brief.id, { copy: { ...brief.copy, talkingPointsList: updated } });
+                  onUpdate(brief.id, { copy: { ...brief.copy, talkingPoints: updated } });
                 }}
                 className="flex-1 p-2 bg-[var(--input-bg)] border border-[var(--card-border)] rounded-lg text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--accent)]"
               />
@@ -1574,8 +1569,8 @@ function PRDeliverablesView({
   onUpdate,
   copyToClipboard,
 }: {
-  deliverables: PRDeliverable[];
-  onUpdate: (id: string, updates: Partial<PRDeliverable>) => void;
+  deliverables: PRAffiliateDeliverable[];
+  onUpdate: (id: string, updates: Partial<PRAffiliateDeliverable>) => void;
   copyToClipboard: (text: string) => void;
 }) {
   const [selected, setSelected] = useState<string | null>(deliverables[0]?.id || null);
@@ -1677,8 +1672,8 @@ function WebDeliverablesView({
   onUpdate,
   copyToClipboard,
 }: {
-  deliverables: WebDeliverable[];
-  onUpdate: (id: string, updates: Partial<WebDeliverable>) => void;
+  deliverables: EcomDeliverable[];
+  onUpdate: (id: string, updates: Partial<EcomDeliverable>) => void;
   copyToClipboard: (text: string) => void;
 }) {
   const [selected, setSelected] = useState<string | null>(deliverables[0]?.id || null);

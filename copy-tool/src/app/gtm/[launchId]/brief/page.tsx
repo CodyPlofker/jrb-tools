@@ -369,9 +369,9 @@ ${brainstorm.additionalNotes}
               <Link
                 href={`/gtm/${launchId}/deliverables`}
                 className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
-                  launch?.channelStrategies || launch?.paidSocialStrategy ? "bg-[var(--input-bg)] text-[var(--foreground)] hover:bg-[var(--card-border)]" : "bg-[var(--input-bg)] text-[var(--muted)] cursor-not-allowed opacity-50"
+                  launch?.channelStrategies ? "bg-[var(--input-bg)] text-[var(--foreground)] hover:bg-[var(--card-border)]" : "bg-[var(--input-bg)] text-[var(--muted)] cursor-not-allowed opacity-50"
                 }`}
-                onClick={(e) => !(launch?.channelStrategies || launch?.paidSocialStrategy) && e.preventDefault()}
+                onClick={(e) => !launch?.channelStrategies && e.preventDefault()}
               >
                 <span className="w-5 h-5 rounded-full bg-[var(--card-border)] flex items-center justify-center text-xs">3</span>
                 <span className="hidden sm:inline">Deliverables</span>
