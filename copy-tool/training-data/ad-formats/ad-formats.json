@@ -2,7 +2,7 @@
   {
     "id": "product-hero-with-benefit-badge-mkiu5w13",
     "name": "Product Hero with Benefit Badge",
-    "description": "",
+    "description": "Bold claim headline with comparison badge and humorous parenthetical subline",
     "createdAt": "2026-01-17T21:45:11.271Z",
     "thumbnail": "/ad-formats/product-hero-with-benefit-badge-mkiu5w13/sample-1.jpg",
     "sampleImages": [
@@ -13,10 +13,10 @@
         {
           "zone": "headline",
           "position": "top-center",
-          "style": "bold, large green text",
+          "style": "bold, large text",
           "maxChars": 25,
           "required": true,
-          "description": "Main benefit statement or product positioning"
+          "description": "Bold, simple claim statement. Pattern: '[Thing] is the new [thing]' or '[Benefit] in [format]' e.g. 'Fiber is the new protein.' Keep it punchy and declarative."
         },
         {
           "zone": "benefit-badge",
@@ -24,7 +24,7 @@
           "style": "burst/star shape with bold text",
           "maxChars": 35,
           "required": false,
-          "description": "Highlighting key product attribute or comparison"
+          "description": "Comparison-based benefit claim. Pattern: 'MORE [X] THAN [Y]' e.g. 'MORE FIBER THAN 2 CUPS OF BROCCOLI'. Must be specific and comparative."
         },
         {
           "zone": "humorous-subline",
@@ -32,7 +32,7 @@
           "style": "parenthetical, smaller casual text",
           "maxChars": 50,
           "required": false,
-          "description": "Playful or relatable benefit statement in casual tone"
+          "description": "Playful parenthetical that adds personality. Pattern: '(Especially if you [relatable scenario])' - casual, self-aware humor."
         },
         {
           "zone": "product-label",
@@ -40,7 +40,7 @@
           "style": "product packaging text",
           "maxChars": 20,
           "required": true,
-          "description": "Brand name and product identifier on package"
+          "description": "Brand name on package"
         },
         {
           "zone": "product-descriptor",
@@ -48,10 +48,10 @@
           "style": "small descriptive text on package",
           "maxChars": 30,
           "required": true,
-          "description": "Product category or flavor description"
+          "description": "Product category descriptor on packaging e.g. 'Superfoods Greens Gummies'"
         }
       ],
-      "styleNotes": "Clean, health-focused design with warm cream background, hand-held product shot for relatability, uses humor to make health benefits approachable, combines bold benefit claims with casual conversational tone",
+      "styleNotes": "Clean, health-focused design with warm background and hand-held product shot. Headline is a bold declarative claim. Benefit badge uses comparison format. Humorous subline adds personality in parentheses. Keep all copy SHORT and punchy.",
       "bestFor": [
         "health food products",
         "functional snacks",
@@ -65,7 +65,7 @@
   {
     "id": "product-hero-with-social-proof-mkiuarmi",
     "name": "Product Hero with Social Proof",
-    "description": "",
+    "description": "Minimal product hero with conversational headline and social proof badge",
     "createdAt": "2026-01-17T21:48:58.842Z",
     "thumbnail": "/ad-formats/product-hero-with-social-proof-mkiuarmi/sample-1.jpg",
     "sampleImages": [
@@ -74,85 +74,36 @@
     "specs": {
       "copyPlacements": [
         {
-          "zone": "brand-header",
-          "position": "top-left",
-          "style": "bold",
-          "maxChars": 25,
-          "required": true,
-          "description": "Brand name and sponsored label"
-        },
-        {
-          "zone": "opening-hook",
-          "position": "upper-left",
-          "style": "conversational",
-          "maxChars": 120,
-          "required": true,
-          "description": "Problem-focused opening question or statement"
-        },
-        {
           "zone": "main-headline",
-          "position": "center-overlay",
-          "style": "elegant-serif",
-          "maxChars": 60,
+          "position": "top-center",
+          "style": "elegant-serif with italic emphasis",
+          "maxChars": 45,
           "required": true,
-          "description": "Primary value proposition with emphasis text"
+          "description": "Conversational headline with *emphasis* on key benefit phrase. Pattern: 'The [benefit phrase] for [audience]' e.g. 'The *no-makeup makeup* for chronically late people'"
         },
         {
           "zone": "subheadline",
-          "position": "center-below-headline",
+          "position": "below-headline",
           "style": "clean-sans",
-          "maxChars": 80,
+          "maxChars": 55,
           "required": true,
-          "description": "Supporting benefit statement"
+          "description": "Supporting benefit statement that expands on the headline promise"
         },
         {
           "zone": "social-proof",
-          "position": "lower-center",
+          "position": "bottom-center",
           "style": "badge-style",
           "maxChars": 30,
           "required": true,
-          "description": "Star rating and review count"
-        },
-        {
-          "zone": "website-url",
-          "position": "bottom-left",
-          "style": "small-subtle",
-          "maxChars": 40,
-          "required": true,
-          "description": "Brand website URL"
-        },
-        {
-          "zone": "secondary-headline",
-          "position": "bottom-left-large",
-          "style": "bold-sans",
-          "maxChars": 35,
-          "required": true,
-          "description": "Action-oriented headline"
-        },
-        {
-          "zone": "product-description",
-          "position": "bottom-left-small",
-          "style": "light-descriptive",
-          "maxChars": 40,
-          "required": false,
-          "description": "Brief product description"
-        },
-        {
-          "zone": "cta-button",
-          "position": "bottom-right",
-          "style": "bold-button",
-          "maxChars": 15,
-          "required": true,
-          "description": "Primary call-to-action"
+          "description": "Star rating and review count. Pattern: '★★★★★ [number] [X] STAR REVIEWS' e.g. '★★★★★ 29,931 5 STAR REVIEWS'"
         }
       ],
-      "styleNotes": "Clean, minimal design with elegant serif headlines contrasting with modern sans-serif supporting text. Uses warm, natural product photography with plenty of white space. Social proof prominently displayed as credibility badge.",
+      "styleNotes": "Clean, minimal design with elegant serif headline featuring italic emphasis on key phrase. Product hero shot centered with social proof badge at bottom. Keep copy tight and conversational.",
       "bestFor": [
         "beauty products",
         "skincare",
         "wellness products",
         "lifestyle brands",
-        "subscription services",
         "premium consumer goods"
       ]
     }
@@ -217,6 +168,239 @@
         "functional foods",
         "premium health products",
         "benefit-driven campaigns"
+      ]
+    }
+  },
+  {
+    "id": "split-product-benefits-with-guarantee",
+    "name": "Split Product Benefits with Guarantee",
+    "description": "Four-quadrant layout with bold headline, guarantee callout, product shot, and ingredient benefits list",
+    "createdAt": "2026-01-25T20:00:00.000Z",
+    "thumbnail": "",
+    "sampleImages": [],
+    "specs": {
+      "copyPlacements": [
+        {
+          "zone": "brand-label",
+          "position": "top-left",
+          "style": "small, subtle brand identifier",
+          "maxChars": 20,
+          "required": true,
+          "description": "Brand name displayed small above headline"
+        },
+        {
+          "zone": "primary-headline",
+          "position": "top-left-large",
+          "style": "bold, uppercase, high-impact",
+          "maxChars": 22,
+          "required": true,
+          "description": "Bold benefit claim with timeframe or result. Pattern: '[RESULT] IN [TIME]' e.g. 'BETTER FOCUS IN 60 MINS'"
+        },
+        {
+          "zone": "guarantee-headline",
+          "position": "top-right",
+          "style": "script/handwritten feel",
+          "maxChars": 25,
+          "required": true,
+          "description": "Risk-reversal guarantee statement. Pattern: 'Or [Guarantee]' e.g. 'Or Get Your Money Back'"
+        },
+        {
+          "zone": "benefit-1",
+          "position": "bottom-right",
+          "style": "single line with bold keyword",
+          "maxChars": 35,
+          "required": true,
+          "description": "Ingredient benefit line. Pattern: '[Ingredient] for [benefit]' e.g. 'Lion's Mane for memory & learning'"
+        },
+        {
+          "zone": "benefit-2",
+          "position": "bottom-right",
+          "style": "single line with bold keyword",
+          "maxChars": 35,
+          "required": true,
+          "description": "Ingredient benefit line. Pattern: '[Ingredient] to [benefit]' e.g. 'CDP Choline to support attention'"
+        },
+        {
+          "zone": "benefit-3",
+          "position": "bottom-right",
+          "style": "single line with bold keyword",
+          "maxChars": 35,
+          "required": true,
+          "description": "Ingredient benefit line. Pattern: '[Ingredient] provides [benefit]' e.g. '7-8 DHF provides neuroprotection'"
+        },
+        {
+          "zone": "product-name",
+          "position": "overlay-on-product",
+          "style": "product packaging text",
+          "maxChars": 15,
+          "required": true,
+          "description": "Product name as shown on packaging"
+        }
+      ],
+      "styleNotes": "Four-quadrant split layout. Top-left: bold headline. Top-right: guarantee with product hero shot. Bottom-left: product packaging shot. Bottom-right: stacked ingredient benefits. Benefits must be single lines following the pattern '[Ingredient/Feature] for/to/provides [benefit keyword]'. Keep all copy tight and scannable.",
+      "bestFor": [
+        "supplements",
+        "nootropics",
+        "functional wellness",
+        "products with ingredient stories",
+        "money-back guarantee offers",
+        "benefit-driven health products"
+      ]
+    }
+  },
+  {
+    "id": "negative-quote-based-product-hero",
+    "name": "Negative Quote-Based Product Hero",
+    "description": "Sarcastic quote format using ironic statements no one would say to highlight the problem",
+    "createdAt": "2026-01-25T20:30:00.000Z",
+    "thumbnail": "",
+    "sampleImages": [],
+    "specs": {
+      "copyPlacements": [
+        {
+          "zone": "quote-headline",
+          "position": "top-center",
+          "style": "bold, large, quoted",
+          "maxChars": 40,
+          "required": true,
+          "description": "Sarcastic/ironic quote - something NOBODY would ever say. Pattern: 'I WANT [BAD THING]' e.g. 'I WANT MICROPLASTICS IN MY BREASTMILK'. Must be absurd and highlight the problem the product solves."
+        },
+        {
+          "zone": "attribution",
+          "position": "below-quote",
+          "style": "subtle, italic, small",
+          "maxChars": 18,
+          "required": true,
+          "description": "Sarcastic attribution. Pattern: '— No [person] ever' e.g. '— No mom ever'. NOT a real testimonial name."
+        },
+        {
+          "zone": "brand-logo",
+          "position": "overlay-center-upper",
+          "style": "handwritten, elegant",
+          "maxChars": 15,
+          "required": true,
+          "description": "Brand name"
+        },
+        {
+          "zone": "product-name",
+          "position": "overlay-center",
+          "style": "bold, all-caps, white",
+          "maxChars": 30,
+          "required": true,
+          "description": "Product name/descriptor on packaging e.g. 'MICROPLASTIC BINDING PROBIOTIC'"
+        },
+        {
+          "zone": "usage-instructions",
+          "position": "overlay-bottom",
+          "style": "small, subtle, white",
+          "maxChars": 25,
+          "required": false,
+          "description": "Brief usage or dosage info"
+        }
+      ],
+      "styleNotes": "Dark, moody product photography. The quote must be IRONIC - something absurd that nobody would say, highlighting the problem. Attribution is sarcastic ('No mom ever'), NOT a real person testimonial. This format uses humor through absurdity.",
+      "bestFor": [
+        "health supplements",
+        "clean beauty",
+        "toxin-free products",
+        "wellness products solving specific problems",
+        "products with strong differentiators"
+      ]
+    }
+  },
+  {
+    "id": "news-article-headline-image",
+    "name": "News Article Headline + Image",
+    "description": "Fake news article layout with brand as publication, curiosity-driven headline, and testimonial body",
+    "createdAt": "2026-01-25T21:00:00.000Z",
+    "thumbnail": "",
+    "sampleImages": [],
+    "specs": {
+      "copyPlacements": [
+        {
+          "zone": "brand-header",
+          "position": "top-center",
+          "style": "publication masthead",
+          "maxChars": 15,
+          "required": true,
+          "description": "Brand name styled as publication/magazine name"
+        },
+        {
+          "zone": "headline",
+          "position": "below-header",
+          "style": "bold, large, news headline",
+          "maxChars": 45,
+          "required": true,
+          "description": "Curiosity-driven news headline. Pattern: '[Persona] Swears by This [Benefit] Hack' e.g. 'Teacher Swears by This Morning Beauty Hack'. Must include relatable persona, use 'Swears by/Discovers/Relies on', include 'This' for curiosity gap. NO product or brand name."
+        },
+        {
+          "zone": "article-links",
+          "position": "below-headline",
+          "style": "blue hyperlink text",
+          "maxChars": 45,
+          "required": true,
+          "description": "Related topic links separated by pipe. Pattern: '[Topic] | \"[Teaser quote]\"' e.g. '2-Min Routine | \"The ultimate healthy glow\"'"
+        },
+        {
+          "zone": "body-text",
+          "position": "below-links",
+          "style": "article body text",
+          "maxChars": 90,
+          "required": true,
+          "description": "1-2 sentence article intro with named person quote. Pattern: '[Title] [Full Name] says, \"This is my little [morning/daily] secret.\"' e.g. '11th Grade teacher Sarah Jenkins says, \"This is my little morning secret.\"'"
+        }
+      ],
+      "styleNotes": "Styled like a real news article or blog post. Brand appears as publication name in masthead. Headline creates curiosity without revealing product. Body text includes a named person with their title giving a personal testimonial quote. Should feel like journalism, not advertising.",
+      "bestFor": [
+        "beauty products",
+        "wellness supplements",
+        "lifestyle products",
+        "products with strong persona fit",
+        "native advertising style"
+      ]
+    }
+  },
+  {
+    "id": "native-problem-solution",
+    "name": "Native Problem-Solution",
+    "description": "Q&A/forum style format with vulnerable problem question and helpful product solution - creator POV",
+    "createdAt": "2026-01-25T21:30:00.000Z",
+    "thumbnail": "",
+    "sampleImages": [],
+    "specs": {
+      "copyPlacements": [
+        {
+          "zone": "topic-label",
+          "position": "top-left",
+          "style": "black badge label",
+          "maxChars": 15,
+          "required": true,
+          "description": "Category/community topic label e.g. 'GLP-1 Q&A', 'Skincare Help', 'Morning Routine'"
+        },
+        {
+          "zone": "problem-question",
+          "position": "below-label",
+          "style": "casual, vulnerable, first-person",
+          "maxChars": 60,
+          "required": true,
+          "description": "Vulnerable first-person question from a real person struggling with a problem. MUST be casual/imperfect with ellipses, emoji optional. Pattern: 'I'm having [problem]... how do you manage?' or 'anyone else deal with [problem]??' e.g. 'I'm having trouble in the bathroom... 💩 how do you manage?' Write from CREATOR POV, not brand voice."
+        },
+        {
+          "zone": "solution-callout",
+          "position": "overlay-bottom",
+          "style": "handwritten annotation with arrow",
+          "maxChars": 55,
+          "required": true,
+          "description": "Helpful tip pointing to product as solution. Pattern: '[Amount] of [ingredient] helps [solve problem]' e.g. '6g of fiber helps relieve bloating and constipation.' Should feel like a friend sharing a tip, not brand marketing."
+        }
+      ],
+      "styleNotes": "Mimics social media Q&A or forum posts. Problem question should feel vulnerable and real - someone admitting a struggle and asking for help. Solution callout feels like a helpful friend sharing what worked for them, with handwritten annotation style pointing to the product. CRITICAL: All copy must be written from creator/user POV, NOT brand voice. Casual, imperfect, human.",
+      "bestFor": [
+        "supplements solving specific problems",
+        "health/wellness products",
+        "products with ingredient stories",
+        "digestive health",
+        "products targeting specific communities"
       ]
     }
   }

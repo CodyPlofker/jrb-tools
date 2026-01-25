@@ -354,23 +354,33 @@ Generate copy for a STATIC CREATIVE (image ad with text overlays).
 
 ${adFormat ? `## AD FORMAT: ${adFormat.name}
 
-This ad uses a specific format with defined copy zones. Generate copy for EACH zone below:
+This ad uses a specific format with defined copy zones. Generate copy for EACH zone below.
 
-${adFormat.specs.copyPlacements.map((p: { zone: string; position: string; style: string; maxChars: number; required: boolean }) => `
+**CRITICAL: You MUST respect the character limits. Count your characters. If your copy exceeds the limit, rewrite it shorter.**
+
+${adFormat.specs.copyPlacements.map((p: { zone: string; position: string; style: string; maxChars: number; required: boolean; description?: string }) => `
 ### ${p.zone.toUpperCase()}
+- Max Characters: **${p.maxChars}** (STRICT LIMIT - do not exceed)
 - Position: ${p.position}
 - Style: ${p.style}
 - Required: ${p.required ? "Yes" : "No"}
+${p.description ? `- Guidelines: ${p.description}` : ""}
 `).join("")}
 
 Style notes: ${adFormat.specs.styleNotes}
 Best for: ${adFormat.specs.bestFor.join(", ")}
 
 ## OUTPUT FORMAT
-For each zone defined above:
+For each zone defined above, output in this exact format:
 
-### [ZONE NAME]
-**Copy:** [Your generated copy]
+[ZONE-NAME]
+[Your copy here - MUST be under the character limit]
+
+**IMPORTANT:**
+- Count characters for each zone before outputting
+- If copy is too long, rewrite it shorter - do not exceed limits
+- Character limits exist because designers need copy that fits the visual layout
+- Shorter, punchier copy is almost always better
 
 Provide 2-3 variations for the main headline/hook zones.` : referenceImage ? `## REFERENCE CREATIVE ANALYSIS
 I've uploaded a reference creative image. Please:
