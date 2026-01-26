@@ -334,7 +334,7 @@ export default function Home() {
           smsType: selectedSmsType,
           emailType: selectedEmailType,
           metaAdType: selectedMetaAdType,
-          adFormatId: selectedChannel === "meta-ads" && selectedMetaAdType === "static-creative" ? selectedAdFormat : null,
+          adFormatId: selectedChannel === "meta-ads" && (selectedMetaAdType === "static-creative" || selectedMetaAdType === "revise") ? selectedAdFormat : null,
           awareness: selectedAwareness,
           productInfo,
           angle,
@@ -743,6 +743,27 @@ export default function Home() {
             {/* Revise Copy - Upload ad for headline alternatives */}
             {selectedChannel === "meta-ads" && selectedMetaAdType === "revise" && (
               <>
+                {/* Format Selection - Required for Revise */}
+                <div>
+                  <label className="floating-label mb-3 block">Ad Format *</label>
+                  <AdFormatDropdown
+                    formats={adFormats}
+                    selected={selectedAdFormat}
+                    onSelect={setSelectedAdFormat}
+                    hideNewFormat={true}
+                  />
+                  {selectedAdFormat && (
+                    <p className="text-xs text-[var(--muted)] mt-2">
+                      {adFormats.find((f) => f.id === selectedAdFormat)?.specs.copyPlacements.length} copy zones defined
+                    </p>
+                  )}
+                  {!selectedAdFormat && (
+                    <p className="text-xs text-[var(--muted-dim)] mt-2">
+                      Select the format this ad uses to apply trained copy patterns
+                    </p>
+                  )}
+                </div>
+
                 <div>
                   <label className="floating-label mb-3 block">Upload Ad to Revise</label>
                   {referenceImage ? (
@@ -801,7 +822,7 @@ export default function Home() {
             {/* Generate Button */}
             <button
               onClick={handleGenerate}
-              disabled={isLoading || !selectedChannel || !productInfo}
+              disabled={isLoading || !selectedChannel || !productInfo || (selectedChannel === "meta-ads" && selectedMetaAdType === "revise" && !selectedAdFormat)}
               className="btn-primary w-full py-3.5 px-6 rounded-lg cursor-pointer disabled:cursor-not-allowed"
             >
               {isLoading ? (

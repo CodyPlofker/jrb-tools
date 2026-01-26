@@ -7,7 +7,8 @@ interface AdFormatDropdownProps {
   formats: AdFormat[];
   selected: string;
   onSelect: (formatId: string) => void;
-  onNewFormat: () => void;
+  onNewFormat?: () => void;
+  hideNewFormat?: boolean;
 }
 
 export default function AdFormatDropdown({
@@ -15,6 +16,7 @@ export default function AdFormatDropdown({
   selected,
   onSelect,
   onNewFormat,
+  hideNewFormat = false,
 }: AdFormatDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredFormat, setHoveredFormat] = useState<AdFormat | null>(null);
@@ -128,26 +130,28 @@ export default function AdFormatDropdown({
                     )}
                   </button>
                 ))}
-                <div className="border-t border-[var(--card-border)]" />
+                {!hideNewFormat && <div className="border-t border-[var(--card-border)]" />}
               </>
             )}
 
-            <button
-              type="button"
-              onClick={() => {
-                onNewFormat();
-                setIsOpen(false);
-                setHoveredFormat(null);
-              }}
-              className="w-full p-3 flex items-center gap-3 hover:bg-[var(--input-bg)] transition-colors text-left text-[var(--accent)] cursor-pointer"
-            >
-              <div className="w-12 h-12 border border-dashed border-[var(--accent)] rounded flex items-center justify-center">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-              </div>
-              <div className="text-sm font-medium">Add New Format</div>
-            </button>
+            {!hideNewFormat && onNewFormat && (
+              <button
+                type="button"
+                onClick={() => {
+                  onNewFormat();
+                  setIsOpen(false);
+                  setHoveredFormat(null);
+                }}
+                className="w-full p-3 flex items-center gap-3 hover:bg-[var(--input-bg)] transition-colors text-left text-[var(--accent)] cursor-pointer"
+              >
+                <div className="w-12 h-12 border border-dashed border-[var(--accent)] rounded flex items-center justify-center">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                </div>
+                <div className="text-sm font-medium">Add New Format</div>
+              </button>
+            )}
           </div>
 
           {/* Hover preview panel */}

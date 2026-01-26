@@ -269,87 +269,70 @@ export async function POST(request: NextRequest) {
 
     const channelInstructions: Record<string, string> = {
       "meta-ads": metaAdType === "revise" ? `
-## HEADLINE REVISION TASK
+## COPY REVISION TASK
 
-You are a world-class direct response copywriter for Jones Road Beauty. I've uploaded an existing static ad that needs better headlines.
+You are a world-class direct response copywriter for Jones Road Beauty. I've uploaded an existing static ad that needs better copy.
+
+${adFormat ? `## AD FORMAT: ${adFormat.name}
+
+This ad uses the "${adFormat.name}" format. You MUST follow the trained copy patterns for this format.
+
+**FORMAT GUIDELINES:**
+${adFormat.specs.styleNotes}
+
+**COPY ZONES TO REVISE:**
+${adFormat.specs.copyPlacements.map((p: { zone: string; position: string; style: string; maxChars: number; required: boolean; description?: string }) => `
+### ${p.zone.toUpperCase()}
+- Max Characters: **${p.maxChars}** (STRICT LIMIT)
+- Style: ${p.style}
+${p.description ? `- PATTERN/GUIDELINES: ${p.description}` : ""}
+`).join("")}
 
 **YOUR TASK:**
-
 1. **ANALYZE THE AD:**
-   - Identify the current headline text on the image
-   - Count the characters and words in the headline
-   - Describe the visual context (product shown, layout, brand feel, where text appears)
-   - Note any character/length constraints based on the visual space available
+   - Identify the current copy in each zone
+   - Note what's working and what isn't
+   - Check if current copy follows the format patterns
 
-2. **GENERATE 8-10 ALTERNATIVE HEADLINES** that:
-   - Fit the same visual space (similar character count to original)
-   - Maintain Jones Road voice (confident, honest, warm, direct - never salesy)
-   - Apply different persuasion angles
-   - Feel specific to the product shown (not generic)
+2. **GENERATE 3 COMPLETE VARIATIONS** that:
+   - Follow the EXACT patterns defined above for each zone
+   - Stay within character limits
+   - Maintain Jones Road voice (confident, honest, warm, direct)
+   - Feel specific to the product shown
 
-${revisionContext ? `**USER FEEDBACK ON CURRENT HEADLINE:**
+${revisionContext ? `**USER FEEDBACK ON CURRENT COPY:**
 ${revisionContext}
 
 Factor this feedback into your alternatives.` : ""}
 
 ## OUTPUT FORMAT
 
-### Current Headline Analysis
-
-**Detected headline:** "[The headline text you see on the ad]"
-**Character count:** [X] | **Word count:** [X]
-**Visual context:** [Brief description of the ad - product, layout, where headline appears]
-**Space constraint:** [Approximately X characters or X words to fit the design]
+### Current Copy Analysis
+[Identify current copy for each zone and briefly note what works/doesn't work]
 
 ---
 
-### Alternative Headlines
+### Variation 1
+${adFormat.specs.copyPlacements.map((p: { zone: string }) => `
+**${p.zone.toUpperCase()}:** "[Your copy]"
+`).join("")}
 
-#### BENEFIT-DRIVEN
-Focus on what they GET. Clear, direct, specific benefits.
+### Variation 2
+${adFormat.specs.copyPlacements.map((p: { zone: string }) => `
+**${p.zone.toUpperCase()}:** "[Your copy]"
+`).join("")}
 
-1. **"[Alternative headline]"**
-   - [X] chars | [X] words
-   - [1 sentence explaining the angle]
+### Variation 3
+${adFormat.specs.copyPlacements.map((p: { zone: string }) => `
+**${p.zone.toUpperCase()}:** "[Your copy]"
+`).join("")}
 
-2. **"[Alternative headline]"**
-   - [X] chars | [X] words
-   - [1 sentence explaining the angle]
+CRITICAL: Follow the patterns in the format guidelines. If a zone says "Pattern: '[Thing A] Meets [Thing B]'" - use that exact structure.` : `
+**ERROR: No format selected.**
 
-3. **"[Alternative headline]"**
-   - [X] chars | [X] words
-   - [1 sentence explaining the angle]
+To use Revise Copy, you must select an existing ad format. This allows the AI to apply trained copy patterns specific to that format.
 
-#### CURIOSITY / FOMO
-Create intrigue. Make them need to know more.
-
-4. **"[Alternative headline]"**
-   - [X] chars | [X] words
-   - [1 sentence explaining the angle]
-
-5. **"[Alternative headline]"**
-   - [X] chars | [X] words
-   - [1 sentence explaining the angle]
-
-#### IDENTITY-BASED
-Speak to who they ARE or want to be.
-
-6. **"[Alternative headline]"**
-   - [X] chars | [X] words
-   - [1 sentence explaining the angle]
-
-7. **"[Alternative headline]"**
-   - [X] chars | [X] words
-   - [1 sentence explaining the angle]
-
-#### CONTRARIAN
-Challenge assumptions. Flip the script.
-
-8. **"[Alternative headline]"**
-   - [X] chars | [X] words
-   - [1 sentence explaining the angle]
-
-Remember: Keep headlines SPECIFIC to the product shown. Generic headlines like "Your Skin Deserves Better" should become specific like "Skip Foundation, Keep the Glow" or "The 5-Minute Face for Real Life."` : metaAdType === "static-creative" ? `
+Please go back and select the format this ad uses.`}` : metaAdType === "static-creative" ? `
 Generate copy for a STATIC CREATIVE (image ad with text overlays).
 
 ${adFormat ? `## AD FORMAT: ${adFormat.name}
