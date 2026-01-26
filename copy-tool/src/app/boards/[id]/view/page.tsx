@@ -16,6 +16,7 @@ export default function BoardViewPage({ params }: { params: Promise<{ id: string
   const [isLoading, setIsLoading] = useState(true);
   const [selectedBrief, setSelectedBrief] = useState<SavedBrief | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [enlargedImage, setEnlargedImage] = useState<string | null>(null);
   const [groupBy, setGroupBy] = useState<GroupBy>("angle");
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
 
@@ -329,7 +330,11 @@ export default function BoardViewPage({ params }: { params: Promise<{ id: string
               {/* Brief Info Row */}
               <div className="flex gap-4 items-start">
                 {/* Reference Thumbnail */}
-                <div className="w-24 h-24 bg-[var(--input-bg)] rounded-lg overflow-hidden flex-shrink-0">
+                <div
+                  className={`w-24 h-24 bg-[var(--input-bg)] rounded-lg overflow-hidden flex-shrink-0 ${selectedBrief.format.thumbnail ? 'cursor-pointer hover:ring-2 hover:ring-[var(--accent)] transition-all' : ''}`}
+                  onClick={() => selectedBrief.format.thumbnail && setEnlargedImage(selectedBrief.format.thumbnail)}
+                  title={selectedBrief.format.thumbnail ? "Click to enlarge" : ""}
+                >
                   {selectedBrief.format.thumbnail ? (
                     <img src={selectedBrief.format.thumbnail} alt="" className="w-full h-full object-cover" />
                   ) : (
@@ -380,6 +385,29 @@ export default function BoardViewPage({ params }: { params: Promise<{ id: string
               <button onClick={() => setSelectedBrief(null)} className="px-4 py-2 text-sm bg-[var(--accent)] text-white rounded-lg hover:opacity-90 cursor-pointer">Close</button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Enlarged Image Modal */}
+      {enlargedImage && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/90"
+          onClick={() => setEnlargedImage(null)}
+        >
+          <button
+            onClick={() => setEnlargedImage(null)}
+            className="absolute top-4 right-4 p-2 text-white/70 hover:text-white transition-colors cursor-pointer"
+          >
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          <img
+            src={enlargedImage}
+            alt="Reference image"
+            className="max-w-[90vw] max-h-[90vh] object-contain rounded-lg"
+            onClick={(e) => e.stopPropagation()}
+          />
         </div>
       )}
     </div>
