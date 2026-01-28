@@ -374,80 +374,9 @@ export default function BoardViewPage({ params }: { params: Promise<{ id: string
                       return <span className="text-[var(--muted-dim)] italic">No copy generated</span>;
                     }
 
-                    const cleanText = (text: string) => text
-                      .replace(/\*\*(.+?)\*\*/g, '$1')
-                      .replace(/\*(.+?)\*/g, '$1')
-                      .replace(/^#+\s*/gm, '')
-                      .replace(/\*\*Copy:\*\*\s*/gi, '')
-                      .replace(/^-\s+/gm, '• ');
-
                     return (
-                      <div className="space-y-4">
-                        {copyText.split(/(?=^#{2,3}\s|\n(?=[A-Z][A-Z-]+\n))/m).map((section, index) => {
-                          const trimmed = section.trim();
-                          if (!trimmed) return null;
-
-                          const h2Match = trimmed.match(/^##\s+(.+?)(?:\n|$)/);
-                          const h3Match = trimmed.match(/^###\s+(.+?)(?:\n|$)/);
-                          const zoneLabelMatch = trimmed.match(/^([A-Z][A-Z0-9-]+)\n([\s\S]*)$/);
-
-                          if (h2Match) {
-                            const title = cleanText(h2Match[1]);
-                            const content = trimmed.slice(h2Match[0].length).trim();
-                            return (
-                              <div key={index} className="mb-4">
-                                <h2 className="text-base font-semibold text-[var(--accent)] mb-2 pb-1 border-b border-[var(--card-border)]">
-                                  {title}
-                                </h2>
-                                {content && (
-                                  <div className="text-sm text-[var(--foreground)] leading-relaxed whitespace-pre-wrap">
-                                    {cleanText(content)}
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          }
-
-                          if (h3Match) {
-                            const title = cleanText(h3Match[1]);
-                            const content = trimmed.slice(h3Match[0].length).trim();
-                            return (
-                              <div key={index} className="mb-3">
-                                <h3 className="text-xs font-medium text-[var(--muted)] uppercase tracking-wide mb-1">
-                                  {title}
-                                </h3>
-                                {content && (
-                                  <div className="text-sm text-[var(--foreground)] leading-relaxed whitespace-pre-wrap">
-                                    {cleanText(content)}
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          }
-
-                          if (zoneLabelMatch) {
-                            const label = zoneLabelMatch[1];
-                            const content = zoneLabelMatch[2].trim();
-                            return (
-                              <div key={index} className="mb-3">
-                                <h3 className="text-xs font-medium text-[var(--accent)] uppercase tracking-wide mb-1">
-                                  {label}
-                                </h3>
-                                {content && (
-                                  <div className="text-sm text-[var(--foreground)] leading-relaxed whitespace-pre-wrap">
-                                    {cleanText(content)}
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          }
-
-                          return (
-                            <div key={index} className="text-sm text-[var(--foreground)] leading-relaxed whitespace-pre-wrap">
-                              {cleanText(trimmed)}
-                            </div>
-                          );
-                        })}
+                      <div className="text-sm text-[var(--foreground)] leading-relaxed whitespace-pre-wrap font-mono">
+                        {copyText}
                       </div>
                     );
                   })()}
