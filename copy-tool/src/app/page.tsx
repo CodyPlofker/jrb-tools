@@ -370,6 +370,12 @@ export default function Home() {
           </div>
           <div className="flex items-center gap-4">
             <a
+              href="/hooks"
+              className="text-sm text-[var(--muted)] hover:text-[var(--foreground)] cursor-pointer transition-colors"
+            >
+              Hooks
+            </a>
+            <a
               href="/brief-generator"
               className="text-sm text-[var(--muted)] hover:text-[var(--foreground)] cursor-pointer transition-colors"
             >
