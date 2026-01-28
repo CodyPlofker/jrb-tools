@@ -182,23 +182,26 @@ export async function POST(request: NextRequest) {
     const body: HookGenerationRequest = await request.json();
 
     // Build the user prompt
-    let userPrompt = "";
+    let userPrompt = "Generate 5 video hooks";
 
-    if (body.brief) {
-      userPrompt = `Generate 5 video hooks based on this brief:\n\n${body.brief}`;
+    if (body.brief && body.product) {
+      userPrompt += ` for ${body.product} based on this brief:\n\n${body.brief}`;
+    } else if (body.brief) {
+      userPrompt += ` based on this brief:\n\n${body.brief}`;
     } else if (body.product) {
-      userPrompt = `Generate 5 video hooks for ${body.product}`;
-      if (body.persona) {
-        userPrompt += ` targeting ${body.persona}`;
-      }
-      if (body.angle) {
-        userPrompt += ` with angle: ${body.angle}`;
-      }
+      userPrompt += ` for ${body.product}`;
     } else {
       return NextResponse.json(
-        { error: "Please provide either a brief or a product" },
+        { error: "Please provide a brief or select a product" },
         { status: 400 }
       );
+    }
+
+    if (body.persona) {
+      userPrompt += `\n\nTarget persona: ${body.persona}`;
+    }
+    if (body.angle) {
+      userPrompt += `\n\nAngle/direction: ${body.angle}`;
     }
 
     const anthropic = new Anthropic({ apiKey: CACHED_API_KEY });

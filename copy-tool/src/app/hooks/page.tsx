@@ -45,7 +45,6 @@ export default function HooksPage() {
   const [activeTab, setActiveTab] = useState<"generate" | "library">("generate");
 
   // Input state
-  const [inputMode, setInputMode] = useState<"freeform" | "structured">("freeform");
   const [brief, setBrief] = useState("");
   const [selectedProduct, setSelectedProduct] = useState("");
   const [selectedPersona, setSelectedPersona] = useState("");
@@ -109,13 +108,8 @@ export default function HooksPage() {
   };
 
   const handleGenerate = async () => {
-    if (inputMode === "freeform" && !brief.trim()) {
-      alert("Please enter a brief or description");
-      return;
-    }
-
-    if (inputMode === "structured" && !selectedProduct) {
-      alert("Please select a product");
+    if (!brief.trim() && !selectedProduct) {
+      alert("Please enter a brief or select a product");
       return;
     }
 
@@ -127,10 +121,10 @@ export default function HooksPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          brief: inputMode === "freeform" ? brief : undefined,
-          product: inputMode === "structured" ? selectedProduct : undefined,
-          persona: inputMode === "structured" ? selectedPersona : undefined,
-          angle: inputMode === "structured" ? angle : undefined,
+          brief: brief.trim() || undefined,
+          product: selectedProduct || undefined,
+          persona: selectedPersona || undefined,
+          angle: angle || undefined,
           pov: selectedPOV || undefined,
           type: selectedType || undefined,
           channel: selectedChannel || undefined,
@@ -267,85 +261,59 @@ export default function HooksPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Left Column - Inputs */}
             <div className="space-y-6">
-              {/* Input Mode Toggle */}
+              {/* Brief / Description */}
               <div>
-                <label className="floating-label mb-3 block">Input Mode</label>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    onClick={() => setInputMode("freeform")}
-                    className={`channel-card py-3 px-4 text-center rounded-lg cursor-pointer ${
-                      inputMode === "freeform" ? "selected" : ""
-                    }`}
+                <label className="floating-label mb-3 block">Brief / Description</label>
+                <textarea
+                  value={brief}
+                  onChange={(e) => setBrief(e.target.value)}
+                  placeholder="e.g., hooks for Miracle Balm targeting busy moms who are skeptical about clean beauty..."
+                  className="input-dark w-full p-4 rounded-lg min-h-[100px] resize-none"
+                />
+              </div>
+
+              {/* Product & Persona Row */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="floating-label mb-3 block">Product</label>
+                  <select
+                    value={selectedProduct}
+                    onChange={(e) => setSelectedProduct(e.target.value)}
+                    className="input-dark w-full p-3 rounded-lg cursor-pointer"
                   >
-                    <span className="text-sm font-medium">Freeform Brief</span>
-                  </button>
-                  <button
-                    onClick={() => setInputMode("structured")}
-                    className={`channel-card py-3 px-4 text-center rounded-lg cursor-pointer ${
-                      inputMode === "structured" ? "selected" : ""
-                    }`}
+                    <option value="">Any product</option>
+                    {products.map((p) => (
+                      <option key={p.id} value={p.name}>{p.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="floating-label mb-3 block">Persona</label>
+                  <select
+                    value={selectedPersona}
+                    onChange={(e) => setSelectedPersona(e.target.value)}
+                    className="input-dark w-full p-3 rounded-lg cursor-pointer"
                   >
-                    <span className="text-sm font-medium">Structured</span>
-                  </button>
+                    <option value="">Any persona</option>
+                    {personas.map((p) => (
+                      <option key={p.id} value={p.name}>{p.name}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
-              {/* Freeform Input */}
-              {inputMode === "freeform" && (
-                <div>
-                  <label className="floating-label mb-3 block">Brief / Description *</label>
-                  <textarea
-                    value={brief}
-                    onChange={(e) => setBrief(e.target.value)}
-                    placeholder="e.g., hooks for Miracle Balm targeting busy moms who are skeptical about clean beauty..."
-                    className="input-dark w-full p-4 rounded-lg min-h-[120px] resize-none"
-                  />
-                </div>
-              )}
-
-              {/* Structured Input */}
-              {inputMode === "structured" && (
-                <>
-                  <div>
-                    <label className="floating-label mb-3 block">Product *</label>
-                    <select
-                      value={selectedProduct}
-                      onChange={(e) => setSelectedProduct(e.target.value)}
-                      className="input-dark w-full p-3 rounded-lg cursor-pointer"
-                    >
-                      <option value="">Select product</option>
-                      {products.map((p) => (
-                        <option key={p.id} value={p.name}>{p.name}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="floating-label mb-3 block">Persona</label>
-                    <select
-                      value={selectedPersona}
-                      onChange={(e) => setSelectedPersona(e.target.value)}
-                      className="input-dark w-full p-3 rounded-lg cursor-pointer"
-                    >
-                      <option value="">Any persona</option>
-                      {personas.map((p) => (
-                        <option key={p.id} value={p.name}>{p.name}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="floating-label mb-3 block">Angle / Hook Direction</label>
-                    <input
-                      type="text"
-                      value={angle}
-                      onChange={(e) => setAngle(e.target.value)}
-                      placeholder="e.g., time-saving, natural ingredients, no-makeup makeup..."
-                      className="input-dark w-full p-3 rounded-lg"
-                    />
-                  </div>
-                </>
-              )}
+              {/* Angle */}
+              <div>
+                <label className="floating-label mb-3 block">Angle / Hook Direction</label>
+                <input
+                  type="text"
+                  value={angle}
+                  onChange={(e) => setAngle(e.target.value)}
+                  placeholder="e.g., time-saving, natural ingredients, no-makeup makeup..."
+                  className="input-dark w-full p-3 rounded-lg"
+                />
+              </div>
 
               {/* Filters */}
               <div className="border-t border-[var(--card-border)] pt-6">
