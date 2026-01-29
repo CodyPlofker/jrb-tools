@@ -185,6 +185,7 @@ export default function BriefGeneratorPage() {
               specs: {
                 copyPlacements: format.specs.copyPlacements,
                 styleNotes: format.specs.styleNotes,
+                bestFor: format.specs.bestFor,
               },
             },
             generatedCopy: {},

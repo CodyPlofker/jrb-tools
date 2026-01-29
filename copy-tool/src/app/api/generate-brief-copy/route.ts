@@ -38,6 +38,40 @@ function readTrainingFile(relativePath: string): string {
   }
 }
 
+// Define type for ad format specs loaded from training data
+interface AdFormatFromFile {
+  id: string;
+  name: string;
+  description: string;
+  createdAt: string;
+  thumbnail: string;
+  sampleImages: string[];
+  specs: {
+    copyPlacements: Array<{
+      zone: string;
+      position: string;
+      style: string;
+      maxChars: number;
+      required: boolean;
+      description?: string;
+    }>;
+    styleNotes: string;
+    bestFor: string[];
+  };
+}
+
+// Load full ad format specs from training data file
+function getAdFormatSpecs(formatId: string): AdFormatFromFile | null {
+  if (!formatId) return null;
+  try {
+    const formatsPath = path.join(TRAINING_DATA_DIR, "ad-formats/ad-formats.json");
+    const formats = JSON.parse(fs.readFileSync(formatsPath, "utf-8"));
+    return formats.find((f: { id: string }) => f.id === formatId) || null;
+  } catch {
+    return null;
+  }
+}
+
 function getPersonaContent(personaId: string): string {
   const personaMap: Record<string, string> = {
     "dedicated-educator": "personas/the-dedicated-educator.md",
@@ -182,8 +216,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Load the FULL format from training data to ensure we have all fields
+    // This is the key fix - the frontend may pass partial data, but we need the complete format
+    const fullFormat = format?.id ? getAdFormatSpecs(format.id) : null;
+
+    // Use fullFormat if available (preferred), otherwise fall back to passed format
+    const effectiveFormat = fullFormat || format;
+
     // Ensure copyPlacements exists and is an array
-    const copyPlacements = format?.specs?.copyPlacements || [];
+    const copyPlacements = effectiveFormat?.specs?.copyPlacements || [];
     if (copyPlacements.length === 0) {
       return NextResponse.json({
         copy: "Copy zones not configured. Please add copy placements to this ad format."
@@ -197,7 +238,7 @@ export async function POST(request: NextRequest) {
 - Position: ${p.position}
 - Style: ${p.style}
 - Required: ${p.required ? "Yes" : "No"}
-${p.description ? `- Guidelines: ${p.description}` : ""}`).join("\n");
+${p.description ? `- **PATTERN/GUIDELINES (MANDATORY):** ${p.description}` : ""}`).join("\n");
 
     // Check if this is a general brand ad (no specific product)
     const isGeneralBrandAd = product.id === 'general' || product.id === 'brand-value-props';
@@ -225,18 +266,23 @@ ${productSection}
 ANGLE TO EMPHASIZE: ${angle}
 ${angleNotes ? `ADDITIONAL ANGLE NOTES: ${angleNotes}` : ''}
 
-## AD FORMAT: ${format.name}
+## AD FORMAT: ${effectiveFormat.name}
 
 This ad uses a specific format with defined copy zones. Generate copy for EACH zone below.
 
-**CRITICAL: You MUST respect the character limits. Count your characters. If your copy exceeds the limit, rewrite it shorter.**
-
-**CRITICAL: Follow the patterns in the format guidelines. If a zone says "Pattern: '[Thing A] Meets [Thing B]'" - use that exact structure.**
+**CRITICAL INSTRUCTIONS - YOU MUST FOLLOW THESE:**
+1. **CHARACTER LIMITS ARE MANDATORY** - Count your characters. If copy exceeds the limit, rewrite it shorter.
+2. **PATTERNS ARE MANDATORY** - Each zone has a PATTERN/GUIDELINES field. You MUST follow that exact structure.
+   - If it says "Pattern: '[Thing] is the new [thing]'" - your copy MUST follow that structure
+   - If it says "Pattern: 'MORE [X] THAN [Y]'" - your copy MUST use that comparison format
+   - The patterns define HOW the copy should be structured, not just suggestions
+3. **LIST ZONES** - For zones like "benefits-list" or "reasons-list", output EACH ITEM on its own line (numbered), NOT as a paragraph
 
 ${copyZoneSpecs}
 
-${format.specs.styleNotes ? `Style notes: ${format.specs.styleNotes}` : ""}
-${format.specs.bestFor ? `Best for: ${format.specs.bestFor.join(", ")}` : ""}
+${effectiveFormat.specs.styleNotes ? `## STYLE NOTES (MANDATORY)
+${effectiveFormat.specs.styleNotes}` : ""}
+${effectiveFormat.specs.bestFor?.length ? `\nBest for: ${effectiveFormat.specs.bestFor.join(", ")}` : ""}
 
 Write compelling, conversion-focused copy for each zone. The copy should:
 1. Speak directly to the ${persona.name} persona's motivations
@@ -245,22 +291,17 @@ ${isGeneralBrandAd ? '3. Focus on Jones Road Beauty brand values and philosophy'
 4. Use Jones Road's voice: confident, honest, no-BS, warm but direct
 5. Avoid: excessive emojis, clickbait, fake urgency, "clean beauty" clichés
 
-**IMPORTANT:**
-- Count characters for each zone before outputting
-- If copy is too long, rewrite it shorter - do not exceed limits
-- Character limits exist because designers need copy that fits the visual layout
-- Shorter, punchier copy is almost always better
-- For any LIST zones (like benefits-list), output EACH ITEM on its own line:
-  1. First item
-  2. Second item
-  3. Third item
-  (NOT as a paragraph - designers need to see each item separately)
-
 ## OUTPUT FORMAT
-For each zone defined above, output in this exact format:
+For each zone defined above, output in this EXACT format:
 
 [ZONE-NAME]
-[Your copy here - MUST be under the character limit]
+[Your copy here - MUST be under the character limit and MUST follow the zone's pattern]
+
+**MANDATORY REQUIREMENTS:**
+- Count characters for each zone before outputting
+- Follow the PATTERN specified in each zone's Guidelines - this is NOT optional
+- Shorter, punchier copy is almost always better
+- For LIST zones, output each item on its own numbered line
 
 Provide 2-3 variations for the main headline/hook zones.
 
