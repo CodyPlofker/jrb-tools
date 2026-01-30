@@ -954,31 +954,11 @@ export default function PersonasPage() {
                 onClick={() => setSelectedPersona(persona)}
                 className="text-left bg-[var(--card)] border border-[var(--card-border)] rounded-xl p-6 hover:border-[var(--muted-dim)] transition-colors cursor-pointer group"
               >
-                <div className="flex items-start justify-between mb-3">
-                  <h3 className="font-semibold text-[var(--foreground)] transition-colors">
-                    {persona.name}
-                  </h3>
-                  <div className="flex items-center gap-2">
-                    {persona.analytics && (
-                      <span className={`text-xs px-2 py-1 rounded font-medium ${
-                        persona.analytics.performanceClass === "outperformer"
-                          ? "bg-green-500/20 text-green-400"
-                          : persona.analytics.performanceClass === "underperformer"
-                          ? "bg-red-500/20 text-red-400"
-                          : "bg-yellow-500/20 text-yellow-400"
-                      }`}>
-                        {persona.analytics.revenueIndex}x
-                      </span>
-                    )}
-                    {persona.percentage && (
-                      <span className="text-xs bg-[var(--input-bg)] text-[var(--muted)] px-2 py-1 rounded">
-                        {persona.percentage}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <p className="text-sm text-[var(--muted)] line-clamp-2">
-                  {persona.identitySnapshot.substring(0, 100)}...
+                <h3 className="font-semibold text-[var(--foreground)] transition-colors mb-2">
+                  {persona.name}
+                </h3>
+                <p className="text-sm text-[var(--muted)] line-clamp-3">
+                  {persona.identitySnapshot}
                 </p>
               </button>
             ))}
