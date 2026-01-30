@@ -73,6 +73,10 @@ export interface SavedBrief extends Brief {
   boardId: string;
   savedAt: string;
   notes?: string;
+  // Revision fields
+  designedAdImage?: string; // Base64 image of the designed ad
+  designedAdImageName?: string; // Original filename for display
+  lastRevisedAt?: string; // Timestamp of last revision
 }
 
 // A collection of briefs saved together

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect, use, useRef } from "react";
 import Link from "next/link";
 import { BriefBoard, SavedBrief } from "@/types/brief";
 
@@ -20,6 +20,16 @@ export default function BoardDetailPage({ params }: { params: Promise<{ id: stri
   const [isEditingCopy, setIsEditingCopy] = useState(false);
   const [editedCopy, setEditedCopy] = useState<string>("");
   const [enlargedImage, setEnlargedImage] = useState<string | null>(null);
+
+  // Revision state
+  const [isRevisingCopy, setIsRevisingCopy] = useState(false);
+  const [reviseImage, setReviseImage] = useState<string | null>(null);
+  const [reviseImageName, setReviseImageName] = useState<string>("");
+  const [revisionContext, setRevisionContext] = useState("");
+  const [isGeneratingRevision, setIsGeneratingRevision] = useState(false);
+  const [revisionVariations, setRevisionVariations] = useState<string | null>(null);
+  const [selectedVariation, setSelectedVariation] = useState<number | null>(null);
+  const reviseFileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     loadBoard();
@@ -144,6 +154,121 @@ export default function BoardDetailPage({ params }: { params: Promise<{ id: stri
     navigator.clipboard.writeText(text);
     setCopiedId(brief.id);
     setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  // Revision handlers
+  const handleReviseImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setReviseImageName(file.name);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setReviseImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeReviseImage = () => {
+    setReviseImage(null);
+    setReviseImageName("");
+    if (reviseFileInputRef.current) {
+      reviseFileInputRef.current.value = "";
+    }
+  };
+
+  const resetRevisionState = () => {
+    setIsRevisingCopy(false);
+    setReviseImage(null);
+    setReviseImageName("");
+    setRevisionContext("");
+    setRevisionVariations(null);
+    setSelectedVariation(null);
+    if (reviseFileInputRef.current) {
+      reviseFileInputRef.current.value = "";
+    }
+  };
+
+  const handleGenerateRevision = async () => {
+    if (!selectedBrief || !reviseImage) return;
+
+    setIsGeneratingRevision(true);
+    setRevisionVariations(null);
+    setSelectedVariation(null);
+
+    try {
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          persona: selectedBrief.persona.id,
+          channel: "meta-ads",
+          metaAdType: "revise",
+          adFormatId: selectedBrief.format.id,
+          productInfo: `${selectedBrief.product.name} - ${selectedBrief.product.description}`,
+          angle: selectedBrief.angle,
+          referenceImage: reviseImage,
+          revisionContext: revisionContext || undefined,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.error) {
+        alert(`Error: ${data.error}`);
+      } else {
+        setRevisionVariations(data.copy);
+      }
+    } catch (error) {
+      console.error("Error generating revision:", error);
+      alert("Error generating revision. Please try again.");
+    } finally {
+      setIsGeneratingRevision(false);
+    }
+  };
+
+  const parseVariations = (text: string) => {
+    // Split by variation headers and extract content
+    const parts = text.split(/###\s*Variation\s*(\d+)/i);
+    const variations: Array<{ index: number; content: string }> = [];
+
+    for (let i = 1; i < parts.length; i += 2) {
+      const index = parseInt(parts[i], 10);
+      const content = parts[i + 1]?.trim() || "";
+      if (content) {
+        variations.push({ index, content });
+      }
+    }
+
+    return variations;
+  };
+
+  const applyRevision = async (variationContent: string) => {
+    if (!board || !selectedBrief) return;
+
+    const updatedBriefs = board.briefs.map((brief) =>
+      brief.id === selectedBrief.id
+        ? {
+            ...brief,
+            generatedCopy: variationContent,
+            designedAdImage: reviseImage || undefined,
+            designedAdImageName: reviseImageName || undefined,
+            lastRevisedAt: new Date().toISOString(),
+          }
+        : brief
+    );
+
+    const updatedBoard = { ...board, briefs: updatedBriefs };
+    setBoard(updatedBoard);
+    setSelectedBrief({
+      ...selectedBrief,
+      generatedCopy: variationContent,
+      designedAdImage: reviseImage || undefined,
+      designedAdImageName: reviseImageName || undefined,
+      lastRevisedAt: new Date().toISOString(),
+    });
+
+    resetRevisionState();
+    await saveBoard(updatedBoard);
   };
 
   const toggleGroup = (key: string) => {
@@ -503,14 +628,35 @@ export default function BoardDetailPage({ params }: { params: Promise<{ id: stri
           <div className="relative bg-[var(--card)] border border-[var(--card-border)] rounded-xl w-full max-w-2xl overflow-hidden">
             {/* Modal Header */}
             <div className="px-5 py-3 border-b border-[var(--card-border)] flex items-center justify-between">
-              <h2 className="text-base font-medium text-[var(--foreground)]">Brief Details</h2>
-              <div className="flex items-center gap-2">
-                {!isEditingCopy && (
+              <h2 className="text-base font-medium text-[var(--foreground)]">
+                {isRevisingCopy ? "Revise Copy with AI" : "Brief Details"}
+              </h2>
+              <div className="flex items-center gap-3">
+                {!isEditingCopy && !isRevisingCopy && (
+                  <>
+                    <button
+                      onClick={() => setIsRevisingCopy(true)}
+                      className="text-sm text-[var(--muted)] hover:text-[var(--foreground)] cursor-pointer flex items-center gap-1"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                      Revise with AI
+                    </button>
+                    <button
+                      onClick={startEditingCopy}
+                      className="text-sm text-[var(--accent)] hover:underline cursor-pointer"
+                    >
+                      Edit
+                    </button>
+                  </>
+                )}
+                {isRevisingCopy && (
                   <button
-                    onClick={startEditingCopy}
-                    className="text-sm text-[var(--accent)] hover:underline cursor-pointer"
+                    onClick={resetRevisionState}
+                    className="text-sm text-[var(--muted)] hover:text-[var(--foreground)] cursor-pointer"
                   >
-                    Edit
+                    Cancel
                   </button>
                 )}
                 <button
@@ -518,6 +664,7 @@ export default function BoardDetailPage({ params }: { params: Promise<{ id: stri
                     setSelectedBrief(null);
                     setIsEditingCopy(false);
                     setEditedCopy("");
+                    resetRevisionState();
                   }}
                   className="p-1 hover:bg-[var(--input-bg)] rounded transition-colors cursor-pointer"
                 >
@@ -529,27 +676,169 @@ export default function BoardDetailPage({ params }: { params: Promise<{ id: stri
             </div>
 
             {/* Modal Content */}
-            <div className="p-5 space-y-4">
-              {/* Brief Info Row */}
-              <div className="flex gap-4 items-start">
-                {/* Reference Thumbnail */}
-                <div
-                  className={`w-24 h-24 bg-[var(--input-bg)] rounded-lg overflow-hidden flex-shrink-0 ${selectedBrief.format.thumbnail ? 'cursor-pointer hover:ring-2 hover:ring-[var(--accent)] transition-all' : ''}`}
-                  onClick={() => selectedBrief.format.thumbnail && setEnlargedImage(selectedBrief.format.thumbnail)}
-                  title={selectedBrief.format.thumbnail ? "Click to enlarge" : ""}
-                >
-                  {selectedBrief.format.thumbnail ? (
-                    <img src={selectedBrief.format.thumbnail} alt="" className="w-full h-full object-cover" />
+            {isRevisingCopy ? (
+              /* Revision Mode UI */
+              <div className="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
+                {/* Upload Ad Image */}
+                <div>
+                  <label className="text-sm font-medium text-[var(--muted)] mb-2 block">
+                    Upload Designed Ad
+                  </label>
+                  {reviseImage ? (
+                    <div className="bg-[var(--input-bg)] rounded-lg p-4">
+                      <div className="flex items-start gap-4">
+                        <img
+                          src={reviseImage}
+                          alt="Ad to revise"
+                          className="w-24 h-24 object-cover rounded cursor-pointer hover:ring-2 hover:ring-[var(--accent)] transition-all"
+                          onClick={() => setEnlargedImage(reviseImage)}
+                        />
+                        <div className="flex-1">
+                          <p className="text-sm text-[var(--foreground)]">{reviseImageName}</p>
+                          <button
+                            onClick={removeReviseImage}
+                            className="mt-2 text-xs text-red-400 hover:text-red-300 cursor-pointer"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <svg className="w-8 h-8 text-[var(--muted-dim)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <label className="block bg-[var(--input-bg)] border border-dashed border-[var(--card-border)] rounded-lg p-6 text-center cursor-pointer hover:border-[var(--muted-dim)] transition-colors">
+                      <input
+                        ref={reviseFileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleReviseImageUpload}
+                        className="hidden"
+                      />
+                      <svg className="w-8 h-8 text-[var(--muted-dim)] mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
-                    </div>
+                      <p className="text-sm text-[var(--foreground)]">Click to upload the designed ad</p>
+                      <p className="text-xs text-[var(--muted-dim)] mt-1">AI will analyze and generate better copy</p>
+                    </label>
                   )}
                 </div>
-                {/* Info Grid */}
-                <div className="flex-1 grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+
+                {/* Optional Context */}
+                <div>
+                  <label className="text-sm font-medium text-[var(--muted)] mb-2 block">
+                    What needs improvement? (Optional)
+                  </label>
+                  <textarea
+                    value={revisionContext}
+                    onChange={(e) => setRevisionContext(e.target.value)}
+                    placeholder="E.g., headline is too generic, doesn't speak to the target persona, copy is too long..."
+                    rows={2}
+                    className="w-full text-sm text-[var(--foreground)] bg-[var(--input-bg)] border border-[var(--card-border)] rounded-lg p-3 resize-none focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
+                  />
+                </div>
+
+                {/* Brief Context Summary */}
+                <div className="bg-[var(--input-bg)] rounded-lg p-3 text-xs text-[var(--muted)]">
+                  <div className="grid grid-cols-2 gap-2">
+                    <div><span className="text-[var(--muted-dim)]">Format:</span> {selectedBrief.format.name}</div>
+                    <div><span className="text-[var(--muted-dim)]">Product:</span> {selectedBrief.product.name}</div>
+                    <div className="col-span-2"><span className="text-[var(--muted-dim)]">Persona:</span> {selectedBrief.persona.name}</div>
+                    <div className="col-span-2"><span className="text-[var(--muted-dim)]">Angle:</span> {selectedBrief.angle}</div>
+                  </div>
+                </div>
+
+                {/* Generate Button */}
+                <button
+                  onClick={handleGenerateRevision}
+                  disabled={!reviseImage || isGeneratingRevision}
+                  className="w-full py-3 text-sm bg-[var(--accent)] text-white rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
+                >
+                  {isGeneratingRevision ? (
+                    <>
+                      <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                      </svg>
+                      Generating Revisions...
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                      Generate Revised Copy
+                    </>
+                  )}
+                </button>
+
+                {/* Variations Display */}
+                {revisionVariations && (
+                  <div className="space-y-3">
+                    <h4 className="text-sm font-medium text-[var(--foreground)]">Select a Variation to Apply</h4>
+                    {parseVariations(revisionVariations).map((variation) => (
+                      <div
+                        key={variation.index}
+                        onClick={() => setSelectedVariation(variation.index)}
+                        className={`p-4 rounded-lg border cursor-pointer transition-all ${
+                          selectedVariation === variation.index
+                            ? "border-[var(--accent)] bg-[var(--accent)]/10"
+                            : "border-[var(--card-border)] hover:border-[var(--muted)]"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium text-[var(--foreground)]">
+                            Variation {variation.index}
+                          </span>
+                          {selectedVariation === variation.index && (
+                            <svg className="w-4 h-4 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                        </div>
+                        <div className="text-sm text-[var(--muted)] whitespace-pre-wrap line-clamp-6">
+                          {variation.content.replace(/\*\*(.+?)\*\*/g, '$1').replace(/\*(.+?)\*/g, '$1')}
+                        </div>
+                      </div>
+                    ))}
+
+                    {selectedVariation && (
+                      <button
+                        onClick={() => {
+                          const selected = parseVariations(revisionVariations).find(v => v.index === selectedVariation);
+                          if (selected) applyRevision(selected.content);
+                        }}
+                        className="w-full py-3 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 cursor-pointer flex items-center justify-center gap-2"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        Apply Variation {selectedVariation}
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* Normal Brief Details UI */
+              <div className="p-5 space-y-4">
+                {/* Brief Info Row */}
+                <div className="flex gap-4 items-start">
+                  {/* Reference Thumbnail */}
+                  <div
+                    className={`w-24 h-24 bg-[var(--input-bg)] rounded-lg overflow-hidden flex-shrink-0 ${selectedBrief.format.thumbnail ? 'cursor-pointer hover:ring-2 hover:ring-[var(--accent)] transition-all' : ''}`}
+                    onClick={() => selectedBrief.format.thumbnail && setEnlargedImage(selectedBrief.format.thumbnail)}
+                    title={selectedBrief.format.thumbnail ? "Click to enlarge" : ""}
+                  >
+                    {selectedBrief.format.thumbnail ? (
+                      <img src={selectedBrief.format.thumbnail} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <svg className="w-8 h-8 text-[var(--muted-dim)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
+                  {/* Info Grid */}
+                  <div className="flex-1 grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
                   <div><span className="text-[var(--muted)]">PERSONA:</span> <span className="text-[var(--foreground)]">{selectedBrief.persona.name}</span></div>
                   <div><span className="text-[var(--muted)]">PRODUCT:</span> <span className="text-[var(--foreground)]">{selectedBrief.product.name}</span></div>
                   <div className="col-span-2"><span className="text-[var(--muted)]">ANGLE:</span> <span className="text-[var(--foreground)]">{selectedBrief.angle}</span></div>
@@ -659,8 +948,10 @@ export default function BoardDetailPage({ params }: { params: Promise<{ id: stri
                 )}
               </div>
             </div>
+            )}
 
             {/* Modal Footer */}
+            {!isRevisingCopy && (
             <div className="px-5 py-3 border-t border-[var(--card-border)] flex justify-between">
               {isEditingCopy ? (
                 <>
@@ -683,6 +974,7 @@ export default function BoardDetailPage({ params }: { params: Promise<{ id: stri
                 </>
               )}
             </div>
+            )}
           </div>
         </div>
       )}
