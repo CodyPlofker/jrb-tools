@@ -45,6 +45,7 @@ export interface Brief {
         required: boolean;
       }>;
       styleNotes: string;
+      bestFor?: string[];
     };
   };
   generatedCopy: string | {
