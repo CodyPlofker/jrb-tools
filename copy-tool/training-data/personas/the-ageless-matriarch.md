@@ -1,6 +1,6 @@
 # The Ageless Matriarch
 
-**Percentage of Customer Base:** ~15% (Core demographic)
+**Percentage of Customer Base:** 27.7% (Top Revenue Driver)
 
 ---
 
@@ -21,6 +21,36 @@ The sophisticated woman who has earned every line on her face and refuses to apo
 | **Geography** | Suburban or affluent vacation areas (Naples FL, Scottsdale AZ, Coastal MA, Palm Beach) |
 | **Education** | College-educated, often graduate degrees |
 | **Lifestyle** | Active in community, philanthropy, travel, social engagements |
+
+---
+
+## OuterSignal Analytics (Live Data)
+
+### Revenue Performance
+| Metric | Value | vs Brand |
+|--------|-------|----------|
+| **Customer Share** | 27.7% | — |
+| **Revenue Share** | 31.5% | +3.8pp (outperformer) |
+| **Revenue Index** | 1.14x | Top performer |
+| **AOV** | $99 | -7% |
+| **LTV** | $423 | +14% |
+| **Repeat Rate** | 62.7% | — |
+| **Orders/Year** | 0.0 | — |
+| **Sample Size** | 91,270 customers | — |
+
+### Demographics (Verified by OuterSignal)
+- **Average Age:** 67.3 | **Median Age:** 68.0
+- **Gender:** 99.7% Female
+
+### Top States
+1. California (10,314 customers, 11.3%)
+2. Florida (6,196 customers, 6.8%)
+3. Texas (5,139 customers, 5.6%)
+4. New York (4,352 customers, 4.8%)
+
+### Product Affinity (vs Brand Average)
+**Over-indexes:** Just Enough Tinted Moisturizer, The Mascara, Pinky Bronze Kit, Mini Miracle Balm Trio
+**Under-indexes:** The Face Pencil, The Hero Kit, The Party Kit
 
 ---
 

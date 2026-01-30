@@ -3,12 +3,35 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 
+interface OuterSignalAnalytics {
+  customerShare: number;
+  revenueShare: number;
+  revenueIndex: number;
+  performanceClass: "outperformer" | "underperformer" | "average";
+  aov: number;
+  aovVsBrand: number;
+  ltv: number;
+  ltvVsBrand: number;
+  repeatRate: number;
+  ordersPerYear: number;
+  sampleSize: number;
+  demographics: {
+    avgAge: number;
+    medianAge: number;
+    genderFemale: number;
+  };
+  topStates: string[];
+  productAffinityHigh: string[];
+  productAffinityLow: string[];
+}
+
 interface ParsedPersona {
   id: string;
   name: string;
   percentage: string;
   identitySnapshot: string;
   demographics: Record<string, string>;
+  analytics?: OuterSignalAnalytics;
   coreIdentityTraits: string[];
   values: string[];
   worldview: string;
@@ -36,12 +59,19 @@ interface ParsedPersona {
 }
 
 const TABS = [
+  { id: "analytics", label: "Analytics" },
   { id: "who", label: "Who She Is" },
   { id: "messaging", label: "How to Talk to Her" },
   { id: "copy", label: "Copy Examples" },
 ];
 
 const SECTIONS = {
+  analytics: [
+    { id: "revenue", label: "Revenue Performance" },
+    { id: "customer-demo", label: "Customer Demographics" },
+    { id: "geography", label: "Geography" },
+    { id: "product-affinity", label: "Product Affinity" },
+  ],
   who: [
     { id: "identity", label: "Identity" },
     { id: "demographics", label: "Demographics" },
@@ -147,7 +177,7 @@ export default function PersonasPage() {
   const [personas, setPersonas] = useState<ParsedPersona[]>([]);
   const [selectedPersona, setSelectedPersona] = useState<ParsedPersona | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("who");
+  const [activeTab, setActiveTab] = useState("analytics");
   const mainRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -179,6 +209,160 @@ export default function PersonasPage() {
     return (
       <div>
         {/* Tab Content */}
+        {activeTab === "analytics" && persona.analytics && (
+          <div className="space-y-2">
+            {/* Revenue Performance */}
+            <CollapsibleSection id="revenue" title="Revenue Performance">
+              <div className="space-y-4">
+                {/* Performance Badge */}
+                <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium ${
+                  persona.analytics.performanceClass === "outperformer"
+                    ? "bg-green-500/20 text-green-400"
+                    : persona.analytics.performanceClass === "underperformer"
+                    ? "bg-red-500/20 text-red-400"
+                    : "bg-yellow-500/20 text-yellow-400"
+                }`}>
+                  {persona.analytics.performanceClass === "outperformer" && (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                    </svg>
+                  )}
+                  {persona.analytics.performanceClass === "underperformer" && (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                    </svg>
+                  )}
+                  {persona.analytics.revenueIndex}x Revenue Index
+                  {persona.analytics.performanceClass === "outperformer" && " — Outperformer"}
+                  {persona.analytics.performanceClass === "underperformer" && " — Underperformer"}
+                </div>
+
+                {/* Key Metrics Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-4">
+                    <p className="text-xs text-[var(--muted-dim)] mb-1">Customer Share</p>
+                    <p className="text-2xl font-semibold text-[var(--foreground)]">{persona.analytics.customerShare}%</p>
+                  </div>
+                  <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-4">
+                    <p className="text-xs text-[var(--muted-dim)] mb-1">Revenue Share</p>
+                    <p className="text-2xl font-semibold text-[var(--foreground)]">{persona.analytics.revenueShare}%</p>
+                  </div>
+                  <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-4">
+                    <p className="text-xs text-[var(--muted-dim)] mb-1">AOV</p>
+                    <p className="text-2xl font-semibold text-[var(--foreground)]">${persona.analytics.aov}</p>
+                    <p className={`text-xs ${persona.analytics.aovVsBrand >= 0 ? "text-green-400" : "text-red-400"}`}>
+                      {persona.analytics.aovVsBrand >= 0 ? "+" : ""}{persona.analytics.aovVsBrand}% vs brand
+                    </p>
+                  </div>
+                  <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-4">
+                    <p className="text-xs text-[var(--muted-dim)] mb-1">LTV</p>
+                    <p className="text-2xl font-semibold text-[var(--foreground)]">${persona.analytics.ltv}</p>
+                    <p className={`text-xs ${persona.analytics.ltvVsBrand >= 0 ? "text-green-400" : "text-red-400"}`}>
+                      {persona.analytics.ltvVsBrand >= 0 ? "+" : ""}{persona.analytics.ltvVsBrand}% vs brand
+                    </p>
+                  </div>
+                </div>
+
+                {/* Secondary Metrics */}
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-4">
+                    <p className="text-xs text-[var(--muted-dim)] mb-1">Repeat Rate</p>
+                    <p className="text-xl font-semibold text-[var(--foreground)]">{persona.analytics.repeatRate}%</p>
+                  </div>
+                  <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-4">
+                    <p className="text-xs text-[var(--muted-dim)] mb-1">Orders/Year</p>
+                    <p className="text-xl font-semibold text-[var(--foreground)]">{persona.analytics.ordersPerYear}</p>
+                  </div>
+                  <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-4">
+                    <p className="text-xs text-[var(--muted-dim)] mb-1">Sample Size</p>
+                    <p className="text-xl font-semibold text-[var(--foreground)]">{persona.analytics.sampleSize.toLocaleString()}</p>
+                  </div>
+                </div>
+              </div>
+            </CollapsibleSection>
+
+            {/* Customer Demographics */}
+            <CollapsibleSection id="customer-demo" title="Customer Demographics">
+              <div className="grid grid-cols-3 gap-3">
+                <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-4">
+                  <p className="text-xs text-[var(--muted-dim)] mb-1">Average Age</p>
+                  <p className="text-2xl font-semibold text-[var(--foreground)]">{persona.analytics.demographics.avgAge}</p>
+                </div>
+                <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-4">
+                  <p className="text-xs text-[var(--muted-dim)] mb-1">Median Age</p>
+                  <p className="text-2xl font-semibold text-[var(--foreground)]">{persona.analytics.demographics.medianAge}</p>
+                </div>
+                <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-4">
+                  <p className="text-xs text-[var(--muted-dim)] mb-1">Female</p>
+                  <p className="text-2xl font-semibold text-[var(--foreground)]">{persona.analytics.demographics.genderFemale}%</p>
+                </div>
+              </div>
+            </CollapsibleSection>
+
+            {/* Geography */}
+            {persona.analytics.topStates.length > 0 && (
+              <CollapsibleSection id="geography" title="Top States">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {persona.analytics.topStates.map((state, i) => (
+                    <div key={state} className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-4 flex items-center gap-3">
+                      <span className="text-lg font-bold text-[var(--muted-dim)]">{i + 1}</span>
+                      <span className="text-sm text-[var(--foreground)]">{state}</span>
+                    </div>
+                  ))}
+                </div>
+              </CollapsibleSection>
+            )}
+
+            {/* Product Affinity */}
+            {(persona.analytics.productAffinityHigh.length > 0 || persona.analytics.productAffinityLow.length > 0) && (
+              <CollapsibleSection id="product-affinity" title="Product Affinity">
+                <div className="space-y-4">
+                  {persona.analytics.productAffinityHigh.length > 0 && (
+                    <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-xl p-4">
+                      <p className="text-xs text-green-400 font-medium mb-3 uppercase tracking-wide flex items-center gap-2">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                        </svg>
+                        Over-indexes (vs Brand Average)
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {persona.analytics.productAffinityHigh.map((product, i) => (
+                          <span key={i} className="text-sm bg-green-500/10 border border-green-500/30 text-green-400 px-3 py-1.5 rounded-lg">
+                            {product}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {persona.analytics.productAffinityLow.length > 0 && (
+                    <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-xl p-4">
+                      <p className="text-xs text-red-400 font-medium mb-3 uppercase tracking-wide flex items-center gap-2">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                        </svg>
+                        Under-indexes (vs Brand Average)
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {persona.analytics.productAffinityLow.map((product, i) => (
+                          <span key={i} className="text-sm bg-red-500/10 border border-red-500/30 text-red-400 px-3 py-1.5 rounded-lg">
+                            {product}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </CollapsibleSection>
+            )}
+          </div>
+        )}
+
+        {activeTab === "analytics" && !persona.analytics && (
+          <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-xl p-8 text-center">
+            <p className="text-[var(--muted)]">Analytics data not available for this persona.</p>
+          </div>
+        )}
+
         {activeTab === "who" && (
           <div className="space-y-2">
             {/* Identity */}
@@ -656,14 +840,43 @@ export default function PersonasPage() {
                   <h3 className="font-semibold text-[var(--foreground)] transition-colors">
                     {persona.name}
                   </h3>
-                  {persona.percentage && (
-                    <span className="text-xs bg-[var(--input-bg)] text-[var(--muted)] px-2 py-1 rounded">
-                      {persona.percentage}
-                    </span>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {persona.analytics && (
+                      <span className={`text-xs px-2 py-1 rounded font-medium ${
+                        persona.analytics.performanceClass === "outperformer"
+                          ? "bg-green-500/20 text-green-400"
+                          : persona.analytics.performanceClass === "underperformer"
+                          ? "bg-red-500/20 text-red-400"
+                          : "bg-yellow-500/20 text-yellow-400"
+                      }`}>
+                        {persona.analytics.revenueIndex}x
+                      </span>
+                    )}
+                    {persona.percentage && (
+                      <span className="text-xs bg-[var(--input-bg)] text-[var(--muted)] px-2 py-1 rounded">
+                        {persona.percentage}
+                      </span>
+                    )}
+                  </div>
                 </div>
-                <p className="text-sm text-[var(--muted)] line-clamp-3">
-                  {persona.identitySnapshot.substring(0, 150)}...
+                {persona.analytics && (
+                  <div className="grid grid-cols-3 gap-2 mb-3">
+                    <div className="text-center">
+                      <p className="text-lg font-semibold text-[var(--foreground)]">${persona.analytics.aov}</p>
+                      <p className="text-xs text-[var(--muted-dim)]">AOV</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-lg font-semibold text-[var(--foreground)]">${persona.analytics.ltv}</p>
+                      <p className="text-xs text-[var(--muted-dim)]">LTV</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-lg font-semibold text-[var(--foreground)]">{persona.analytics.repeatRate}%</p>
+                      <p className="text-xs text-[var(--muted-dim)]">Repeat</p>
+                    </div>
+                  </div>
+                )}
+                <p className="text-sm text-[var(--muted)] line-clamp-2">
+                  {persona.identitySnapshot.substring(0, 100)}...
                 </p>
                 <div className="mt-4 flex flex-wrap gap-1">
                   {persona.productAffinities.slice(0, 3).map((p, i) => (

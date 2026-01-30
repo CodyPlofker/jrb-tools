@@ -1,6 +1,6 @@
 # The Wellness & Healthcare Practitioner
 
-**Percentage of Customer Base:** ~15%
+**Percentage of Customer Base:** 11.8%
 
 ---
 
@@ -21,6 +21,36 @@ The woman who heals others for a living. She's a doctor, nurse, therapist, nutri
 | **Geography** | Spread across the US, often near major medical centers or university towns |
 | **Education** | Advanced degrees (MD, DO, NP, PhD, RD) |
 | **Household Income** | $80K-$400K (wide range by specialty) |
+
+---
+
+## OuterSignal Analytics (Live Data)
+
+### Revenue Performance
+| Metric | Value | vs Brand |
+|--------|-------|----------|
+| **Customer Share** | 11.8% | — |
+| **Revenue Share** | 11.5% | -0.3pp |
+| **Revenue Index** | 0.97x | Near average |
+| **AOV** | $110 | +3% |
+| **LTV** | $360 | -3% |
+| **Repeat Rate** | 53.2% | — |
+| **Orders/Year** | 3.3 | — |
+| **Sample Size** | 39,011 customers | — |
+
+### Demographics (Verified by OuterSignal)
+- **Average Age:** 51.4 | **Median Age:** 54.0
+- **Gender:** 99.1% Female
+
+### Top States
+1. California (4,682 customers, 12.0%)
+2. Texas (2,497 customers, 6.4%)
+3. Florida (2,223 customers, 5.7%)
+4. New York (1,872 customers, 4.8%)
+
+### Product Affinity (vs Brand Average)
+**Over-indexes:** Just Enough Tinted Moisturizer, The Mascara, Mini Miracle Balm Trio
+**Under-indexes:** The Face Pencil, Hero Kit, Party Kit
 
 ---
 

@@ -1,6 +1,6 @@
 # The High-Powered Executive
 
-**Percentage of Customer Base:** ~20%
+**Percentage of Customer Base:** 20.3%
 
 ---
 
@@ -21,6 +21,36 @@ The woman who's shattered glass ceilings and now sits in the rooms where decisio
 | **Geography** | Major metropolitan hubs and affluent suburbs (NYC, Chicago, Bay Area, DC, Boston, LA) |
 | **Education** | Advanced degrees (MBA, JD, MD common) |
 | **Household Income** | $300K-$1M+ |
+
+---
+
+## OuterSignal Analytics (Live Data)
+
+### Revenue Performance
+| Metric | Value | vs Brand |
+|--------|-------|----------|
+| **Customer Share** | 20.3% | — |
+| **Revenue Share** | 22.4% | +2.1pp (outperformer) |
+| **Revenue Index** | 1.10x | Above average |
+| **AOV** | $115 | +8% |
+| **LTV** | $411 | +10% |
+| **Repeat Rate** | 56.6% | — |
+| **Orders/Year** | 3.7 | — |
+| **Sample Size** | 67,042 customers | — |
+
+### Demographics (Verified by OuterSignal)
+- **Average Age:** 48.2 | **Median Age:** 52.0
+- **Gender:** 97.7% Female
+
+### Top States
+1. California (7,672 customers, 11.4%)
+2. Texas (4,348 customers, 6.5%)
+3. New York (3,954 customers, 5.9%)
+4. Florida (3,483 customers, 5.2%)
+
+### Product Affinity (vs Brand Average)
+**Over-indexes:** The Face Pencil, Mini Miracle Balm Trio, Hero Kit, Party Kit
+**Under-indexes:** Just Enough Tinted Moisturizer, The Mascara
 
 ---
 

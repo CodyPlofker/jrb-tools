@@ -1,6 +1,6 @@
 # The Busy Suburban Super-Mom
 
-**Percentage of Customer Base:** ~20%
+**Percentage of Customer Base:** 9.0%
 
 ---
 
@@ -21,6 +21,36 @@ Women in their 30s to 50s who are the orchestrators of their households. They're
 | **Geography** | Suburban areas (suburbs of Chicago, Atlanta, Dallas, Denver, Bay Area) |
 | **Education** | College-educated |
 | **Household Income** | $100K-$250K combined |
+
+---
+
+## OuterSignal Analytics (Live Data)
+
+### Revenue Performance
+| Metric | Value | vs Brand |
+|--------|-------|----------|
+| **Customer Share** | 9.0% | — |
+| **Revenue Share** | 7.6% | -1.4pp (underperformer) |
+| **Revenue Index** | 0.85x | Below average |
+| **AOV** | $113 | +6% |
+| **LTV** | $317 | -15% |
+| **Repeat Rate** | 46.1% | — |
+| **Orders/Year** | 2.9 | — |
+| **Sample Size** | 29,504 customers | — |
+
+### Demographics (Verified by OuterSignal)
+- **Average Age:** 44.8 | **Median Age:** 47.0
+- **Gender:** 99.9% Female
+
+### Top States
+1. Texas (2,330 customers, 7.9%)
+2. California (2,233 customers, 7.6%)
+3. Illinois (1,432 customers, 4.9%)
+4. Pennsylvania (1,216 customers, 4.1%)
+
+### Product Affinity (vs Brand Average)
+**Over-indexes:** The Face Pencil, Mini Miracle Balm Trio, Pinky Bronze Kit, Hero Kit, Party Kit
+**Under-indexes:** Just Enough Tinted Moisturizer, The Mascara
 
 ---
 

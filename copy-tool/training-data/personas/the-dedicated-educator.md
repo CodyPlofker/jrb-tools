@@ -1,6 +1,6 @@
 # The Dedicated Educator
 
-**Percentage of Customer Base:** ~15%
+**Percentage of Customer Base:** 8.7%
 
 ---
 
@@ -21,6 +21,36 @@ The woman who shapes the next generation. She's the teacher who stays late to he
 | **Geography** | Suburban and rural towns across the US |
 | **Education** | Advanced degrees common (Master's, Ed.D) |
 | **Household Income** | $50K-$100K (teacher salaries vary widely by state) |
+
+---
+
+## OuterSignal Analytics (Live Data)
+
+### Revenue Performance
+| Metric | Value | vs Brand |
+|--------|-------|----------|
+| **Customer Share** | 8.7% | — |
+| **Revenue Share** | 8.5% | -0.2pp |
+| **Revenue Index** | 0.98x | Near average |
+| **AOV** | $105 | -1% |
+| **LTV** | $364 | -2% |
+| **Repeat Rate** | 55.8% | — |
+| **Orders/Year** | 3.5 | — |
+| **Sample Size** | 28,636 customers | — |
+
+### Demographics (Verified by OuterSignal)
+- **Average Age:** 52.8 | **Median Age:** 55.0
+- **Gender:** 99.5% Female
+
+### Top States
+1. California (3,207 customers, 11.2%)
+2. Texas (2,119 customers, 7.4%)
+3. Florida (1,489 customers, 5.2%)
+4. New York (1,374 customers, 4.8%)
+
+### Product Affinity (vs Brand Average)
+**Over-indexes:** Just Enough Tinted Moisturizer, The Mascara, Pinky Bronze Kit
+**Under-indexes:** The Face Pencil, Hero Kit, Party Kit
 
 ---
 

@@ -2,12 +2,35 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 
+interface OuterSignalAnalytics {
+  customerShare: number;
+  revenueShare: number;
+  revenueIndex: number;
+  performanceClass: "outperformer" | "underperformer" | "average";
+  aov: number;
+  aovVsBrand: number;
+  ltv: number;
+  ltvVsBrand: number;
+  repeatRate: number;
+  ordersPerYear: number;
+  sampleSize: number;
+  demographics: {
+    avgAge: number;
+    medianAge: number;
+    genderFemale: number;
+  };
+  topStates: string[];
+  productAffinityHigh: string[];
+  productAffinityLow: string[];
+}
+
 interface ParsedPersona {
   id: string;
   name: string;
   percentage: string;
   identitySnapshot: string;
   demographics: Record<string, string>;
+  analytics?: OuterSignalAnalytics;
   // Psychographics
   coreIdentityTraits: string[];
   values: string[];
@@ -65,6 +88,81 @@ function parseMarkdown(content: string, filename: string): ParsedPersona {
         demographics[key] = parts[1];
       }
     });
+  }
+
+  // Extract OuterSignal Analytics
+  let analytics: OuterSignalAnalytics | undefined;
+  const analyticsSection = content.match(/## OuterSignal Analytics[\s\S]*?(?=\n---\n\n## Psychographics)/);
+  if (analyticsSection) {
+    const section = analyticsSection[0];
+
+    // Parse Revenue Performance table
+    const customerShareMatch = section.match(/\*\*Customer Share\*\*\s*\|\s*([\d.]+)%/);
+    const revenueShareMatch = section.match(/\*\*Revenue Share\*\*\s*\|\s*([\d.]+)%\s*\|\s*([+-]?[\d.]+pp)?/);
+    const revenueIndexMatch = section.match(/\*\*Revenue Index\*\*\s*\|\s*([\d.]+)x/);
+    const aovMatch = section.match(/\*\*AOV\*\*\s*\|\s*\$([\d,]+)\s*\|\s*([+-]?\d+)%/);
+    const ltvMatch = section.match(/\*\*LTV\*\*\s*\|\s*\$([\d,]+)\s*\|\s*([+-]?\d+)%/);
+    const repeatRateMatch = section.match(/\*\*Repeat Rate\*\*\s*\|\s*([\d.]+)%/);
+    const ordersMatch = section.match(/\*\*Orders\/Year\*\*\s*\|\s*([\d.]+)/);
+    const sampleSizeMatch = section.match(/\*\*Sample Size\*\*\s*\|\s*([\d,]+)\s*customers/);
+
+    // Parse Demographics
+    const avgAgeMatch = section.match(/\*\*Average Age:\*\*\s*([\d.]+)/);
+    const medianAgeMatch = section.match(/\*\*Median Age:\*\*\s*([\d.]+)/);
+    const genderMatch = section.match(/\*\*Gender:\*\*\s*([\d.]+)%\s*Female/);
+
+    // Parse Top States
+    const topStates: string[] = [];
+    const statesMatch = section.match(/### Top States\n([\s\S]*?)(?=\n###|\n---|\n##)/);
+    if (statesMatch) {
+      const stateLines = statesMatch[1].match(/^\d+\.\s*(\w+(?:\s+\w+)?)/gm);
+      if (stateLines) {
+        stateLines.forEach(line => {
+          const stateNameMatch = line.match(/^\d+\.\s*(\w+(?:\s+\w+)?)/);
+          if (stateNameMatch) topStates.push(stateNameMatch[1]);
+        });
+      }
+    }
+
+    // Parse Product Affinity
+    const productAffinityHigh: string[] = [];
+    const productAffinityLow: string[] = [];
+    const affinityHighMatch = section.match(/\*\*Over-indexes:\*\*\s*([^\n]+)/);
+    const affinityLowMatch = section.match(/\*\*Under-indexes:\*\*\s*([^\n]+)/);
+    if (affinityHighMatch) {
+      productAffinityHigh.push(...affinityHighMatch[1].split(",").map(p => p.trim()));
+    }
+    if (affinityLowMatch) {
+      productAffinityLow.push(...affinityLowMatch[1].split(",").map(p => p.trim()));
+    }
+
+    // Determine performance class
+    const revenueIndex = revenueIndexMatch ? parseFloat(revenueIndexMatch[1]) : 1;
+    let performanceClass: "outperformer" | "underperformer" | "average" = "average";
+    if (revenueIndex >= 1.05) performanceClass = "outperformer";
+    else if (revenueIndex <= 0.95) performanceClass = "underperformer";
+
+    analytics = {
+      customerShare: customerShareMatch ? parseFloat(customerShareMatch[1]) : 0,
+      revenueShare: revenueShareMatch ? parseFloat(revenueShareMatch[1]) : 0,
+      revenueIndex,
+      performanceClass,
+      aov: aovMatch ? parseInt(aovMatch[1].replace(",", "")) : 0,
+      aovVsBrand: aovMatch ? parseInt(aovMatch[2]) : 0,
+      ltv: ltvMatch ? parseInt(ltvMatch[1].replace(",", "")) : 0,
+      ltvVsBrand: ltvMatch ? parseInt(ltvMatch[2]) : 0,
+      repeatRate: repeatRateMatch ? parseFloat(repeatRateMatch[1]) : 0,
+      ordersPerYear: ordersMatch ? parseFloat(ordersMatch[1]) : 0,
+      sampleSize: sampleSizeMatch ? parseInt(sampleSizeMatch[1].replace(",", "")) : 0,
+      demographics: {
+        avgAge: avgAgeMatch ? parseFloat(avgAgeMatch[1]) : 0,
+        medianAge: medianAgeMatch ? parseFloat(medianAgeMatch[1]) : 0,
+        genderFemale: genderMatch ? parseFloat(genderMatch[1]) : 0,
+      },
+      topStates,
+      productAffinityHigh,
+      productAffinityLow,
+    };
   }
 
   // Extract Psychographics - Core Identity Traits
@@ -252,6 +350,7 @@ function parseMarkdown(content: string, filename: string): ParsedPersona {
     percentage,
     identitySnapshot,
     demographics,
+    analytics,
     coreIdentityTraits,
     values,
     worldview,

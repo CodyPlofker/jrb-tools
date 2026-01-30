@@ -1,6 +1,6 @@
 # The Creative Entrepreneur
 
-**Percentage of Customer Base:** ~10%
+**Percentage of Customer Base:** 9.0%
 
 ---
 
@@ -21,6 +21,36 @@ The woman who creates for a living. She's a graphic designer, photographer, inte
 | **Geography** | Arts-centric communities, coastal cities, cultural hubs (Brooklyn, Portland, Austin, LA, Santa Fe) |
 | **Education** | Often art school or self-taught; values learning over credentials |
 | **Household Income** | $60K-$150K (highly variable based on creative success) |
+
+---
+
+## OuterSignal Analytics (Live Data)
+
+### Revenue Performance
+| Metric | Value | vs Brand |
+|--------|-------|----------|
+| **Customer Share** | 9.0% | — |
+| **Revenue Share** | 8.1% | -0.9pp (underperformer) |
+| **Revenue Index** | 0.90x | Below average |
+| **AOV** | $107 | +1% |
+| **LTV** | $335 | -10% |
+| **Repeat Rate** | 51.6% | — |
+| **Orders/Year** | 3.1 | — |
+| **Sample Size** | 29,721 customers | — |
+
+### Demographics (Verified by OuterSignal)
+- **Average Age:** 47.3 | **Median Age:** 50.0
+- **Gender:** 98.9% Female
+
+### Top States
+1. California (4,458 customers, 15.0%)
+2. New York (2,079 customers, 7.0%)
+3. Texas (1,783 customers, 6.0%)
+4. Florida (1,486 customers, 5.0%)
+
+### Product Affinity (vs Brand Average)
+**Over-indexes:** The Face Pencil, Mini Miracle Balm Trio, Hero Kit
+**Under-indexes:** Just Enough Tinted Moisturizer, The Mascara, Pinky Bronze Kit
 
 ---
 
