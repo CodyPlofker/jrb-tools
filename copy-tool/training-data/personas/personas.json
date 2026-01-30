@@ -92,7 +92,62 @@
       "Social proof (brand popularity among peers)"
     ],
     "whyBrandAppeals": "Jones Road offers a solution to the 'tired mom' face. Products that can be applied with fingers in the car or quickly in the bathroom suit their on-the-go lifestyle. The brand empowers them to feel confident without a heavy mask of makeup.",
-    "customerBasePercentage": 20
+    "customerBasePercentage": 20,
+    "copyThemes": [
+      {
+        "theme": "Intergenerational Use (IU)",
+        "description": "Mom plus daughter using the same products - about shared ownership and trust",
+        "angleCount": 7
+      },
+      {
+        "theme": "Intergenerational Compliment (IC)",
+        "description": "Mom being complimented by younger generation - about emotional validation and identity",
+        "angleCount": 7
+      },
+      {
+        "theme": "Low-Effort Presentability",
+        "description": "Looking acceptable with minimal time - baseline dignity under time pressure",
+        "angleCount": 3
+      },
+      {
+        "theme": "Anti-Foundation Identity",
+        "description": "Rejecting heavy foundation - about comfort and authenticity",
+        "angleCount": 3
+      },
+      {
+        "theme": "Aging Without Overcorrection",
+        "description": "Graceful aging without trying to look young - anti-embarrassment not anti-aging",
+        "angleCount": 3
+      },
+      {
+        "theme": "Skin in Transition",
+        "description": "Dealing with hormones, treatments, aging - skin that's no longer predictable",
+        "angleCount": 3
+      },
+      {
+        "theme": "Energy Restoration",
+        "description": "Looking awake and alive when depleted - counteracting exhaustion",
+        "angleCount": 3
+      },
+      {
+        "theme": "Active Life Compatibility",
+        "description": "Looking presentable in fitness contexts without looking 'done'",
+        "angleCount": 1
+      }
+    ],
+    "coreProblems": [
+      "Aging skin that no longer behaves predictably",
+      "Feeling judged by younger generations",
+      "Emotional invisibility - being seen as 'just a mom'"
+    ],
+    "whatMatters": [
+      "Looking like herself, but better rested and more alive",
+      "Validation from the people who know her best (family)",
+      "Ease, speed, and low cognitive load",
+      "Comfort and physical sensation of products"
+    ],
+    "emotionalJob": "Helping women transition from youthful beauty standards to adult self-acceptance, maintain dignity and attractiveness without denial, and reclaim small moments of confidence in a life dominated by responsibility.",
+    "oneLineSummary": "A woman in the thick of life who wants to look like herself, feel comfortable in her skin, move quickly through her day, and receive quiet, meaningful validation that she still matters, without pretending she's someone she's not."
   },
   {
     "id": "creative-entrepreneur",
