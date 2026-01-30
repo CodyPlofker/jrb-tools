@@ -166,15 +166,29 @@ function parseMarkdown(content: string, filename: string): ParsedPersona {
   const langAvoidMatch = content.match(/### Avoid These\n([\s\S]*?)(?=\n---|\n##)/);
   const languageAvoid = langAvoidMatch ? langAvoidMatch[1].split("\n").filter(l => l.startsWith("- ")).map(l => l.replace(/^- /, "")) : [];
 
-  // Extract VOC quotes
+  // Extract VOC quotes from both "Voice of Customer" and "Gold Nugget Quotes" sections
   const vocQuotes: string[] = [];
-  const vocSection = content.match(/## Voice of Customer[\s\S]*?(?=\n## Purchase|## Jobs|---\n\n##)/);
+
+  // First try the original Voice of Customer section
+  const vocSection = content.match(/## Voice of Customer[\s\S]*?(?=\n## Gold Nugget|\n## Purchase|\n## Jobs|---\n\n##)/);
   if (vocSection) {
     const quotes = vocSection[0].match(/> "([^"]+)"/g);
     if (quotes) {
       quotes.slice(0, 8).forEach(q => {
         const clean = q.replace(/^> "/, "").replace(/"$/, "");
         if (clean.length < 250) vocQuotes.push(clean);
+      });
+    }
+  }
+
+  // Also extract from Gold Nugget Quotes section (expanded reviews)
+  const goldNuggetSection = content.match(/## Gold Nugget Quotes[\s\S]*?(?=\n## Copy Angles|\n## Deep Persona|---\n\n##)/);
+  if (goldNuggetSection) {
+    const quotes = goldNuggetSection[0].match(/> "([^"]+)"/g);
+    if (quotes) {
+      quotes.slice(0, 30).forEach(q => {
+        const clean = q.replace(/^> "/, "").replace(/"$/, "");
+        if (clean.length < 300 && !vocQuotes.includes(clean)) vocQuotes.push(clean);
       });
     }
   }
