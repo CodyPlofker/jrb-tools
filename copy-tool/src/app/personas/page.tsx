@@ -977,34 +977,9 @@ export default function PersonasPage() {
                     )}
                   </div>
                 </div>
-                {persona.analytics && (
-                  <div className="grid grid-cols-3 gap-2 mb-3">
-                    <div className="text-center">
-                      <p className="text-lg font-semibold text-[var(--foreground)]">${persona.analytics.aov}</p>
-                      <p className="text-xs text-[var(--muted-dim)]">AOV</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-lg font-semibold text-[var(--foreground)]">${persona.analytics.ltv}</p>
-                      <p className="text-xs text-[var(--muted-dim)]">LTV</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-lg font-semibold text-[var(--foreground)]">{persona.analytics.repeatRate}%</p>
-                      <p className="text-xs text-[var(--muted-dim)]">Repeat</p>
-                    </div>
-                  </div>
-                )}
                 <p className="text-sm text-[var(--muted)] line-clamp-2">
                   {persona.identitySnapshot.substring(0, 100)}...
                 </p>
-                {persona.analytics && persona.analytics.productAffinityHigh.length > 0 && (
-                  <div className="mt-4 flex flex-wrap gap-1">
-                    {persona.analytics.productAffinityHigh.slice(0, 3).map((product, i) => (
-                      <span key={i} className="text-xs bg-green-500/10 border border-green-500/30 text-green-400 px-2 py-0.5 rounded">
-                        {product}
-                      </span>
-                    ))}
-                  </div>
-                )}
               </button>
             ))}
           </div>
