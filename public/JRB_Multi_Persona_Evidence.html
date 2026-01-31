@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jones Road Beauty - Multi-Persona Positioning Evidence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #F5F0E8;
+            color: #1a1a1a;
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            padding: 60px 80px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation: fadeIn 0.4s ease;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header-banner {
+            background: #000;
+            color: #fff;
+            padding: 20px 40px;
+            margin: -60px -80px 40px -80px;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .header-banner h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .header-banner .subtitle {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 400;
+            margin-top: 5px;
+            opacity: 0.8;
+        }
+
+        h2 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+        }
+
+        h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .stat-huge {
+            font-family: 'Oswald', sans-serif;
+            font-size: 5rem;
+            font-weight: 700;
+            color: #000;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 1.3rem;
+            color: #444;
+            margin-top: 10px;
+        }
+
+        .quote-block {
+            background: #fff;
+            border-left: 4px solid #000;
+            padding: 20px 25px;
+            margin: 15px 0;
+            font-size: 1rem;
+            line-height: 1.6;
+            font-style: italic;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .quote-block .source {
+            font-style: normal;
+            font-weight: 600;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .insight-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .insight-grid.three-col {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .insight-grid.four-col {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .insight-card {
+            background: #fff;
+            padding: 25px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+
+        .insight-card .number {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .insight-card .label {
+            font-size: 0.95rem;
+            color: #444;
+            margin-top: 5px;
+        }
+
+        .insight-card .detail {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+
+        .persona-card {
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+
+        .persona-card .persona-name {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #000;
+            margin-bottom: 8px;
+        }
+
+        .persona-card .persona-count {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .persona-card .persona-triggers {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+
+        .trigger-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .trigger-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e0d8cc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .trigger-list .phrase {
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .trigger-list .count {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .highlight-text {
+            background: #000;
+            color: #fff;
+            padding: 3px 8px;
+            font-weight: 600;
+        }
+
+        .section-intro {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            max-width: 900px;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        .comp-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        .comp-table th {
+            background: #000;
+            color: #fff;
+            padding: 15px;
+            text-align: left;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .comp-table td {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            vertical-align: top;
+        }
+
+        .comp-table tr:nth-child(even) {
+            background: #fff;
+        }
+
+        .comp-table .brand-name {
+            font-weight: 700;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .positioning-box {
+            background: #fff;
+            padding: 40px;
+            margin: 20px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .positioning-box .label {
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .positioning-box .value {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #000;
+        }
+
+        .positioning-box .value strong {
+            background: linear-gradient(180deg, transparent 60%, #FFE566 60%);
+        }
+
+        .positioning-box .evidence {
+            background: #f8f6f2;
+            padding: 15px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #555;
+            border-left: 3px solid #000;
+        }
+
+        .nav-arrows {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            width: 50px;
+            height: 50px;
+            background: #000;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: #000;
+            transition: width 0.3s ease;
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 40px;
+            left: 40px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .title-slide {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: #000;
+            color: #fff;
+        }
+
+        .title-slide h1 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .title-slide .tagline {
+            font-size: 1.4rem;
+            font-weight: 300;
+            opacity: 0.9;
+            max-width: 700px;
+        }
+
+        .title-slide .data-point {
+            margin-top: 50px;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .title-slide .data-point .number {
+            font-size: 4rem;
+            font-weight: 700;
+        }
+
+        .title-slide .data-point .label {
+            font-size: 1.1rem;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .key-insight {
+            background: #000;
+            color: #fff;
+            padding: 25px 30px;
+            margin: 20px 0;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        .small-quotes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .small-quote {
+            background: #fff;
+            padding: 15px 20px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            border-left: 3px solid #000;
+        }
+
+        .draft-label {
+            display: inline-block;
+            background: #FFE566;
+            color: #000;
+            padding: 5px 15px;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+            margin-bottom: 20px;
+        }
+
+        .universal-truth {
+            background: #000;
+            color: #fff;
+            padding: 50px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .universal-truth .big-quote {
+            font-size: 1.8rem;
+            font-style: italic;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        .persona-bar {
+            display: flex;
+            gap: 5px;
+            margin: 20px 0;
+        }
+
+        .persona-bar .segment {
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: #fff;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+
+        <!-- SLIDE 1: Title -->
+        <div class="slide title-slide active">
+            <h1>"Me, On a Good Day"</h1>
+            <p class="tagline">What 255,000+ reviews reveal about why women love Jones Road—across every persona</p>
+            <div class="data-point">
+                <div class="number">351,333</div>
+                <div class="label">Customer Reviews Analyzed</div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: The Core Insight -->
+        <div class="slide">
+            <div class="header-banner">
+                <h1>The Universal Truth</h1>
+                <div class="subtitle">One insight unites all JRB customers</div>
+            </div>
+            <div class="content">
+                <div class="universal-truth">
+                    <div class="big-quote">
+                        "Her fear is not looking old. Her fear is looking <strong>unnatural, overdone, or like she's pretending to be someone she's not.</strong>"
+                    </div>
+                </div>
+
+                <p class="section-intro" style="margin-top: 30px;">
+                    Whether she's 25 or 65, a busy professional or a new mom, our customers share one core desire:
+                </p>
+
+                <div class="insight-grid three-col">
+                    <div class="insight-card" style="text-align: center;">
+                        <div class="number" style="font-size: 1.8rem;">What They Want</div>
+                        <div class="detail" style="font-size: 1.1rem; margin-top: 15px;">"Me on a good day"</div>
+                    </div>
+                    <div class="insight-card" style="text-align: center;">
+                        <div class="number" style="font-size: 1.8rem;">What They Fear</div>
+                        <div class="detail" style="font-size: 1.1rem; margin-top: 15px;">Looking like they're trying too hard</div>
+                    </div>
+                    <div class="insight-card" style="text-align: center;">
+                        <div class="number" style="font-size: 1.8rem;">What JRB Delivers</div>
+                        <div class="detail" style="font-size: 1.1rem; margin-top: 15px;">"Forgiveness, not perfection"</div>
+                    </div>
+                </div>
+
+                <div class="key-insight" style="margin-top: 30px;">
+                    <strong>This is not an age story. It's an identity story.</strong> JRB helps women look like themselves—just enhanced. Not edited. Not transformed. Accommodated.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: Who Loves JRB -->
+        <div class="slide">
+            <div class="header-banner">
+                <h1>Who Loves Jones Road</h1>
+                <div class="subtitle">Multiple personas, one core need</div>
+            </div>
+            <div class="content">
+                <p class="section-intro">
+                    We analyzed 255,000+ reviews to identify distinct customer personas. The "mature/aging" segment is just one part of the story.
+                </p>
+
+                <div class="insight-grid four-col">
+                    <div class="persona-card">
+                        <div class="persona-name">Confidence Seekers</div>
+                        <div class="persona-count">21,213</div>
+                        <div class="persona-triggers">Top triggers: "feel good", "confident", "beautiful"</div>
+                    </div>
+                    <div class="persona-card">
+                        <div class="persona-name">Skincare-First</div>
+                        <div class="persona-count">12,162</div>
+                        <div class="persona-triggers">Top triggers: "skin health", "moisturizing", "natural"</div>
+                    </div>
+                    <div class="persona-card">
+                        <div class="persona-name">Young Professionals</div>
+                        <div class="persona-count">9,646</div>
+                        <div class="persona-triggers">Top triggers: "work", "meetings", "professional", "easy"</div>
+                    </div>
+                    <div class="persona-card">
+                        <div class="persona-name">Makeup Newbies</div>
+                        <div class="persona-count">9,183</div>
+                        <div class="persona-triggers">Top triggers: "easy to use", "first time", "foolproof"</div>
+                    </div>
+                </div>
+
+                <div class="insight-grid four-col" style="margin-top: 15px;">
+                    <div class="persona-card">
+                        <div class="persona-name">Mature Women</div>
+                        <div class="persona-count">6,728</div>
+                        <div class="persona-triggers">Top triggers: "wrinkles", "aging", "50s/60s"</div>
+                    </div>
+                    <div class="persona-card">
+                        <div class="persona-name">Natural Minimalists</div>
+                        <div class="persona-count">5,670</div>
+                        <div class="persona-triggers">Top triggers: "less is more", "no makeup look"</div>
+                    </div>
+                    <div class="persona-card">
+                        <div class="persona-name">Time-Pressed</div>
+                        <div class="persona-count">3,944</div>
+                        <div class="persona-triggers">Top triggers: "quick", "5 minutes", "on the go"</div>
+                    </div>
+                    <div class="persona-card">
+                        <div class="persona-name">Busy Moms</div>
+                        <div class="persona-count">2,334</div>
+                        <div class="persona-triggers">Top triggers: "kids", "school run", "family"</div>
+                    </div>
+                </div>
+
+                <div class="key-insight" style="margin-top: 25px;">
+                    <strong>"Mature/aging" is only 2.6% of reviews.</strong> JRB resonates across generations because the core promise—looking like yourself, only better—is universal.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: Universal Emotional Triggers -->
+        <div class="slide">
+            <div class="header-banner">
+                <h1>Universal Emotional Triggers</h1>
+                <div class="subtitle">Same emotions, different contexts</div>
+            </div>
+            <div class="content">
+                <p class="section-intro">
+                    Every persona shares the same top 3 emotional triggers—they just experience them in different life contexts.
+                </p>
+
+                <div class="two-col">
+                    <div>
+                        <h3>The Three Universal Triggers</h3>
+                        <ul class="trigger-list">
+                            <li>
+                                <span class="phrase">"Feels Good" / Comfort</span>
+                                <span class="count">#1 across all</span>
+                            </li>
+                            <li>
+                                <span class="phrase">"Natural Look" / Like Myself</span>
+                                <span class="count">#2 across all</span>
+                            </li>
+                            <li>
+                                <span class="phrase">"Easy / Effortless"</span>
+                                <span class="count">#3 across all</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>By Persona Context</h3>
+                        <ul class="trigger-list" style="font-size: 0.9rem;">
+                            <li>
+                                <span class="phrase">Young Professional</span>
+                                <span class="count">Feels Good: 2,240</span>
+                            </li>
+                            <li>
+                                <span class="phrase">Makeup Newbie</span>
+                                <span class="count">Easy: 4,253</span>
+                            </li>
+                            <li>
+                                <span class="phrase">Skincare-First</span>
+                                <span class="count">Natural: 2,526</span>
+                            </li>
+                            <li>
+                                <span class="phrase">Minimalist</span>
+                                <span class="count">Natural: 3,646</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="key-insight" style="margin-top: 30px;">
+                    <strong>The takeaway:</strong> JRB doesn't need different messaging for different ages. The same core promise resonates—just surface it through different contexts and life stages.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: The Busy Mom Deep Dive -->
+        <div class="slide">
+            <div class="header-banner">
+                <h1>Deep Dive: The Busy Mom</h1>
+                <div class="subtitle">From Consigliere AI gold nugget analysis</div>
+            </div>
+            <div class="content">
+                <p class="section-intro">
+                    "She is not chasing 'beauty.' She is protecting identity, dignity, and vitality."
+                </p>
+
+                <div class="two-col">
+                    <div>
+                        <h3>What She Wants</h3>
+                        <div class="quote-block">
+                            "She wants <strong>forgiveness, not perfection.</strong>"
+                        </div>
+                        <div class="quote-block">
+                            "Just enough to show up confidently. Feel put together."
+                        </div>
+                        <div class="quote-block">
+                            Products must "be hard to mess up" and work on bad days.
+                        </div>
+                    </div>
+                    <div>
+                        <h3>The Validation Pattern</h3>
+                        <p style="margin-bottom: 15px;">Who gives her compliments matters:</p>
+                        <ul class="trigger-list">
+                            <li><span class="phrase">Daughters who borrow it</span><span class="count">181</span></li>
+                            <li><span class="phrase">Sons who notice</span><span class="count">Unexpected</span></li>
+                            <li><span class="phrase">Teens who approve</span><span class="count">"Finally"</span></li>
+                            <li><span class="phrase">Husbands who comment</span><span class="count">102</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="key-insight" style="margin-top: 25px;">
+                    <strong>"This product becomes a bridge, not a divider."</strong> Different skin tones can share it. Three generations can use it. It unites rather than separates.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: Intergenerational -->
+        <div class="slide">
+            <div class="header-banner">
+                <h1>The Intergenerational Bond</h1>
+                <div class="subtitle">46% of mom gold nuggets feature this theme</div>
+            </div>
+            <div class="content">
+                <p class="section-intro">
+                    23 of 50 Supermom quotes featured either intergenerational USE (sharing products) or intergenerational COMPLIMENTS (being validated by younger generations).
+                </p>
+
+                <div class="two-col">
+                    <div>
+                        <h3>Intergenerational Use (IU)</h3>
+                        <div class="quote-block">
+                            "My daughter and I have different skin tones but pinched cheeks looks fabulous on both of us!"
+                        </div>
+                        <div class="quote-block">
+                            "She borrowed mine. Now she wants her own."
+                        </div>
+                        <p style="margin-top: 15px; font-size: 0.9rem; color: #666;">
+                            <strong>Core message:</strong> Shared ownership and trust. "Different tones. Same glow."
+                        </p>
+                    </div>
+                    <div>
+                        <h3>Intergenerational Compliment (IC)</h3>
+                        <div class="quote-block">
+                            "My daughter kept looking at me and told me I looked 20 years younger."
+                        </div>
+                        <div class="quote-block">
+                            "When your teenager actually compliments you, it must look good."
+                        </div>
+                        <p style="margin-top: 15px; font-size: 0.9rem; color: #666;">
+                            <strong>Core message:</strong> Emotional validation and identity. "The compliments hit different when they're real."
+                        </p>
+                    </div>
+                </div>
+
+                <div class="key-insight" style="margin-top: 25px;">
+                    <strong>Strategic insight:</strong> IU is about <em>practical inclusivity</em>. IC is about <em>emotional validation</em>. They trigger different emotional rewards—don't blend them in messaging.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: Beyond Age - Other Themes -->
+        <div class="slide">
+            <div class="header-banner">
+                <h1>Beyond Age: Key Themes</h1>
+                <div class="subtitle">Messaging angles that work across personas</div>
+            </div>
+            <div class="content">
+                <div class="insight-grid three-col">
+                    <div class="insight-card">
+                        <div class="number" style="font-size: 1.4rem;">Low-Effort Professional</div>
+                        <div class="detail" style="margin-top: 15px;">
+                            Hook: "Zoom-ready in 5"<br><br>
+                            Promise: Professional polish without the time sink. Look put-together for meetings.
+                        </div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="number" style="font-size: 1.4rem;">Energy Restoration</div>
+                        <div class="detail" style="margin-top: 15px;">
+                            Hook: "Sleep optional"<br><br>
+                            Promise: Look awake even when you're exhausted. "Relief from exhaustion showing."
+                        </div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="number" style="font-size: 1.4rem;">Active Lifestyle</div>
+                        <div class="detail" style="margin-top: 15px;">
+                            Hook: "Gym to groceries"<br><br>
+                            Promise: Makeup that survives real movement. Pilates, soccer, real life.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="insight-grid three-col" style="margin-top: 20px;">
+                    <div class="insight-card">
+                        <div class="number" style="font-size: 1.4rem;">Anti-Foundation</div>
+                        <div class="detail" style="margin-top: 15px;">
+                            Hook: "Finally outgrew foundation"<br><br>
+                            Promise: Your skin changed. Your makeup should too. Maturity, not loss.
+                        </div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="number" style="font-size: 1.4rem;">Skin in Transition</div>
+                        <div class="detail" style="margin-top: 15px;">
+                            Hook: "For skin that's changing"<br><br>
+                            Promise: Works with hormonal changes, texture shifts, evolving concerns.
+                        </div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="number" style="font-size: 1.4rem;">Graceful, Not Trying</div>
+                        <div class="detail" style="margin-top: 15px;">
+                            Hook: "Appropriate, not aspirational"<br><br>
+                            Promise: Look current—not youthful. "Anti-embarrassment, not anti-aging."
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: Competitor Analysis -->
+        <div class="slide">
+            <div class="header-banner">
+                <h1>Competitive Landscape</h1>
+                <div class="subtitle">Where JRB sits in the market</div>
+            </div>
+            <div class="content">
+                <table class="comp-table">
+                    <tr>
+                        <th>Brand</th>
+                        <th>Core Position</th>
+                        <th>Emotional Message</th>
+                        <th>The Limitation</th>
+                    </tr>
+                    <tr>
+                        <td class="brand-name">Jones Road</td>
+                        <td><strong>Accommodating beauty</strong></td>
+                        <td>"Look like yourself, only better"</td>
+                        <td>None—meets women where they are</td>
+                    </tr>
+                    <tr>
+                        <td class="brand-name">Merit</td>
+                        <td>Sophisticated minimalism</td>
+                        <td>"Less is more elegant"</td>
+                        <td>Assumes you start from a "good" place</td>
+                    </tr>
+                    <tr>
+                        <td class="brand-name">ILIA</td>
+                        <td>Clean beauty + skin health</td>
+                        <td>"Skin that looks like skin"</td>
+                        <td>Ingredient story > emotional story</td>
+                    </tr>
+                    <tr>
+                        <td class="brand-name">Charlotte Tilbury</td>
+                        <td>Luxury glamour</td>
+                        <td>"Red carpet for everyone"</td>
+                        <td>Transformation, not enhancement</td>
+                    </tr>
+                    <tr>
+                        <td class="brand-name">Tower 28</td>
+                        <td>Safe self-expression</td>
+                        <td>"Fun without fear"</td>
+                        <td>Youth-focused, playful</td>
+                    </tr>
+                </table>
+
+                <div class="key-insight" style="margin-top: 30px;">
+                    <strong>The JRB Difference:</strong> Merit is about <em>editing</em>. JRB is about <em>accommodating</em>. We meet women where they are—complex lives, complex skin—and help them look great fast.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: Revised Positioning -->
+        <div class="slide">
+            <div class="header-banner">
+                <h1>Revised Positioning Statement</h1>
+                <div class="subtitle">Broader than "pro-aging"</div>
+            </div>
+            <div class="content">
+                <span class="draft-label">Draft for Discussion</span>
+
+                <div class="positioning-box">
+                    <div class="label">Consumer Target</div>
+                    <div class="value">
+                        For <strong>women with full, real lives</strong>
+                    </div>
+                    <div class="evidence">Evidence: Personas span ages 25-70+, from new professionals to grandmothers. The common thread is real life, not age.</div>
+                </div>
+
+                <div class="positioning-box">
+                    <div class="label">Job to Be Done</div>
+                    <div class="value">
+                        who want to <strong>look like themselves on a good day—without the fuss</strong>
+                    </div>
+                    <div class="evidence">Evidence: "Me on a good day" appears across all personas. Universal desire for enhanced self, not transformed self.</div>
+                </div>
+
+                <div class="positioning-box">
+                    <div class="label">Category</div>
+                    <div class="value">
+                        Jones Road is the <strong>accommodating beauty brand</strong>
+                    </div>
+                    <div class="evidence">Evidence: "Forgiveness, not perfection." Products that work WITH your skin, your life, your constraints.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: Positioning Continued -->
+        <div class="slide">
+            <div class="header-banner">
+                <h1>Positioning (Continued)</h1>
+                <div class="subtitle">Brand benefit and reason to believe</div>
+            </div>
+            <div class="content">
+                <span class="draft-label">Draft for Discussion</span>
+
+                <div class="positioning-box">
+                    <div class="label">Brand Benefit</div>
+                    <div class="value">
+                        that delivers <strong>effortless confidence through forgiving, flexible makeup that enhances who you already are</strong>
+                    </div>
+                    <div class="evidence">Evidence: 21,213 reviews mention confidence; top trigger across all personas is "feels good"; products described as "hard to mess up"</div>
+                </div>
+
+                <div class="positioning-box">
+                    <div class="label">Reason to Believe</div>
+                    <div class="value">
+                        because <strong>Bobbi Brown knows that most makeup is designed for fantasy—not for real women with real lives and real skin</strong>
+                    </div>
+                    <div class="evidence">Evidence: 50 years of expertise; $100M+ in 3 years; "This is not a fantasy consumer. This is a functioning adult woman."</div>
+                </div>
+
+                <div class="key-insight" style="margin-top: 30px;">
+                    <strong>Full statement:</strong> For women with full, real lives who want to look like themselves on a good day—without the fuss, Jones Road is the accommodating beauty brand that delivers effortless confidence through forgiving, flexible makeup that enhances who you already are, because Bobbi Brown knows most makeup is designed for fantasy, not for real women with real lives and real skin.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 11: The Core Differentiator -->
+        <div class="slide">
+            <div class="header-banner">
+                <h1>The Core Differentiator</h1>
+                <div class="subtitle">Editing vs. Accommodating</div>
+            </div>
+            <div class="content">
+                <div class="two-col" style="align-items: start;">
+                    <div style="text-align: center; padding: 40px;">
+                        <div class="stat-huge">Editing</div>
+                        <div class="stat-label" style="margin-top: 20px;">What competitors do</div>
+                        <p style="margin-top: 20px; color: #666; line-height: 1.6;">
+                            Minimal makeup for people who already have "good" skin. Assumes you start from an ideal place. <em>You edit down to elegance.</em>
+                        </p>
+                    </div>
+                    <div style="text-align: center; padding: 40px; background: #000; color: #fff;">
+                        <div class="stat-huge" style="color: #fff;">Accommodating</div>
+                        <div class="stat-label" style="margin-top: 20px; color: #ccc;">What Jones Road does</div>
+                        <p style="margin-top: 20px; color: #aaa; line-height: 1.6;">
+                            Forgiving, flexible makeup for women whose skin and lives are more complex. <em>We meet you where you are.</em>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="quote-block" style="margin-top: 40px;">
+                    "Proof that I still look good, <strong>on my own terms.</strong>"
+                    <div class="source">— Universal JRB Customer Truth</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 12: The Emotional Job -->
+        <div class="slide">
+            <div class="header-banner">
+                <h1>The Emotional Job</h1>
+                <div class="subtitle">What JRB is really selling</div>
+            </div>
+            <div class="content">
+                <p class="section-intro" style="font-size: 1.3rem;">
+                    "Jones Road Beauty is not selling makeup. It is helping women:"
+                </p>
+
+                <div class="insight-grid" style="margin-top: 30px;">
+                    <div class="insight-card" style="text-align: center; padding: 30px;">
+                        <div class="number" style="font-size: 1.3rem;">Look Like Themselves</div>
+                        <div class="detail" style="font-size: 1rem; margin-top: 15px;">
+                            Not a transformation. An enhancement. "Me, but on a really good day."
+                        </div>
+                    </div>
+                    <div class="insight-card" style="text-align: center; padding: 30px;">
+                        <div class="number" style="font-size: 1.3rem;">Move Quickly</div>
+                        <div class="detail" style="font-size: 1rem; margin-top: 15px;">
+                            Real women don't have 45 minutes. They have 5. JRB works with their pace.
+                        </div>
+                    </div>
+                    <div class="insight-card" style="text-align: center; padding: 30px;">
+                        <div class="number" style="font-size: 1.3rem;">Receive Validation</div>
+                        <div class="detail" style="font-size: 1rem; margin-top: 15px;">
+                            Quiet, meaningful validation that she still matters—from people who know her.
+                        </div>
+                    </div>
+                    <div class="insight-card" style="text-align: center; padding: 30px;">
+                        <div class="number" style="font-size: 1.3rem;">Feel Attractive Without Feeling Ridiculous</div>
+                        <div class="detail" style="font-size: 1rem; margin-top: 15px;">
+                            "Approval without imitation. Respect, not relevance."
+                        </div>
+                    </div>
+                </div>
+
+                <div class="key-insight" style="margin-top: 30px;">
+                    <strong>The one-sentence summary:</strong> JRB helps women look like themselves, feel comfortable in their skin, move quickly through their day, and receive quiet validation that they still matter—without pretending to be someone they're not.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 13: Bottom Line -->
+        <div class="slide title-slide">
+            <h1>The Bottom Line</h1>
+            <p class="tagline" style="max-width: 800px; font-size: 1.3rem; line-height: 1.8;">
+                JRB isn't the "pro-aging" brand. It's the <strong>"pro-you"</strong> brand.<br><br>
+                The same promise works for 25 and 65:<br>
+                <em>"Look like yourself, only better. Without the fuss."</em>
+            </p>
+            <div style="margin-top: 50px; display: flex; gap: 50px; justify-content: center;">
+                <div class="data-point">
+                    <div class="number" style="font-size: 2.5rem;">8+</div>
+                    <div class="label">Distinct Personas</div>
+                </div>
+                <div class="data-point">
+                    <div class="number" style="font-size: 2.5rem;">3</div>
+                    <div class="label">Universal Triggers</div>
+                </div>
+                <div class="data-point">
+                    <div class="number" style="font-size: 2.5rem;">1</div>
+                    <div class="label">Core Truth</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 14: Methodology -->
+        <div class="slide">
+            <div class="header-banner">
+                <h1>Methodology & Sources</h1>
+                <div class="subtitle">How we got these insights</div>
+            </div>
+            <div class="content" style="max-width: 700px; margin: 0 auto;">
+                <h3>Data Sources</h3>
+                <ul style="list-style: none; line-height: 2.2; font-size: 1.1rem;">
+                    <li>• <strong>351,333</strong> total product reviews from Junip export</li>
+                    <li>• <strong>255,203</strong> substantive reviews (50+ characters) analyzed</li>
+                    <li>• <strong>Consigliere AI</strong> gold nugget analysis (50 quotes, deep analysis)</li>
+                    <li>• <strong>Persona pattern matching</strong> for 8 customer segments</li>
+                    <li>• <strong>Emotional trigger analysis</strong> across all personas</li>
+                </ul>
+
+                <h3 style="margin-top: 40px;">Key Finding</h3>
+                <ul style="list-style: none; line-height: 2.2; font-size: 1.1rem;">
+                    <li>• "Mature/aging" = only <strong>2.6%</strong> of reviews</li>
+                    <li>• Same emotional triggers appear <strong>across all personas</strong></li>
+                    <li>• Universal truth: "Me on a good day"</li>
+                </ul>
+
+                <div style="margin-top: 40px; padding: 25px; background: #000; color: #fff; text-align: center;">
+                    <p style="font-family: 'Oswald', sans-serif; font-size: 1.1rem; letter-spacing: 1px;">
+                        JRB IS FOR EVERYONE WHO WANTS TO LOOK LIKE THEMSELVES, ONLY BETTER.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-arrows">
+        <button class="nav-btn" onclick="prevSlide()">←</button>
+        <button class="nav-btn" onclick="nextSlide()">→</button>
+    </div>
+
+    <div class="slide-counter">
+        <span id="current">1</span> / <span id="total">14</span>
+    </div>
+
+    <div class="progress-bar" id="progress"></div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const total = slides.length;
+
+        document.getElementById('total').textContent = total;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + total) % total;
+            slides[currentSlide].classList.add('active');
+            document.getElementById('current').textContent = currentSlide + 1;
+            document.getElementById('progress').style.width = ((currentSlide + 1) / total * 100) + '%';
+        }
+
+        function nextSlide() { showSlide(currentSlide + 1); }
+        function prevSlide() { showSlide(currentSlide - 1); }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        // Click navigation
+        document.querySelector('.presentation').addEventListener('click', (e) => {
+            if (e.target.closest('.nav-arrows')) return;
+            if (e.clientX > window.innerWidth / 2) nextSlide();
+            else prevSlide();
+        });
+
+        // Touch navigation
+        let touchStartX = 0;
+        document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+        document.addEventListener('touchend', (e) => {
+            const diff = touchStartX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) nextSlide();
+                else prevSlide();
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>
