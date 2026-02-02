@@ -48,7 +48,7 @@ export default function BoardDetailPage({ params }: { params: Promise<{ id: stri
 
   const loadBoard = async () => {
     try {
-      const response = await fetch(`/api/boards/${id}`, { cache: "no-store" });
+      const response = await fetch(`/api/boards/${id}?t=${Date.now()}`, { cache: "no-store" });
       if (response.ok) {
         const data = await response.json();
         setBoard(data);
@@ -68,6 +68,8 @@ export default function BoardDetailPage({ params }: { params: Promise<{ id: stri
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedBoard),
       });
+      // Reload the board from server to ensure sync
+      await loadBoard();
     } catch (error) {
       console.error("Error saving board:", error);
     } finally {

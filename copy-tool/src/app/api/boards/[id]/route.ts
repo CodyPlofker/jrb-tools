@@ -11,13 +11,16 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const { blobs } = await list({ prefix: `${BOARDS_PREFIX}${id}.json` });
+    const { blobs } = await list({ prefix: `${BOARDS_PREFIX}${id}` });
 
     if (blobs.length === 0) {
       return NextResponse.json({ error: "Board not found" }, { status: 404 });
     }
 
-    const response = await fetch(blobs[0].url, { cache: "no-store" });
+    // Always pick the newest one
+    const latestBlob = blobs.sort((a, b) => b.uploadedAt.getTime() - a.uploadedAt.getTime())[0];
+
+    const response = await fetch(`${latestBlob.url}?t=${Date.now()}`, { cache: "no-store" });
     const board = await response.json();
 
     return NextResponse.json(board);
@@ -37,13 +40,16 @@ export async function PUT(
     const updates: Partial<BriefBoard> = await request.json();
 
     // Fetch existing board
-    const { blobs } = await list({ prefix: `${BOARDS_PREFIX}${id}.json` });
+    const { blobs } = await list({ prefix: `${BOARDS_PREFIX}${id}` });
 
     if (blobs.length === 0) {
       return NextResponse.json({ error: "Board not found" }, { status: 404 });
     }
 
-    const response = await fetch(blobs[0].url, { cache: "no-store" });
+    // Always pick the newest one to update from
+    const latestBlob = blobs.sort((a, b) => b.uploadedAt.getTime() - a.uploadedAt.getTime())[0];
+
+    const response = await fetch(`${latestBlob.url}?t=${Date.now()}`, { cache: "no-store" });
     const existingBoard: BriefBoard = await response.json();
 
     // Merge updates
@@ -63,12 +69,19 @@ export async function PUT(
     });
     updatedBoard.designers = Array.from(designerSet);
 
-    // Save updated board
+    // Save updated board with a random suffix to ensure a new URL
+    // This is the most reliable way to bust edge cache
     const blob = await put(
       `${BOARDS_PREFIX}${id}.json`,
       JSON.stringify(updatedBoard),
-      { access: "public", contentType: "application/json", addRandomSuffix: false, allowOverwrite: true }
+      { access: "public", contentType: "application/json", addRandomSuffix: true }
     );
+
+    // After uploading the new version, delete the old version(s) to clean up
+    // We do this after successful upload
+    for (const oldBlob of blobs) {
+      await del(oldBlob.url);
+    }
 
     return NextResponse.json({ ...updatedBoard, url: blob.url });
   } catch (error) {
@@ -84,13 +97,16 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const { blobs } = await list({ prefix: `${BOARDS_PREFIX}${id}.json` });
+    const { blobs } = await list({ prefix: `${BOARDS_PREFIX}${id}` });
 
     if (blobs.length === 0) {
       return NextResponse.json({ error: "Board not found" }, { status: 404 });
     }
 
-    await del(blobs[0].url);
+    // Delete all versions
+    for (const blob of blobs) {
+      await del(blob.url);
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {

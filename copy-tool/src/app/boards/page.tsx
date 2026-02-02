@@ -14,7 +14,7 @@ export default function BoardsPage() {
 
   const loadBoards = async () => {
     try {
-      const response = await fetch("/api/boards");
+      const response = await fetch(`/api/boards?t=${Date.now()}`, { cache: "no-store" });
       const data = await response.json();
       setBoards(data);
     } catch (error) {
@@ -29,7 +29,8 @@ export default function BoardsPage() {
 
     try {
       await fetch(`/api/boards/${id}`, { method: "DELETE" });
-      setBoards(boards.filter((b) => b.id !== id));
+      // Reload from server instead of just optimistic update
+      await loadBoards();
     } catch (error) {
       console.error("Error deleting board:", error);
     }
