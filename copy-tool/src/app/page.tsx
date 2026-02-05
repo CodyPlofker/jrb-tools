@@ -400,6 +400,12 @@ export default function Home() {
             >
               Personas
             </a>
+            <a
+              href="/animated-ads"
+              className="text-sm text-[var(--muted)] hover:text-[var(--foreground)] cursor-pointer transition-colors"
+            >
+              Animated Ads
+            </a>
           </div>
         </div>
       </header>
