@@ -84,10 +84,19 @@ export class CreatomateBackend implements VideoBackend {
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error("Creatomate API error:", response.status, errorText);
+        console.error("[Creatomate] API error:", response.status, errorText);
+
+        // Provide helpful error messages for common issues
+        if (response.status === 401 || response.status === 403) {
+          return {
+            success: false,
+            error: `Creatomate authentication failed. Please verify your API key is correct.`,
+          };
+        }
+
         return {
           success: false,
-          error: `Creatomate API error: ${response.status} - ${errorText}`,
+          error: `Creatomate API error: ${response.status} - ${errorText.substring(0, 200)}`,
         };
       }
 
@@ -127,43 +136,60 @@ export class CreatomateBackend implements VideoBackend {
 
   private async pollForCompletion(renderId: string, maxAttempts = 60): Promise<VideoResult> {
     const pollUrl = `${this.apiUrl}/${renderId}`;
+    let lastError = "";
 
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait 2 seconds
 
-      const response = await fetch(pollUrl, {
-        headers: {
-          "Authorization": `Bearer ${this.apiKey}`,
-        },
-      });
+      try {
+        const response = await fetch(pollUrl, {
+          headers: {
+            "Authorization": `Bearer ${this.apiKey}`,
+          },
+        });
 
-      if (!response.ok) {
-        continue;
-      }
+        if (!response.ok) {
+          lastError = `Poll request failed: ${response.status}`;
+          console.error(`[Creatomate] Polling attempt ${attempt + 1}/${maxAttempts}: ${lastError}`);
 
-      const render = await response.json();
+          // For auth errors, fail fast instead of looping 60 times
+          if (response.status === 401 || response.status === 403) {
+            return {
+              success: false,
+              error: `Creatomate API authentication failed (${response.status}). Check your API key.`,
+            };
+          }
+          continue;
+        }
 
-      if (render.status === "succeeded") {
-        return {
-          success: true,
-          url: render.url,
-          downloadUrl: render.url,
-          thumbnailUrl: render.snapshot_url,
-          format: "mp4",
-        };
-      }
+        const render = await response.json();
+        console.log(`[Creatomate] Polling attempt ${attempt + 1}: status = ${render.status}`);
 
-      if (render.status === "failed") {
-        return {
-          success: false,
-          error: render.error_message || "Render failed",
-        };
+        if (render.status === "succeeded") {
+          return {
+            success: true,
+            url: render.url,
+            downloadUrl: render.url,
+            thumbnailUrl: render.snapshot_url,
+            format: "mp4",
+          };
+        }
+
+        if (render.status === "failed") {
+          return {
+            success: false,
+            error: render.error_message || "Render failed",
+          };
+        }
+      } catch (err) {
+        lastError = err instanceof Error ? err.message : "Unknown error";
+        console.error(`[Creatomate] Polling error: ${lastError}`);
       }
     }
 
     return {
       success: false,
-      error: "Render timed out",
+      error: `Render timed out after ${maxAttempts * 2} seconds. Last error: ${lastError}`,
     };
   }
 

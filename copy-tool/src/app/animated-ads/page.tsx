@@ -139,6 +139,15 @@ export default function AnimatedAdsPage() {
         }),
       });
 
+      // Check HTTP status before parsing JSON
+      if (!analyzeResponse.ok) {
+        const errorText = await analyzeResponse.text();
+        setAnalysisError(`Analysis failed (${analyzeResponse.status}): ${errorText.substring(0, 200)}`);
+        setIsGenerating(false);
+        setProgressMessage("");
+        return;
+      }
+
       const analyzeData = await analyzeResponse.json();
 
       if (analyzeData.error) {
@@ -168,6 +177,15 @@ export default function AnimatedAdsPage() {
           backend,
         }),
       });
+
+      // Check HTTP status before parsing JSON
+      if (!generateResponse.ok) {
+        const errorText = await generateResponse.text();
+        setGenerationError(`Generation failed (${generateResponse.status}): ${errorText.substring(0, 200)}`);
+        setIsGenerating(false);
+        setProgressMessage("");
+        return;
+      }
 
       const generateData = await generateResponse.json();
 
